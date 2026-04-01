@@ -21,9 +21,8 @@
     in
     {
       # NixOS configuration entrypoint
-      # Available through 'nixos-rebuild --flake .#your-hostname'
+      # Available through 'nixos-rebuild --flake .#nixos-vmware'
       nixosConfigurations = {
-        # FIXME replace with your hostname
         nixos-vmware = nixpkgs.lib.nixosSystem {
           specialArgs = { inherit inputs; };
           # > Our main nixos configuration file <
@@ -32,9 +31,8 @@
       };
 
       # Standalone home-manager configuration entrypoint
-      # Available through 'home-manager --flake .#your-username@your-hostname'
+      # Available through 'home-manager --flake .#tung@nixos-vmware'
       homeConfigurations = {
-        # FIXME replace with your username@hostname
         "tung@nixos-vmware" = home-manager.lib.homeManagerConfiguration {
           # Home-manager requires 'pkgs' instance
           pkgs = nixpkgs.legacyPackages.x86_64-linux;
