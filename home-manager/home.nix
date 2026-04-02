@@ -18,6 +18,7 @@
     ./ssh.nix
     ./git.nix
     ./zsh.nix
+    ./mcfly.nix
   ];
 
   nixpkgs = {

@@ -466,7 +466,7 @@
       defaultBranch = "main";
     };
     interactive = {
-      diffFilter = "diff-so-fancy --patch";
+      # diffFilter = "diff-so-fancy --patch";
     };
   };
 
