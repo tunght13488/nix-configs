@@ -46,7 +46,7 @@ Typical edit cycle from the repo root:
 ```zsh
 nix flake show --no-write-lock-file
 sudo nixos-rebuild switch --flake .#nixos-vmware
-home-manager switch --flake .#tung@nixos-vmware
+home-manager switch --flake ".#tung@nixos-vmware"
 ```
 
 Use the full system rebuild when you change `nixos/configuration.nix`; use the Home Manager command when you change only `home-manager/home.nix`.
@@ -66,13 +66,13 @@ sudo nixos-rebuild switch --flake .#nixos-vmware
 Apply only the Home Manager profile:
 
 ```zsh
-home-manager switch --flake .#tung@nixos-vmware
+home-manager switch --flake ".#tung@nixos-vmware"
 ```
 
 If `home-manager` is not installed:
 
 ```zsh
-nix shell nixpkgs#home-manager --command home-manager switch --flake .#tung@nixos-vmware
+nix shell nixpkgs#home-manager --command home-manager switch --flake ."#tung@nixos-vmware"
 ```
 
 Update pinned inputs intentionally:

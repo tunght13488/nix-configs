@@ -17,6 +17,7 @@
     # ./nvim.nix
     ./ssh.nix
     ./git.nix
+    ./zsh.nix
   ];
 
   nixpkgs = {
