@@ -369,7 +369,7 @@
       whitespace = "fix,space-before-tab,trailing-space,cr-at-eol";
       ignorecase = "false";
       autocrlf = "input";
-      # editor = "nvim";
+      editor = "nvim";
       askpass = "git-gui--askpass";
       # pager = "less -x1,5";
       # pager = "diff-so-fancy | less --tabs=4 -RFX";
