@@ -712,4 +712,10 @@
     "*.pdf binary"
     "*.gpg binary"
   ];
+
+  programs.lazygit = {
+    enable = true;
+    enableZshIntegration = true;
+    # settings = { };
+  };
 }
