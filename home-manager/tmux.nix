@@ -51,7 +51,13 @@
         extraConfig = "set -g @continuum-restore 'on'";
       }
       tmuxPlugins.vim-tmux-navigator
-      tmuxPlugins.fingers
+      {
+        plugin = tmuxPlugins.fingers;
+        extraConfig = ''
+          set -g @fingers-key H
+        '';
+      }
+      tmuxPlugins.tmux-fzf
     ];
   };
 }

@@ -14,12 +14,13 @@
     # inputs.nix-colors.homeManagerModule
 
     # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
     ./ssh.nix
     ./git.nix
     ./zsh.nix
-    ./mcfly.nix
     ./tmux.nix
+    ./fonts.nix
+    ./terminal.nix
+    ./nvim.nix
   ];
 
   nixpkgs = {
@@ -50,11 +51,13 @@
   };
 
   # Add stuff for your user as you see fit:
-  programs.neovim.enable = true;
   home.packages = with pkgs; [
     tmux
     python313
     python313Packages.powerline
+    ncdu
+    monaspace
+    nerd-fonts.monaspace
   ];
 
   # Enable home-manager and git

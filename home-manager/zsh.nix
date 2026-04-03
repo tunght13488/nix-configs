@@ -8,6 +8,26 @@
 {
   programs.zsh = {
     enable = true;
+    shellAliases = {
+      vim = "nvim";
+      grep = "rg";
+      tf = "terraform";
+      ls = "eza --group-directories-first";
+      l = "ls -l";
+      la = "l -a";
+      cat = "bat --paging=never --style=plain";
+      find = "fd";
+      du = "ncdu --color dark -rr -x --exclude .git --exclude node_modules";
+
+      a = "php artisan";
+      c = "php $(which composer)";
+      mx = "chmod a+x";
+      hosts = "sudo $EDITOR /etc/hosts";
+      sshconfig = "$EDITOR ~/.ssh/config";
+      myip = "dig +short myip.opendns.com @resolver1.opendns.com";
+      myips = "ifconfig -a | perl -nle'/(\d+.\d+.\d+.\d+)/ && print $1'";
+      fs = "stat -f \"%z bytes\"";
+    };
   };
 
   programs.zsh.prezto = {
@@ -76,11 +96,5 @@
       windowTitleFormat = "%n@%m: %s";
       tabTitleFormat = "%m: %s";
     };
-  };
-
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = { };
   };
 }
