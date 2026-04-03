@@ -62,23 +62,18 @@
       nixPath = lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs;
     };
 
-  # FIXME: Add the rest of your current configuration
-
-  # networking.hostName = "nixos-vmware";
   networking = {
     hostName = "nixos-vmware";
     networkmanager.enable = true;
   };
 
-  # TODO: Configure your system-wide user settings (groups, etc), add more users as needed.
+  time.timeZone = "Asia/Singapore";
+
   users.users = {
     tung = {
       initialHashedPassword = "$y$j9T$/dk6Un7glSRNrZAI.PaJI/$qReZjapopysGOwT.YKGT9slxIXbFeCklCW5W6LXw112";
       isNormalUser = true;
-      openssh.authorizedKeys.keys = [
-        # TODO: Add your SSH public key(s) here, if you plan on using SSH to connect
-      ];
-      # TODO: Be sure to add any other groups you need (such as networkmanager, audio, docker, etc)
+      openssh.authorizedKeys.keys = [ ];
       extraGroups = [
         "wheel"
         "networkmanager"

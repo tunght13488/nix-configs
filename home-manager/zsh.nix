@@ -9,7 +9,6 @@
   programs.zsh = {
     enable = true;
     shellAliases = {
-      vim = "nvim";
       grep = "rg";
       tf = "terraform";
       ls = "eza --group-directories-first";

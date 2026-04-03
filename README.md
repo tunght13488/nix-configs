@@ -45,7 +45,7 @@ Typical edit cycle from the repo root:
 
 ```zsh
 nix flake show --no-write-lock-file
-sudo nixos-rebuild switch --flake .#nixos-vmware
+sudo nixos-rebuild switch --flake ".#nixos-vmware"
 home-manager switch --flake ".#tung@nixos-vmware"
 ```
 
@@ -60,7 +60,7 @@ nix flake show --no-write-lock-file
 Rebuild the system from the repo root:
 
 ```zsh
-sudo nixos-rebuild switch --flake .#nixos-vmware
+sudo nixos-rebuild switch --flake ".#nixos-vmware"
 ```
 
 Apply only the Home Manager profile:

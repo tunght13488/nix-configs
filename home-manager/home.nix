@@ -12,6 +12,7 @@
   imports = [
     # If you want to use home-manager modules from other flakes (such as nix-colors):
     # inputs.nix-colors.homeManagerModule
+    inputs.nixvim.homeModules.nixvim
 
     # You can also split up your configuration and import pieces of it here:
     ./ssh.nix
@@ -20,7 +21,6 @@
     ./tmux.nix
     ./fonts.nix
     ./terminal.nix
-    ./nvim.nix
   ];
 
   nixpkgs = {
@@ -59,6 +59,8 @@
     monaspace
     nerd-fonts.monaspace
   ];
+
+  programs.nixvim.imports = [ ./nixvim.nix ];
 
   # Enable home-manager and git
   programs.home-manager.enable = true;
