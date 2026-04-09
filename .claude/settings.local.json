@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:home-manager-options.extranix.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(home-manager switch:*)"
+    ]
+  }
+}

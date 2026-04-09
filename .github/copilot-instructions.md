@@ -1,44 +1,46 @@
 # Copilot instructions for `nix-configs`
 
+## Approach
+- Think before acting. Read existing files before writing code.
+- Be concise in output but thorough in reasoning.
+- Prefer editing over rewriting whole files.
+- Do not re-read files you have already read unless the file may have changed.
+- Test your code before declaring done.
+- No sycophantic openers or closing fluff.
+- Keep solutions simple and direct.
+- User instructions always override this file.
+
 ## Big picture
-- This repo started from `github:misterio77/nix-starter-config#minimal` via `nix flake init`. It keeps that template's core shape: a single flake, one `nixos/` tree, and one `home-manager/` tree.
-- This repo is a flake-based personal NixOS setup for the `nixos-vmware` host. `flake.nix` is the entrypoint and exposes both `nixosConfigurations.nixos-vmware` and `homeConfigurations."tung@nixos-vmware"`.
-- System-level configuration lives in `nixos/configuration.nix`; user-level configuration lives in `home-manager/home.nix`. Keep that split: OS services, users, desktop, and system packages belong in the NixOS module; per-user tools and dotfile-style settings belong in Home Manager.
-- The repo still uses the template's standalone Home Manager design, not Home Manager as a NixOS module. Preserve the separate `homeConfigurations` output and prefer `home-manager switch` for user-level changes unless the user asks to merge them.
-- `nixos/configuration.nix` currently imports only `./hardware-configuration.nix`. The structure is intentionally simple and inline rather than heavily modularized.
-- The workspace also includes `/etc/nixos`, which is a separate live-machine config. Its `configuration.nix` imports `./home-manager.nix`, and `home-manager.nix` pulls Home Manager via `builtins.fetchTarball` instead of flakes.
+- This repo is a flake-based personal NixOS setup for `nixos-vmware`; `flake.nix` exposes `nixosConfigurations.nixos-vmware` and standalone `homeConfigurations."tung@nixos-vmware"`.
+- Keep the split between host-level NixOS config in `nixos/configuration.nix` and per-user config in `home-manager/home.nix` plus its imported modules.
+- Preserve the current minimal layout unless the user asks otherwise: one main system module, one main Home Manager module, and a small set of focused files under `home-manager/`.
+- `home-manager/home.nix` imports `inputs.nixvim.homeModules.nixvim`; editor changes usually belong in `home-manager/nixvim.nix`, not a separate Neovim repo.
 
-## Editing conventions
-- Prefer changing the flake-backed repo under `nix-configs/` first. Only update `/etc/nixos/*` when the task is explicitly about the live system config or requires keeping the non-flake copy in sync.
-- Treat this as a customized copy of the template's `minimal` variant, not `standard`: do not add `pkgs/`, `overlays/`, or `modules/` boilerplate unless the user explicitly wants to evolve the repo beyond the minimal layout.
-- Preserve existing host/user identifiers unless the user asks otherwise: hostname `nixos-vmware`, user `tung`, home path `/home/tung`.
-- Some comments and scaffolding markers (`FIXME`, `TODO`) are inherited from the starter template. They are guidance, not evidence that the repo is incomplete or needs broad cleanup.
-- Keep unfree-package handling aligned with existing patterns: broad `allowUnfree = true;` plus a targeted `allowUnfreePredicate` for packages such as `vscode`, `google-chrome`, and `1password-gui`.
-- Follow the current style: inline attribute sets, short comment blocks, and package lists in `environment.systemPackages = with pkgs; [ ... ];`.
-- Do not "clean up" the generated `hardware-configuration.nix` files unless the task specifically requires hardware changes.
+## Key files
+- `flake.nix` pins `nixpkgs`, `home-manager`, and `nixvim` to the `25.11` release family and passes `inputs` into both NixOS and Home Manager.
+- `nixos/configuration.nix` owns Nix settings, hostname/timezone, GNOME on X11, VMware guest support, Firefox policies, 1Password GUI, and `environment.systemPackages`.
+- `home-manager/home.nix` imports `ssh.nix`, `git.nix`, `zsh.nix`, `tmux.nix`, `fonts.nix`, `terminal.nix`, and `nixvim.nix`.
+- `home-manager/zsh.nix` enables Prezto and shell aliases; update this file instead of trying to manage Zsh from `dotfiles/` or the checked-out `prezto/` folder.
 
-## Typical workflows
-- Rebuild the flake-based system from the repo root:
-  `sudo nixos-rebuild switch --flake .#nixos-vmware`
-- Apply only the user profile from the repo root:
-  `home-manager switch --flake .#tung@nixos-vmware`
-- If `home-manager` is not installed in the environment, the template's fallback still applies:
-  `nix shell nixpkgs#home-manager --command home-manager switch --flake .#tung@nixos-vmware`
-- Validate the flake parses before larger edits without mutating `flake.lock`:
-  `nix flake show --no-write-lock-file`
-- Update pinned dependencies intentionally with `nix flake update`; the flake uses the commits recorded in `flake.lock`, not just the branch names in `flake.nix`.
-- If you must work against the live `/etc/nixos` copy, use the classic rebuild path instead of the flake command:
-  `sudo nixos-rebuild switch -I nixos-config=/etc/nixos/configuration.nix`
+## Workflows
+- Validate evaluation without touching `flake.lock`: `nix flake show --no-write-lock-file`
+- Apply system changes from the repo root: `sudo nixos-rebuild switch --flake .#nixos-vmware`
+- Apply user-only changes from the repo root: `home-manager switch --flake .#tung@nixos-vmware`
+- If `home-manager` is not installed, use `nix shell nixpkgs#home-manager --command home-manager switch --flake .#tung@nixos-vmware`
+- Format touched Nix files with `nixfmt <file>`; `nixfmt` is installed in `environment.systemPackages`.
 
-## Repo-specific patterns
-- Firefox is configured through enterprise policies (`programs.firefox.policies.DisableTelemetry = true;`) rather than wrapper scripts or extra prefs files.
-- Desktop defaults are GNOME on X11 with VMware guest support (`services.xserver.videoDrivers = [ "vmware" ];` and `virtualisation.vmware.guest.enable = true;`). New desktop changes should fit that baseline unless the user asks to change display stack.
-- User shells are explicitly set to `pkgs.zsh`, and both system and home configs enable Git/Zsh-related programs. Keep shell changes consistent across user and program declarations.
-- The Home Manager module is intentionally minimal: it sets identity, enables `programs.home-manager` and `programs.git`, and uses `systemd.user.startServices = "sd-switch"` for smooth reloads.
+## Repo-specific conventions
+- Preserve existing identifiers unless requested otherwise: hostname `nixos-vmware`, user `tung`, home directory `/home/tung`, and login shell `pkgs.zsh`.
+- Keep ownership clear: system packages, desktop services, users, and Firefox policies belong in `nixos/configuration.nix`; user packages and program settings belong in Home Manager modules.
+- Nix is intentionally configured without channels or a global registry; `nix.registry` and `nix.nixPath` are derived from flake inputs in `nixos/configuration.nix`.
+- Unfree packages are intentionally enabled broadly (`allowUnfree = true;` in both system and Home Manager); the commented `allowUnfreePredicate` block in `nixos/configuration.nix` is not the active configuration.
+- Desktop defaults are GNOME on X11 with VMware guest integration (`services.xserver.videoDrivers = [ "vmware" ];` and `virtualisation.vmware.guest.enable = true;`); keep that baseline unless the user asks to change it.
+- SSH uses `~/.1password/agent.sock` and host-specific GitHub identities in `home-manager/ssh.nix`; GitHub SSH changes should stay aligned with those match blocks.
+- Zsh and tmux are intentionally opinionated: Prezto modules live in `home-manager/zsh.nix`, and tmux uses backtick as the main prefix in `home-manager/tmux.nix`.
+- `home-manager/nixvim.nix` mixes declarative Nixvim options with embedded Lua for keymaps and plugin setup; follow that pattern for editor changes instead of introducing ad-hoc Lua files.
 
-## Integration points
-- `flake.nix` wires `home-manager.inputs.nixpkgs.follows = "nixpkgs"`; when adding new flake inputs, keep versions compatible with the pinned `nixos-25.11` / `release-25.11` channels.
-- The NixOS module derives `nix.registry` and `nix.nixPath` from flake inputs. Avoid changes that re-enable channels or a global registry unless the user explicitly wants that behavior.
-- Nix flakes only see tracked files. If a newly added module or file seems invisible during evaluation, ensure it is not ignored and has been added to git.
-- Secrets and machine-specific state are not abstracted into reusable modules here; avoid introducing secret values or replacing existing hashed passwords unless requested.
-- The upstream starter repo is useful for background context, but its README explicitly notes it is a bit out of date. Prefer the current local files and official Nix/Home Manager docs over blindly reintroducing template-era patterns.
+## Integration notes
+- Keep new flake inputs version-aligned with the existing `25.11` pins in `flake.nix`, especially when they depend on `nixpkgs`.
+- `home-manager/home.nix` uses `systemd.user.startServices = "sd-switch"`; Home Manager reload behavior depends on that staying intact.
+- Flakes only see tracked files, so new modules must be added to git before evaluation can import them.
+- `nixos/hardware-configuration.nix` is generated machine state; only change it for real hardware or disk-layout updates.

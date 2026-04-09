@@ -21,6 +21,7 @@
     ./tmux.nix
     ./fonts.nix
     ./terminal.nix
+    ./ai.nix
   ];
 
   nixpkgs = {
