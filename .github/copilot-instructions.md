@@ -28,6 +28,7 @@
 - Apply user-only changes from the repo root: `home-manager switch --flake .#tung@nixos-vmware`
 - If `home-manager` is not installed, use `nix shell nixpkgs#home-manager --command home-manager switch --flake .#tung@nixos-vmware`
 - Format touched Nix files with `nixfmt <file>`; `nixfmt` is installed in `environment.systemPackages`.
+- Use `.copilot_workspace/` (repo root) as a scratch directory for temporary files, build artefacts, and test outputs instead of `/dev/null` or `/tmp`; it is gitignored and does not require extra approval to write.
 
 ## Repo-specific conventions
 - Preserve existing identifiers unless requested otherwise: hostname `nixos-vmware`, user `tung`, home directory `/home/tung`, and login shell `pkgs.zsh`.

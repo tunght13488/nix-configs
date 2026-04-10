@@ -29,6 +29,7 @@
     overlays = [
       # If you want to use overlays exported from other flakes:
       # neovim-nightly-overlay.overlays.default
+      inputs.phps.overlays.default
 
       # Or define it inline, for example:
       # (final: prev: {
@@ -52,18 +53,84 @@
   };
 
   # Add stuff for your user as you see fit:
-  home.packages = with pkgs; [
-    tmux
-    python313
-    python313Packages.powerline
-    ncdu
-    monaspace
-    nerd-fonts.monaspace
-    jetbrains.phpstorm
-    jetbrains.idea
-  ];
+  home.packages =
+    with pkgs;
+    [
+      tmux
+      python313
+      python313Packages.powerline
+      ncdu
+      monaspace
+      nerd-fonts.monaspace
+      jetbrains.phpstorm
+      jetbrains.idea
+      httpie
+      colormake
+      gnumake
+    ]
+    ++ (
+      # PHP versions from nix-phps.
+      # Each version gets versioned binary names, e.g.:
+      #   php81, php81-fpm, php81ize, php81-config
+      #   php82, php82-fpm, php82ize, php82-config
+      #   php83, php83-fpm, php83ize, php83-config
+      #
+      # Run FPM for multiple versions simultaneously on different ports:
+      #   php81-fpm --nodaemonize -d listen=127.0.0.1:9081
+      #   php82-fpm --nodaemonize -d listen=127.0.0.1:9082
+      #   php83-fpm --nodaemonize -d listen=127.0.0.1:9083
+      #
+      # Switch the default `php` by changing the php83 reference in the hiPrio block below.
+      let
+        mkVersionedPhp =
+          ver: php:
+          pkgs.runCommand "php${ver}-versioned" { } ''
+            mkdir -p $out/bin
+            for src in ${php}/bin/php ${php}/bin/php-fpm ${php}/bin/php-cgi ${php}/bin/phpdbg ${php}/bin/phpize ${php}/bin/php-config; do
+              [ -e "$src" ] || continue
+              base=$(basename "$src")
+              # php → php81, php-fpm → php81-fpm, phpize → php81ize, php-config → php81-config
+              versioned=$(echo "$base" | sed "s/^php/php${ver}/")
+              ln -s "$src" "$out/bin/$versioned"
+            done
+          '';
+      in
+      [
+        (mkVersionedPhp "81" pkgs.php81)
+        (mkVersionedPhp "82" pkgs.php82)
+        (mkVersionedPhp "83" pkgs.php83)
+        # Default `php` / `php-fpm` point to 8.3 — change pkgs.php83 here to switch.
+        (lib.hiPrio pkgs.php81)
+      ]
+    );
 
   programs.nixvim.imports = [ ./nixvim.nix ];
+
+  # direnv — auto-switch PHP version per project via .envrc
+  programs.direnv = {
+    enable = true;
+    enableZshIntegration = true;
+    nix-direnv.enable = true;
+  };
+
+  # PHP test sites — served by system nginx (nixos/nginx.nix).
+  # Each directory is made world-readable (o+rx) so the nginx user can read files.
+  home.file = {
+    "php-sites/php81/index.php".text = "<?php phpinfo(); phpinfo(INFO_MODULES);";
+    "php-sites/php82/index.php".text = "<?php phpinfo(); phpinfo(INFO_MODULES);";
+    "php-sites/php83/index.php".text = "<?php phpinfo(); phpinfo(INFO_MODULES);";
+  };
+
+  home.activation.phpSitesDirPermissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    # Make directories world-readable so the nginx user can traverse them.
+    # The index.php files are symlinks into the Nix store which is already
+    # world-readable (store files are 444), so no chmod on those is needed.
+    chmod o+rx \
+      "$HOME/php-sites" \
+      "$HOME/php-sites/php81" \
+      "$HOME/php-sites/php82" \
+      "$HOME/php-sites/php83"
+  '';
 
   # Enable home-manager and git
   programs.home-manager.enable = true;

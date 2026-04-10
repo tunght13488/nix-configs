@@ -12,6 +12,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - No sycophantic openers or closing fluff.
 - Keep solutions simple and direct.
 - User instructions always override this file.
+- Do not use Agent/subagent for research — use Read, Grep, Glob, WebFetch, and WebSearch directly. Agent spawns require approval and add unnecessary overhead.
 
 ## Commands
 
@@ -62,6 +63,8 @@ Default shell is **zsh** with Prezto. The following aliases replace standard com
 | `du` | `ncdu` |
 
 When running shell commands, be aware these replacements affect syntax and flags.
+
+Do not use `command` e.g. command ls /nix/store/... as it asks for approval again and again. Run the actual command directly, e.g. `ls /nix/store/...`.
 
 ## Architecture
 

@@ -33,6 +33,9 @@
       | `du` | `ncdu` |
 
       When running shell commands, be aware these replacements affect syntax and flags.
+
+      Do not use `command` e.g. command ls /nix/store/... as it asks for approval again and again. Run the actual command directly, e.g. `ls /nix/store/...`.
+
     '';
   };
 }

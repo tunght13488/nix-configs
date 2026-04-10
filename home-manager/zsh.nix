@@ -19,7 +19,7 @@
       du = "ncdu --color dark -rr -x --exclude .git --exclude node_modules";
 
       a = "php artisan";
-      c = "php $(which composer)";
+      c = "composer";
       mx = "chmod a+x";
       hosts = "sudo $EDITOR /etc/hosts";
       sshconfig = "$EDITOR ~/.ssh/config";

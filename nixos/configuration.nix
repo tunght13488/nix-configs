@@ -19,20 +19,18 @@
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
+
+    # PHP-FPM pools and nginx virtual hosts
+    ./php-fpm.nix
+    ./nginx.nix
   ];
 
   nixpkgs = {
     # You can add overlays here
     overlays = [
-      # If you want to use overlays exported from other flakes:
-      # neovim-nightly-overlay.overlays.default
-
-      # Or define it inline, for example:
-      # (final: prev: {
-      #   hi = final.hello.overrideAttrs (oldAttrs: {
-      #     patches = [ ./change-hello-to-hi.patch ];
-      #   });
-      # })
+      # PHP versions from https://github.com/fossar/nix-phps
+      # Provides pkgs.php81, pkgs.php82, pkgs.php83, etc.
+      inputs.phps.overlays.default
     ];
     # Configure your nixpkgs instance
     config = {
@@ -80,6 +78,14 @@
   networking = {
     hostName = "nixos-vmware";
     networkmanager.enable = true;
+    # Local development: PHP version test sites
+    extraHosts = ''
+      127.0.0.1 php81.local
+      127.0.0.1 php82.local
+      127.0.0.1 php83.local
+      127.0.0.1 middleware.vm.local
+      127.0.0.1 v3.vm.local
+    '';
   };
 
   time.timeZone = "Asia/Singapore";
@@ -88,6 +94,10 @@
     tung = {
       initialHashedPassword = "$y$j9T$/dk6Un7glSRNrZAI.PaJI/$qReZjapopysGOwT.YKGT9slxIXbFeCklCW5W6LXw112";
       isNormalUser = true;
+      # 711: owner has full access; others can traverse (execute) but not list.
+      # This lets the nginx user follow the path into ~/php-sites/ without
+      # exposing the rest of the home directory.
+      homeMode = "711";
       openssh.authorizedKeys.keys = [ ];
       extraGroups = [
         "wheel"
@@ -174,5 +184,8 @@
     nixfmt
     stow
     home-manager
+    php81.packages.composer
+    php82.packages.composer
+    php83.packages.composer
   ];
 }

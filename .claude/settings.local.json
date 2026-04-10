@@ -3,7 +3,16 @@
     "allow": [
       "WebFetch(domain:home-manager-options.extranix.com)",
       "WebFetch(domain:github.com)",
-      "Bash(home-manager switch:*)"
+      "Bash(home-manager switch:*)",
+      "Bash(nix eval:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(php81 --version)",
+      "Bash(php82 --version)",
+      "Bash(php83 --version)",
+      "Bash(php --version)",
+      "Bash(direnv --version)",
+      "Read(//home/tung/code/netsuite-middleware/**)",
+      "Read(//home/tung/code/admin_ci3/**)"
     ]
   }
 }

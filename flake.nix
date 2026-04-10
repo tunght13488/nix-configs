@@ -14,6 +14,10 @@
     # Nixvim
     # nixvim.url = "github:nix-community/nixvim/nixos-25.11";
     nixvim.url = "github:nix-community/nixvim/main";
+
+    # Additional PHP versions
+    phps.url = "github:fossar/nix-phps";
+    phps.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
