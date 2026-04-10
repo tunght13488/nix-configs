@@ -66,6 +66,7 @@
       colormake
       gnumake
       jetbrains-toolbox
+      mycli
     ]
     # ++ (
     #   let

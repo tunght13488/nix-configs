@@ -23,6 +23,7 @@
     # PHP-FPM pools and nginx virtual hosts
     ./php-fpm.nix
     ./nginx.nix
+    ./mysql.nix
     ./nix-ld.nix
   ];
 

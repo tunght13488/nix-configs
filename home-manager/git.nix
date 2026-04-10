@@ -472,8 +472,10 @@
 
   programs.git.ignores = [
     # Nix - direnv #
-    ".envrc"
-    ".direnv"
+    # ".direnv"
+    # ".envrc"
+    # "default.nix"
+    # "shell.nix"
 
     # Git #
     # #####

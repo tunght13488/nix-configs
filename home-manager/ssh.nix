@@ -20,7 +20,7 @@
 
     "*" = {
       forwardAgent = true;
-      identityAgent = [ "~/.1password/agent.sock" ];
+      # identityAgent = [ "~/.1password/agent.sock" ];
     };
   };
   services.ssh-agent.enable = true;
