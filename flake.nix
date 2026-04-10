@@ -18,6 +18,8 @@
     # Additional PHP versions
     phps.url = "github:fossar/nix-phps";
     phps.inputs.nixpkgs.follows = "nixpkgs";
+
+    nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
   };
 
   outputs =
@@ -25,6 +27,7 @@
       self,
       nixpkgs,
       home-manager,
+      nix-jetbrains-plugins,
       ...
     }@inputs:
     let

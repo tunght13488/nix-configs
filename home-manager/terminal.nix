@@ -104,14 +104,14 @@ in
   programs.bat = {
     enable = true;
     config = { };
-    syntaxes = { };
-    themes = { };
-    extraPackages = with pkgs.bat-extras; [
-      # batdiff
-      # batman
-      # batgrep
-      # batwatch
-    ];
+    # syntaxes = { };
+    # themes = { };
+    # extraPackages = with pkgs.bat-extras; [
+    #   # batdiff
+    #   # batman
+    #   # batgrep
+    #   # batwatch
+    # ];
   };
 
   programs.fd = {

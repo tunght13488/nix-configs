@@ -62,12 +62,35 @@
       ncdu
       monaspace
       nerd-fonts.monaspace
-      jetbrains.phpstorm
-      jetbrains.idea
       httpie
       colormake
       gnumake
+      jetbrains-toolbox
     ]
+    # ++ (
+    #   let
+    #     inherit (pkgs.jetbrains) phpstorm;
+    #     plugins = inputs.nix-jetbrains-plugins.lib.pluginsForIde pkgs phpstorm [
+    #       "com.github.copilot"
+    #     ];
+    #   in
+    #   [
+    #     # phpstorm
+    #     (pkgs.jetbrains.plugins.addPlugins phpstorm (lib.attrValues plugins))
+    #   ]
+    # )
+    # ++ (
+    #   let
+    #     inherit (pkgs.jetbrains) idea;
+    #     plugins = inputs.nix-jetbrains-plugins.lib.pluginsForIde pkgs idea [
+    #       "com.github.copilot"
+    #     ];
+    #   in
+    #   [
+    #     # idea
+    #     (pkgs.jetbrains.plugins.addPlugins idea (lib.attrValues plugins))
+    #   ]
+    # )
     ++ (
       # PHP versions from nix-phps.
       # Each version gets versioned binary names, e.g.:
