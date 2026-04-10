@@ -59,6 +59,8 @@
     ncdu
     monaspace
     nerd-fonts.monaspace
+    jetbrains.phpstorm
+    jetbrains.idea
   ];
 
   programs.nixvim.imports = [ ./nixvim.nix ];

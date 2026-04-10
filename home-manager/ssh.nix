@@ -24,5 +24,5 @@
     };
   };
   services.ssh-agent.enable = true;
-  services.ssh-agent.enableZshIntegration = true;
+  # services.ssh-agent.enableZshIntegration = true;
 }

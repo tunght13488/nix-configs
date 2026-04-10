@@ -53,9 +53,24 @@
         flake-registry = "";
         # Workaround for https://github.com/NixOS/nix/issues/9574
         nix-path = config.nix.nixPath;
+        # Cache configuration - optimized for Asia
+        substituters = [
+          # "https://mirror.sjtu.edu.cn/nix-channels/store" # Shanghai Jiao Tong University - best for Asia
+          # "https://mirrors.ustc.edu.cn/nix-channels/store" # USTC backup mirror
+          # "https://cache.nixos.org" # Official global cache
+          "https://nix-community.cachix.org" # Community packages
+          # "https://hyprland.cachix.org"
+          # "https://aseipp-nix-cache.global.ssl.fastly.net"
+        ];
+        trusted-public-keys = [
+          "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        ];
+        http-connections = 120;
+        max-substitution-jobs = 120;
+        max-jobs = "auto";
       };
       # Opinionated: disable channels
-      channel.enable = false;
+      # channel.enable = false;
 
       # Opinionated: make flake registry and nix path match flake inputs
       registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
@@ -117,13 +132,13 @@
   ];
 
   # programs.firefox.enable = true;
-  programs.firefox = {
-    enable = true;
+  # programs.firefox = {
+  #   enable = true;
 
-    policies = {
-      DisableTelemetry = true;
-    };
-  };
+  #   policies = {
+  #     DisableTelemetry = true;
+  #   };
+  # };
 
   programs.vim.enable = true;
   programs.zsh.enable = true;
@@ -154,7 +169,7 @@
     # wget
     git
     vscode
-    firefox
+    # firefox
     google-chrome
     nixfmt
     stow
