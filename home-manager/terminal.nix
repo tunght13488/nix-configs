@@ -139,4 +139,8 @@ in
     # keyScheme = "vim";
     # settings = { };
   };
+
+  programs.htop = {
+    enable = true;
+  };
 }
