@@ -67,6 +67,7 @@
       gnumake
       jetbrains-toolbox
       mycli
+      postman
     ]
     # ++ (
     #   let
