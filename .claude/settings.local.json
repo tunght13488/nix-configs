@@ -14,7 +14,13 @@
       "Read(//home/tung/code/netsuite-middleware/**)",
       "Read(//home/tung/code/admin_ci3/**)",
       "Bash(nix build:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(nix flake:*)",
+      "Bash(direnv allow:*)",
+      "Bash(direnv exec:*)",
+      "Bash(nix search:*)",
+      "Bash(nix-prefetch-url:*)",
+      "Bash(nix hash:*)"
     ]
   }
 }
