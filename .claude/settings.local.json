@@ -12,7 +12,9 @@
       "Bash(php --version)",
       "Bash(direnv --version)",
       "Read(//home/tung/code/netsuite-middleware/**)",
-      "Read(//home/tung/code/admin_ci3/**)"
+      "Read(//home/tung/code/admin_ci3/**)",
+      "Bash(nix build:*)",
+      "Bash(curl:*)"
     ]
   }
 }

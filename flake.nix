@@ -47,8 +47,10 @@
       # Available through 'home-manager --flake .#tung@nixos-vmware'
       homeConfigurations = {
         "tung@nixos-vmware" = home-manager.lib.homeManagerConfiguration {
-          # Home-manager requires 'pkgs' instance
-          pkgs = nixpkgs.legacyPackages.x86_64-linux;
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
           extraSpecialArgs = { inherit inputs; };
           # > Our main home-manager configuration file <
           modules = [ ./home-manager/home.nix ];
