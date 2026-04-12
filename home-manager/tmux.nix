@@ -23,7 +23,8 @@
       bind-key r source-file ~/.config/tmux/tmux.conf
       # bind-key j command-prompt -p "join pane from:"  "join-pane -s '%%'"
       # bind-key s command-prompt -p "send pane to:"  "join-pane -t '%%'"
-      set -g repeat-time 125 set-window-option -g automatic-rename on
+      set -g repeat-time 125
+      set-window-option -g automatic-rename on
       set -g set-titles on
       set -g set-titles-string '#S:#I.#P #W'
       setw -g monitor-activity on
