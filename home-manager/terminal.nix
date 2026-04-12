@@ -12,135 +12,90 @@ let
   fontSize = 10;
 in
 {
-  programs.alacritty = {
-    enable = true;
-    settings = {
-      colors = {
-        bright = {
-          black = "#4e4e4e";
-          blue = "#82aaff";
-          cyan = "#89ddff";
-          green = "#c3e88d";
-          magenta = "#f07178";
-          red = "#ff5370";
-          white = "#ffffff";
-          yellow = "#ffcb6b";
-        };
-        normal = {
-          black = "#000000";
-          blue = "#6182b8";
-          cyan = "#39adb5";
-          green = "#91b859";
-          magenta = "#ff5370";
-          red = "#e53935";
-          white = "#a0a0a0";
-          yellow = "#ffb62c";
-        };
-        primary = {
-          background = "#263238";
-          foreground = "#eeffff";
-        };
-        cursor = {
-          text = "#263238";
-          cursor = "#eeffff";
-        };
-      };
-      font = {
-        size = fontSize;
-        bold = {
-          family = fontFamily;
-          style = "Bold";
-        };
-        bold_italic = {
-          family = fontFamily;
-          style = "Bold Italic";
-        };
-        italic = {
-          family = fontFamily;
-          style = "Italic";
-        };
-        normal = {
-          family = fontFamily;
-          style = "Regular";
-        };
-      };
-      cursor = {
-        style = {
-          shape = "Beam";
-          blinking = "Off";
-        };
-      };
-    };
-    # theme = null;
+  programs.alacritty.enable = true;
+  programs.alacritty.settings.colors.bright = {
+    black = "#4e4e4e";
+    blue = "#82aaff";
+    cyan = "#89ddff";
+    green = "#c3e88d";
+    magenta = "#f07178";
+    red = "#ff5370";
+    white = "#ffffff";
+    yellow = "#ffcb6b";
+  };
+  programs.alacritty.settings.colors.normal = {
+    black = "#000000";
+    blue = "#6182b8";
+    cyan = "#39adb5";
+    green = "#91b859";
+    magenta = "#ff5370";
+    red = "#e53935";
+    white = "#a0a0a0";
+    yellow = "#ffb62c";
+  };
+  programs.alacritty.settings.colors.primary = {
+    background = "#263238";
+    foreground = "#eeffff";
+  };
+  programs.alacritty.settings.colors.cursor = {
+    text = "#263238";
+    cursor = "#eeffff";
+  };
+  programs.alacritty.settings.font.size = fontSize;
+  programs.alacritty.settings.font.bold = {
+    family = fontFamily;
+    style = "Bold";
+  };
+  programs.alacritty.settings.font.bold_italic = {
+    family = fontFamily;
+    style = "Bold Italic";
+  };
+  programs.alacritty.settings.font.italic = {
+    family = fontFamily;
+    style = "Italic";
+  };
+  programs.alacritty.settings.font.normal = {
+    family = fontFamily;
+    style = "Regular";
+  };
+  programs.alacritty.settings.cursor.style = {
+    shape = "Beam";
+    blinking = "Off";
   };
 
-  programs.starship = {
-    enable = true;
-    enableZshIntegration = true;
-    settings = { };
-  };
+  programs.starship.enable = true;
+  programs.starship.enableZshIntegration = true;
+  programs.starship.settings = { };
 
-  programs.ripgrep = {
-    enable = true;
-    arguments = [ ];
-  };
+  programs.ripgrep.enable = true;
+  programs.ripgrep.arguments = [ ];
 
-  programs.zoxide = {
-    enable = true;
-    enableZshIntegration = true;
-    options = [ ];
-  };
+  programs.zoxide.enable = true;
+  programs.zoxide.enableZshIntegration = true;
+  programs.zoxide.options = [ ];
 
-  programs.eza = {
-    enable = true;
-    enableZshIntegration = true;
-    git = true;
-    colors = "auto";
-    icons = "auto";
-    extraOptions = [ ];
-    theme = { };
-  };
+  programs.eza.enable = true;
+  programs.eza.enableZshIntegration = true;
+  programs.eza.git = true;
+  programs.eza.colors = "auto";
+  programs.eza.icons = "auto";
 
-  programs.bat = {
-    enable = true;
-    config = { };
-    # syntaxes = { };
-    # themes = { };
-    # extraPackages = with pkgs.bat-extras; [
-    #   # batdiff
-    #   # batman
-    #   # batgrep
-    #   # batwatch
-    # ];
-  };
+  programs.bat.enable = true;
+  programs.bat.config = { };
 
-  programs.fd = {
-    enable = true;
-    hidden = false;
-    ignores = [ ];
-    extraOptions = [ ];
-  };
+  programs.fd.enable = true;
+  programs.fd.hidden = false;
+  programs.fd.ignores = [ ];
+  programs.fd.extraOptions = [ ];
 
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    tmux.enableShellIntegration = true;
-    # changeDirWidgetCommand = null;
-    # changeDirWidgetOptions = [ ];
-    # colors = { };
-    # defaultCommand = null;
-  };
+  programs.fzf.enable = true;
+  programs.fzf.enableZshIntegration = true;
+  programs.fzf.tmux.enableShellIntegration = true;
 
-  programs.mcfly = {
-    enable = true;
-    fuzzySearchFactor = 2;
-    fzf.enable = true;
-    interfaceView = "BOTTOM";
-    # keyScheme = "vim";
-    # settings = { };
-  };
+  programs.mcfly.enable = true;
+  programs.mcfly.fuzzySearchFactor = 2;
+  programs.mcfly.fzf.enable = true;
+  programs.mcfly.interfaceView = "BOTTOM";
 
-  programs.htop = {
-    enable = true;
-  };
+  programs.htop.enable = true;
 }

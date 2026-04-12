@@ -22,6 +22,7 @@
     ./fonts.nix
     ./terminal.nix
     ./ai.nix
+    ./aws.nix
   ];
 
   nixpkgs = {
@@ -56,9 +57,6 @@
   home.packages =
     with pkgs;
     [
-      tmux
-      python313
-      python313Packages.powerline
       ncdu
       monaspace
       nerd-fonts.monaspace
@@ -125,7 +123,8 @@
         (mkVersionedPhp "82" pkgs.php82)
         (mkVersionedPhp "83" pkgs.php83)
         # Default `php` / `php-fpm` point to 8.3 — change pkgs.php83 here to switch.
-        (lib.hiPrio pkgs.php81)
+        (lib.hiPrio pkgs.php83)
+        (lib.hiPrio pkgs.php83.packages.composer)
       ]
     );
 
