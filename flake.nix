@@ -71,6 +71,13 @@
               pkgs.php81.packages.composer
             ];
           };
+          # prbot — PHP 8.1 (EOL, via phps overlay)
+          prbot = pkgs.mkShell {
+            buildInputs = [
+              (pkgs.lib.hiPrio pkgs.php81)
+              pkgs.php81.packages.composer
+            ];
+          };
           # admin_ci3 (v3) — PHP 8.3
           v3 = pkgs.mkShell {
             buildInputs = [

@@ -20,7 +20,8 @@
       "Bash(direnv exec:*)",
       "Bash(nix search:*)",
       "Bash(nix-prefetch-url:*)",
-      "Bash(nix hash:*)"
+      "Bash(nix hash:*)",
+      "Read(//home/tung/code/prbot/**)"
     ]
   }
 }
