@@ -35,6 +35,9 @@
         if (( $+commands[op])); then
           eval "$(op completion zsh)"; compdef _op op
         fi
+        if (( $+commands[ngrok])); then
+          eval "$(ngrok completion)";
+        fi
       '';
     in
     lib.mkMerge [

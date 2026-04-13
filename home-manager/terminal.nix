@@ -12,6 +12,10 @@ let
   fontSize = 10;
 in
 {
+  home.packages = with pkgs; [
+    ngrok
+  ];
+
   programs.alacritty.enable = true;
   programs.alacritty.settings.colors.bright = {
     black = "#4e4e4e";
@@ -98,4 +102,6 @@ in
   programs.mcfly.interfaceView = "BOTTOM";
 
   programs.htop.enable = true;
+
+  programs.jq.enable = true;
 }

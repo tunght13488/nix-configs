@@ -32,11 +32,13 @@
       ...
     }@inputs:
     let
-      pkgsFor = system: import nixpkgs {
-        inherit system;
-        config.allowUnfree = true;
-        overlays = [ phps.overlays.default ];
-      };
+      pkgsFor =
+        system:
+        import nixpkgs {
+          inherit system;
+          config.allowUnfree = true;
+          overlays = [ phps.overlays.default ];
+        };
     in
     {
       # NixOS configuration entrypoint
@@ -63,7 +65,10 @@
       #        use flake /home/tung/code/nix-configs#my-project
       #   3. Run: direnv allow
       devShells.x86_64-linux =
-        let pkgs = pkgsFor "x86_64-linux"; in {
+        let
+          pkgs = pkgsFor "x86_64-linux";
+        in
+        {
           # netsuite-middleware — PHP 8.1 (EOL, via phps overlay); migrate to 8.2 when ready
           middleware = pkgs.mkShell {
             buildInputs = [
@@ -98,7 +103,12 @@
               };
             in
             pkgs.mkShell {
-              buildInputs = [ pkgs.jdk8 maven363 pkgs.nodejs ];
+              buildInputs = [
+                pkgs.jdk8
+                maven363
+                pkgs.nodejs
+                pkgs.jq
+              ];
               JAVA_HOME = "${pkgs.jdk8}";
             };
         };
