@@ -8,7 +8,8 @@
 let
   # fontFamily = "JetBrainsMono Nerd Font Mono";
   # fontFamily = "MonaspaceAr Nerd Font Mono";
-  fontFamily = "Monaspace Argon NF";
+  # fontFamily = "Monaspace Argon NF";
+  fontFamily = "Monaspace Krypton NF";
   fontSize = 10;
 in
 {
