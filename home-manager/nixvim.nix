@@ -689,6 +689,29 @@ in
     end
   '';
 
+  plugins.multicursors.enable = true;
+  plugins.multicursors.lazyLoad.enable = true;
+  plugins.multicursors.lazyLoad.settings.event = "DeferredUIEnter";
+  plugins.multicursors.lazyLoad.settings.cmd = [
+    "MCstart"
+    "MCvisual"
+    "MCclear"
+    "MCpattern"
+    "MCvisualPattern"
+    "MCunderCursor"
+  ];
+  plugins.multicursors.lazyLoad.settings.keys = [
+    {
+      mode = [
+        "v"
+        "n"
+      ];
+      __unkeyed-2 = "<Leader>m";
+      __unkeyed-3 = "<cmd>MCstart<CR>";
+      desc = "Start [M]ulticursor";
+    }
+  ];
+
   colorschemes.tokyonight.enable = true;
   colorschemes.tokyonight.lazyLoad.enable = true;
   colorschemes.tokyonight.lazyLoad.settings.priority = 1000;
