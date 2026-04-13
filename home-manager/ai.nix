@@ -38,6 +38,10 @@ let
 in
 
 {
+  home.packages = with pkgs; [
+    copilot-cli
+  ];
+
   programs.claude-code.enable = true;
   programs.claude-code.context = global_instructions;
 

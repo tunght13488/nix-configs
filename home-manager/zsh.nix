@@ -38,6 +38,9 @@
         if (( $+commands[ngrok])); then
           eval "$(ngrok completion)";
         fi
+        if (( $+commands[gh])); then
+          eval "$(gh completion -s zsh)";
+        fi
       '';
     in
     lib.mkMerge [
