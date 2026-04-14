@@ -20,6 +20,8 @@
     phps.inputs.nixpkgs.follows = "nixpkgs";
 
     nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
+
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs =
@@ -28,6 +30,7 @@
       nixpkgs,
       home-manager,
       nix-jetbrains-plugins,
+      agenix,
       phps,
       ...
     }@inputs:
@@ -175,7 +178,10 @@
               ;
           };
           # > Our main home-manager configuration file <
-          modules = [ ./home-manager/home.nix ];
+          modules = [
+            ./home-manager/home.nix
+            agenix.homeManagerModules.default
+          ];
         };
       };
     };

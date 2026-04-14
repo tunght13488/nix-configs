@@ -76,6 +76,7 @@ in
     ./terminal.nix
     ./ai.nix
     ./aws.nix
+    ./ngrok.nix
   ];
 
   nixpkgs = {
@@ -178,6 +179,25 @@ in
     enable = true;
     enableZshIntegration = true;
     nix-direnv.enable = true;
+  };
+
+  # agenix secret — decrypted at activation to $XDG_RUNTIME_DIR/agenix/
+  age.identityPaths = [
+    "/home/tung/.ssh/ssh_agenix"
+  ];
+  age.secrets.ngrok-authtoken.file = ../secrets/ngrok-authtoken.age;
+
+  # ngrok — managed tunnel config; authtoken injected from agenix secret
+  programs.ngrok = {
+    enable = true;
+    authtokenFile = config.age.secrets.ngrok-authtoken.path;
+    endpoints = {
+      middleware = {
+        name = "middleware";
+        url = "https://inherently-good-tarpon.ngrok-free.app";
+        upstream.url = "middleware.vm.local:443";
+      };
+    };
   };
 
   # PHP test sites — served by system nginx (nixos/nginx.nix).
