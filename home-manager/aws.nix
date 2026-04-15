@@ -1,9 +1,5 @@
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
+{ pkgs
+, ...
 }:
 {
   programs.awscli.enable = true;

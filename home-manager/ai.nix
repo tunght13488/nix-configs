@@ -1,8 +1,5 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ pkgs
+, ...
 }:
 
 let
@@ -39,14 +36,14 @@ in
 
 {
   home.packages = with pkgs; [
-    copilot-cli
+    github-copilot-cli
   ];
 
   programs.claude-code.enable = true;
-  programs.claude-code.context = global_instructions;
+  programs.claude-code.memory.text = global_instructions;
 
   programs.opencode.enable = true;
-  programs.opencode.package = pkgs.opencode-desktop;
-  programs.opencode.context = global_instructions;
+  programs.opencode.package = pkgs.unstable.opencode-desktop;
+  programs.opencode.rules = global_instructions;
   programs.opencode.settings.share = "disabled";
 }

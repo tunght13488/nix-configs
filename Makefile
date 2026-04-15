@@ -1,5 +1,5 @@
 format:
-	find . -name '*.nix' -not -path './.git/*' | xargs nixfmt
+	find . -name '*.nix' -not -path './.git/*' | xargs nixpkgs-fmt
 home:
 	home-manager switch --flake ".#tung@nixos-vmware"
 system:

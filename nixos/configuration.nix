@@ -1,21 +1,16 @@
 # This is your system's configuration file.
 # Use this to configure your system environment (it replaces /etc/nixos/configuration.nix)
-{
-  inputs,
-  lib,
-  config,
-  pkgs,
-  ...
+{ inputs
+, lib
+, config
+, pkgs
+, ...
 }:
 {
   # You can import other NixOS modules here
   imports = [
-    # If you want to use modules from other flakes (such as nixos-hardware):
-    # inputs.hardware.nixosModules.common-cpu-amd
-    # inputs.hardware.nixosModules.common-ssd
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./users.nix
+    # If you want to use modules your own flake exports (from modules/nixos):
+    inputs.self.nixosModules.php-config
 
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
@@ -30,9 +25,21 @@
   nixpkgs = {
     # You can add overlays here
     overlays = [
-      # PHP versions from https://github.com/fossar/nix-phps
-      # Provides pkgs.php81, pkgs.php82, pkgs.php83, etc.
-      inputs.phps.overlays.default
+      # Add overlays your own flake exports (from overlays and pkgs dir):
+      inputs.self.overlays.additions
+      inputs.self.overlays.modifications
+      inputs.self.overlays.unstable-packages
+      inputs.self.overlays.phps
+
+      # You can also add overlays exported from other flakes:
+      # neovim-nightly-overlay.overlays.default
+
+      # Or define it inline, for example:
+      # (final: prev: {
+      #   hi = final.hello.overrideAttrs (oldAttrs: {
+      #     patches = [ ./change-hello-to-hi.patch ];
+      #   });
+      # })
     ];
     # Configure your nixpkgs instance
     config = {
@@ -53,14 +60,9 @@
         flake-registry = "";
         # Workaround for https://github.com/NixOS/nix/issues/9574
         nix-path = config.nix.nixPath;
-        # Cache configuration - optimized for Asia
+        # Cache configuration
         substituters = [
-          # "https://mirror.sjtu.edu.cn/nix-channels/store" # Shanghai Jiao Tong University - best for Asia
-          # "https://mirrors.ustc.edu.cn/nix-channels/store" # USTC backup mirror
-          # "https://cache.nixos.org" # Official global cache
           "https://nix-community.cachix.org" # Community packages
-          # "https://hyprland.cachix.org"
-          # "https://aseipp-nix-cache.global.ssl.fastly.net"
         ];
         trusted-public-keys = [
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
@@ -70,7 +72,7 @@
         max-jobs = "auto";
       };
       # Opinionated: disable channels
-      # channel.enable = false;
+      channel.enable = false;
 
       # Opinionated: make flake registry and nix path match flake inputs
       registry = lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs;
@@ -143,15 +145,6 @@
     gnome-user-docs
   ];
 
-  # programs.firefox.enable = true;
-  # programs.firefox = {
-  #   enable = true;
-
-  #   policies = {
-  #     DisableTelemetry = true;
-  #   };
-  # };
-
   programs.vim.enable = true;
   programs.zsh.enable = true;
   programs.git.enable = true;
@@ -164,30 +157,18 @@
     polkitPolicyOwners = [ "tung" ];
   };
 
-  # nixpkgs.config.allowUnfreePredicate =
-  #   pkg:
-  #   builtins.elem (lib.getName pkg) [
-  #     "vscode"
-  #     "1password-gui"
-  #     "1password-cli"
-  #     "1password"
-  #     "google-chrome"
-  #   ];
-
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
     vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     # wget
     git
-    vscode
+    vscode.fhs
     # firefox
     google-chrome
     nixfmt
+    nixpkgs-fmt
     stow
     home-manager
-    php81.packages.composer
-    php82.packages.composer
-    php83.packages.composer
   ];
 }

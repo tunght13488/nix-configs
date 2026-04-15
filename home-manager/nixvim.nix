@@ -192,16 +192,11 @@ in
     }
   ];
 
-  dependencies.lazygit.enable = true;
   # dependencies.copilot.enable = true;
-
-  plugins.lz-n.enable = true;
 
   plugins.guess-indent.enable = true;
 
   plugins.which-key.enable = true;
-  plugins.which-key.lazyLoad.enable = true;
-  plugins.which-key.lazyLoad.settings.event = "VimEnter";
   plugins.which-key.settings.delay = 0;
   plugins.which-key.settings.icons.mappings = lib.nixvim.mkRaw "vim.g.have_nerd_font";
   plugins.which-key.settings.spec = [
@@ -233,8 +228,6 @@ in
   ];
 
   plugins.telescope.enable = true;
-  plugins.telescope.lazyLoad.enable = true;
-  plugins.telescope.lazyLoad.settings.event = "VimEnter";
   plugins.telescope.settings = { };
   plugins.telescope.luaConfig.content = ''
     -- plugins.telescope.luaConfig.content
@@ -326,8 +319,6 @@ in
   plugins.luasnip.enable = true;
 
   plugins.blink-cmp.enable = true;
-  plugins.blink-cmp.lazyLoad.enable = true;
-  plugins.blink-cmp.lazyLoad.settings.event = "VimEnter";
   # plugins.blink-cmp.lazyLoad.settings.version = "1.*";
   plugins.blink-cmp.settings.keymap.preset = "default";
   plugins.blink-cmp.settings.appearance.nerd_font_variant = "mono";
@@ -343,8 +334,6 @@ in
   plugins.blink-cmp.settings.signature.enabled = true;
 
   plugins.copilot-vim.enable = true;
-  plugins.copilot-vim.lazyLoad.enable = true;
-  plugins.copilot-vim.lazyLoad.settings.event = "VimEnter";
 
   # lsp.servers.copilot.enable = true;
   lsp.luaConfig.pre = ''
@@ -493,19 +482,6 @@ in
   '';
 
   plugins.conform-nvim.enable = true;
-  plugins.conform-nvim.lazyLoad.enable = true;
-  plugins.conform-nvim.lazyLoad.settings.event = "BufWritePre";
-  plugins.conform-nvim.lazyLoad.settings.cmd = "ConformInfo";
-  plugins.conform-nvim.lazyLoad.settings.keys = [
-    {
-      __unkeyed-1 = "<leader>f";
-      __unkeyed-3 = lib.nixvim.mkRaw ''
-        function() require('conform').format { async = true, lsp_format = 'fallback' } end
-      '';
-      mode = "";
-      desc = "[F]ormat buffer";
-    }
-  ];
   plugins.conform-nvim.settings.notify_on_error = false;
   plugins.conform-nvim.settings.format_on_save = lib.nixvim.mkRaw ''
     function(bufnr)
@@ -528,8 +504,6 @@ in
   plugins.conform-nvim.settings.formatters_by_ft.nix = [ "nixfmt" ];
 
   plugins.todo-comments.enable = true;
-  plugins.todo-comments.lazyLoad.enable = true;
-  plugins.todo-comments.lazyLoad.settings.event = "VimEnter";
   plugins.todo-comments.settings.signs = false;
 
   plugins.mini.enable = true;
@@ -549,7 +523,6 @@ in
   '';
 
   plugins.treesitter.enable = true;
-  plugins.treesitter.lazyLoad.enable = false;
   plugins.treesitter.luaConfig.pre = ''
     -- plugins.treesitter.luaConfig.pre
   '';
@@ -559,9 +532,8 @@ in
   plugins.treesitter.luaConfig.post = ''
     -- plugins.treesitter.luaConfig.post
   '';
-  plugins.treesitter.folding.enable = true;
-  plugins.treesitter.highlight.enable = true;
-  plugins.treesitter.indent.enable = true;
+  plugins.treesitter.settings.highlight.enable = true;
+  plugins.treesitter.settings.indent.enable = true;
   plugins.treesitter.grammarPackages = with config.plugins.treesitter.package.builtGrammars; [
     bash
     c
@@ -587,31 +559,18 @@ in
   plugins.indent-blankline.enable = true;
 
   plugins.nvim-autopairs.enable = true;
-  plugins.nvim-autopairs.lazyLoad.enable = true;
-  plugins.nvim-autopairs.lazyLoad.settings.event = "InsertEnter";
 
   plugins.nui.enable = true;
 
   plugins.neo-tree.enable = true;
   plugins.neo-tree.settings.filesystem.window.mappings."\\" = "close_window";
-  plugins.neo-tree.lazyLoad.enable = true;
-  # plugins.neo-tree.lazyLoad.settings.version = "*";
-  plugins.neo-tree.lazyLoad.settings.lazy = false;
-  plugins.neo-tree.lazyLoad.settings.keys = [
-    {
-      __unkeyed-1 = "\\";
-      __unkeyed-2 = ":Neotree reveal<CR>";
-      desc = "NeoTree reveal";
-      silent = true;
-    }
-  ];
 
   plugins.gitsigns.enable = true;
   plugins.gitsigns.settings.signs.add.text = "+";
   plugins.gitsigns.settings.signs.change.text = "~";
   plugins.gitsigns.settings.signs.changedelete.text = "~";
   plugins.gitsigns.settings.signs.delete.text = "_";
-  pVlugins.gitsigns.settings.signs.topdelete.text = "‾";
+  plugins.gitsigns.settings.signs.topdelete.text = "‾";
   plugins.gitsigns.settings.on_attach = lib.nixvim.mkRaw ''
     function(bufnr)
       local gitsigns = require 'gitsigns'
@@ -663,58 +622,31 @@ in
   plugins.lazygit.settings.floating_window_use_plenary = 1;
 
   plugins.smart-splits.enable = true;
-  plugins.smart-splits.lazyLoad.enable = true;
-  plugins.smart-splits.lazyLoad.settings.event = "VimEnter";
-  plugins.smart-splits.lazyLoad.settings.after = lib.nixvim.mkRaw ''
-    function()
-      -- recommended mappings
-      -- resizing splits
-      -- these keymaps will also accept a range,
-      -- for example `10<A-h>` will `resize_left` by `(10 * config.default_amount)`
-      vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
-      vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
-      vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
-      vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
-      -- moving between splits
-      vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
-      vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
-      vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
-      vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
-      vim.keymap.set('n', '<C-\\>', require('smart-splits').move_cursor_previous)
-      -- swapping buffers between windows
-      vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
-      vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
-      vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
-      vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
-    end
+  plugins.smart-splits.luaConfig.post = ''
+    -- recommended mappings
+    -- resizing splits
+    -- these keymaps will also accept a range,
+    -- for example `10<A-h>` will `resize_left` by `(10 * config.default_amount)`
+    vim.keymap.set('n', '<A-h>', require('smart-splits').resize_left)
+    vim.keymap.set('n', '<A-j>', require('smart-splits').resize_down)
+    vim.keymap.set('n', '<A-k>', require('smart-splits').resize_up)
+    vim.keymap.set('n', '<A-l>', require('smart-splits').resize_right)
+    -- moving between splits
+    vim.keymap.set('n', '<C-h>', require('smart-splits').move_cursor_left)
+    vim.keymap.set('n', '<C-j>', require('smart-splits').move_cursor_down)
+    vim.keymap.set('n', '<C-k>', require('smart-splits').move_cursor_up)
+    vim.keymap.set('n', '<C-l>', require('smart-splits').move_cursor_right)
+    vim.keymap.set('n', '<C-\\>', require('smart-splits').move_cursor_previous)
+    -- swapping buffers between windows
+    vim.keymap.set('n', '<leader><leader>h', require('smart-splits').swap_buf_left)
+    vim.keymap.set('n', '<leader><leader>j', require('smart-splits').swap_buf_down)
+    vim.keymap.set('n', '<leader><leader>k', require('smart-splits').swap_buf_up)
+    vim.keymap.set('n', '<leader><leader>l', require('smart-splits').swap_buf_right)
   '';
 
   plugins.multicursors.enable = true;
-  plugins.multicursors.lazyLoad.enable = true;
-  plugins.multicursors.lazyLoad.settings.event = "DeferredUIEnter";
-  plugins.multicursors.lazyLoad.settings.cmd = [
-    "MCstart"
-    "MCvisual"
-    "MCclear"
-    "MCpattern"
-    "MCvisualPattern"
-    "MCunderCursor"
-  ];
-  plugins.multicursors.lazyLoad.settings.keys = [
-    {
-      mode = [
-        "v"
-        "n"
-      ];
-      __unkeyed-2 = "<Leader>m";
-      __unkeyed-3 = "<cmd>MCstart<CR>";
-      desc = "Start [M]ulticursor";
-    }
-  ];
 
   colorschemes.tokyonight.enable = true;
-  colorschemes.tokyonight.lazyLoad.enable = true;
-  colorschemes.tokyonight.lazyLoad.settings.priority = 1000;
   colorschemes.tokyonight.settings.styles.comments.italic = false;
   colorschemes.tokyonight.settings.style = "night";
 }

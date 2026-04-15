@@ -84,7 +84,7 @@ nix flake update
 Format a Nix file after editing it:
 
 ```zsh
-nixfmt nixos/configuration.nix
+nixpkgs-fmt nixos/configuration.nix
 ```
 
 Replace the path with the file you changed.
