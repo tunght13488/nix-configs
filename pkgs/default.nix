@@ -7,6 +7,8 @@
 pkgs: {
   # example = pkgs.callPackage ./example { };
 
+  maven363 = pkgs.callPackage ./maven363.nix { };
+
   # PHP INI derivation builders.  Takes a config attrset matching the shape
   # of the phpConfig module options and returns per-version helpers.
   # Used directly by devShells (outside the module system).

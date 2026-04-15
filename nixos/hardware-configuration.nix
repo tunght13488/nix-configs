@@ -25,6 +25,13 @@
     fsType = "ext4";
   };
 
+  swapDevices = [
+    {
+      device = "/var/lib/swapfile";
+      size = 4 * 1024;
+    }
+  ];
+
   # Set your system kind (needed for flakes)
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

@@ -67,12 +67,19 @@
     monaspace
     nerd-fonts.monaspace
     httpie
-    colormake
     gnumake
     jetbrains-toolbox
     mycli
     postman
+    nodejs
+    unstable.openspec
+    (pkgs.lib.hiPrio jdk8)
+    maven363
   ];
+
+  home.sessionVariables = {
+    JAVA_HOME = "${pkgs.jdk8}";
+  };
 
   programs.nixvim.imports = [ ./nixvim.nix ];
 

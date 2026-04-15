@@ -136,25 +136,15 @@
           };
           # fc-es-starter-pack — Java 8, Maven 3.6.3 (nixpkgs only ships latest Maven;
           # override version/hash to pin 3.6.3)
-          fc-es-starter-pack =
-            let
-              maven363 = pkgs.maven.overrideAttrs {
-                version = "3.6.3";
-                src = pkgs.fetchurl {
-                  url = "https://repo1.maven.org/maven2/org/apache/maven/apache-maven/3.6.3/apache-maven-3.6.3-bin.tar.gz";
-                  hash = "sha256-Jq2R11GzqaUwh676dD9OFqF3QdORWyGc90ESv4ekOMU=";
-                };
-              };
-            in
-            pkgs.mkShell {
-              buildInputs = [
-                pkgs.jdk8
-                maven363
-                pkgs.nodejs
-                pkgs.jq
-              ];
-              JAVA_HOME = "${pkgs.jdk8}";
-            };
+          fc-es-starter-pack = pkgs.mkShell {
+            buildInputs = [
+              pkgs.jdk8
+              pkgs.maven363
+              pkgs.nodejs
+              pkgs.jq
+            ];
+            JAVA_HOME = "${pkgs.jdk8}";
+          };
         }
       );
 

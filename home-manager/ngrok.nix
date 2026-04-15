@@ -8,7 +8,7 @@
       middleware = {
         name = "middleware";
         url = "https://inherently-good-tarpon.ngrok-free.app";
-        upstream.url = "middleware.vm.local:443";
+        upstream.url = "middleware.vm.local:80";
       };
     };
   };
