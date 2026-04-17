@@ -8,4 +8,5 @@ let
 in
 {
   "ngrok-authtoken.age".publicKeys = allKeys;
+  "github-token.age".publicKeys = allKeys;
 }

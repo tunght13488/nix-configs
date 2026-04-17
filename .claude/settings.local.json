@@ -21,7 +21,13 @@
       "Bash(nix search:*)",
       "Bash(nix-prefetch-url:*)",
       "Bash(nix hash:*)",
-      "Read(//home/tung/code/prbot/**)"
+      "Read(//home/tung/code/prbot/**)",
+      "Bash(nix run:*)",
+      "WebFetch(domain:nixos.org)",
+      "WebFetch(domain:nix.dev)",
+      "WebSearch",
+      "Bash(gh api:*)",
+      "Bash(home-manager build:*)"
     ]
   }
 }

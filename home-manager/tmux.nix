@@ -1,8 +1,4 @@
-{ pkgs
-, ...
-}:
-
-{
+{ pkgs, ... }: {
   programs.tmux = {
     enable = true;
     prefix = "`";
@@ -43,6 +39,7 @@
         extraConfig = "set -g @yank_selection 'clipboard'";
       }
       tmuxPlugins.cpu
+      tmuxPlugins.resurrect
       {
         plugin = tmuxPlugins.continuum;
         extraConfig = "set -g @continuum-restore 'on'";
