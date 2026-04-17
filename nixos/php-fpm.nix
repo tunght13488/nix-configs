@@ -6,7 +6,7 @@
 #
 # To add a new pool:
 #   1. Add a new attribute under services.phpfpm.pools below.
-#   2. Create the matching virtual host in nixos/vhosts/<yoursite>.local.nix.
+#   2. Create the matching virtual host in nixos/vhosts/<yoursite>.vm.local.nix.
 { config
 , lib
 , pkgs

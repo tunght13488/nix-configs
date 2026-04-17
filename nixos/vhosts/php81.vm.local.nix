@@ -1,14 +1,13 @@
-# Virtual host for php81.local
+# Virtual host for php81.vm.local
 # PHP-FPM pool: phpfpm-php81  (defined in ../php-fpm.nix)
 #
 # To add a new virtual host, copy this file, rename it, and:
 #   1. Update serverName, root, and the phpfpm socket path.
 #   2. Add the pool to ../php-fpm.nix.
 #   3. Add the file to the vhosts list in ../nginx.nix.
-#   4. Add a /etc/hosts entry in ../configuration.nix.
 { config, ... }:
 {
-  serverName = "php81.local";
+  serverName = "php81.vm.local";
   root = "/home/tung/php-sites/php81";
   extraConfig = "index index.php;";
 

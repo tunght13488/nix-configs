@@ -18,6 +18,7 @@
     # PHP-FPM pools and nginx virtual hosts
     ./php-fpm.nix
     ./nginx.nix
+    ./local-dev.nix
     ./mysql.nix
     ./nix-ld.nix
   ];
@@ -82,14 +83,6 @@
   networking = {
     hostName = "nixos-vmware";
     networkmanager.enable = true;
-    # Local development: PHP version test sites
-    extraHosts = ''
-      127.0.0.1 php81.local
-      127.0.0.1 php82.local
-      127.0.0.1 php83.local
-      127.0.0.1 middleware.vm.local
-      127.0.0.1 v3.vm.local
-    '';
   };
 
   time.timeZone = "Asia/Singapore";

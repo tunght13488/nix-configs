@@ -1,8 +1,8 @@
-# Virtual host for php83.local
+# Virtual host for php83.vm.local
 # PHP-FPM pool: phpfpm-php83  (defined in ../php-fpm.nix)
 { config, ... }:
 {
-  serverName = "php83.local";
+  serverName = "php83.vm.local";
   root = "/home/tung/php-sites/php83";
   extraConfig = "index index.php;";
 

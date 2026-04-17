@@ -1,8 +1,8 @@
-# Virtual host for php82.local
+# Virtual host for php82.vm.local
 # PHP-FPM pool: phpfpm-php82  (defined in ../php-fpm.nix)
 { config, ... }:
 {
-  serverName = "php82.local";
+  serverName = "php82.vm.local";
   root = "/home/tung/php-sites/php82";
   extraConfig = "index index.php;";
 
