@@ -8,4 +8,5 @@ system:
 update:
 	nix flake update
 clean:
-	nix-collect-garbage
+	sudo nix-collect-garbage -d
+	nix-collect-garbage -d
