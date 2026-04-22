@@ -145,6 +145,13 @@
             ];
             JAVA_HOME = "${pkgs.jdk8}";
           };
+          # fc-omx — Node 22 and Yarn, matching package.json engines.node = 22.*
+          fc-omx = pkgs.mkShell {
+            buildInputs = [
+              pkgs.nodejs_22
+              pkgs.yarn
+            ];
+          };
         }
       );
 
