@@ -73,6 +73,10 @@
     "sl.v3.stg" = lib.hm.dag.entryBefore [ "sl.*" ] {
       hostname = "i-0e71c4191b4d7bf8c";
     };
+
+    "sl.pimcore.dev-2026" = lib.hm.dag.entryBefore [ "sl.*" ] {
+      hostname = "i-0751b7f169cd79023";
+    };
   }
   // {
     # SL SSH over public IP

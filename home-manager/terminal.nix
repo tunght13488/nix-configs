@@ -1,4 +1,5 @@
-{ ...
+{ pkgs
+, ...
 }:
 
 let
@@ -9,6 +10,10 @@ let
   fontSize = 10;
 in
 {
+
+  home.packages = with pkgs; [
+    unzip
+  ];
   programs.alacritty.enable = true;
   programs.alacritty.settings.colors.bright = {
     black = "#4e4e4e";
