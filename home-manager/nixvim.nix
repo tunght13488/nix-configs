@@ -501,7 +501,7 @@ in
   '';
 
   plugins.conform-nvim.settings.formatters_by_ft.lua = [ "stylua" ];
-  plugins.conform-nvim.settings.formatters_by_ft.nix = [ "nixfmt" ];
+  plugins.conform-nvim.settings.formatters_by_ft.nix = [ "nixpkgs-fmt" ];
 
   plugins.todo-comments.enable = true;
   plugins.todo-comments.settings.signs = false;

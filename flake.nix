@@ -20,9 +20,12 @@
     phps.url = "github:fossar/nix-phps";
     phps.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
+    # nix-jetbrains-plugins.url = "github:nix-community/nix-jetbrains-plugins";
 
     agenix.url = "github:ryantm/agenix";
+
+    nix-index-database.url = "github:nix-community/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -30,6 +33,7 @@
     , nixpkgs
     , home-manager
     , agenix
+    , nix-index-database
     , ...
     }@inputs:
     let
@@ -75,6 +79,7 @@
           };
           modules = [
             ./nixos/configuration.nix
+            nix-index-database.nixosModules.default
           ];
         };
       };
@@ -173,6 +178,7 @@
             inherit inputs;
           };
           modules = [
+            nix-index-database.homeModules.default
             ./home-manager/home.nix
             agenix.homeManagerModules.default
           ];
