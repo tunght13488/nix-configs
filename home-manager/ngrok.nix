@@ -10,6 +10,11 @@
         url = "https://inherently-good-tarpon.ngrok-free.app";
         upstream.url = "middleware.vm.local:443";
       };
+      prbot = {
+        name = "prbot";
+        url = "https://inherently-good-tarpon.ngrok-free.app";
+        upstream.url = "prbot.vm.local:443";
+      };
     };
   };
 }

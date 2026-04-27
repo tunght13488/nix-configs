@@ -33,6 +33,7 @@ let
     ./vhosts/php83.vm.local.nix
     ./vhosts/middleware.vm.local.nix
     ./vhosts/v3.vm.local.nix
+    ./vhosts/prbot.vm.local.nix
   ];
 
   # Turn a file path into { name = serverName; value = <vhost attrset>; }.
