@@ -1,12 +1,13 @@
+NPROCS = $(shell nproc)
+
 format:
 	find . -name '*.nix' -not -path './.git/*' | xargs nixpkgs-fmt
-home:
-	home-manager switch --flake ".#tung@nixos-vmware"
 system:
-	sudo nixos-rebuild switch --flake ".#nixos-vmware"
+	nh os switch . --hostname nixos-vmware --ask --max-jobs $(NPROCS) --no-update-lock-file
 	sudo -u tung env TRUST_STORES=nss CAROOT=/var/lib/mkcert mkcert -install
+home:
+	nh home switch . --configuration tung@nixos-vmware --ask --max-jobs $(NPROCS) --no-update-lock-file
 update:
 	nix flake update
 clean:
-	sudo nix-collect-garbage -d
-	nix-collect-garbage -d
+	nh clean all --ask
