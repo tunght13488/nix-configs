@@ -13,6 +13,7 @@ in
 
   home.packages = with pkgs; [
     unzip
+    pv
   ];
   programs.alacritty.enable = true;
   programs.alacritty.settings.colors.bright = {
