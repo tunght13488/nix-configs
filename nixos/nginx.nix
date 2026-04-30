@@ -20,7 +20,8 @@ let
   localDevKey = "/var/lib/local-certs/vm.local-key.pem";
 
   localDevTls = {
-    forceSSL = true;
+    addSSL = true;
+    #    forceSSL = true;
     sslCertificate = localDevCert;
     sslCertificateKey = localDevKey;
   };
@@ -49,8 +50,10 @@ in
 {
   services.nginx = {
     enable = true;
+    #    recommendedTlsSettings = true;
     recommendedGzipSettings = true;
     recommendedOptimisation = true;
+    #    recommendedProxySettings = true;
     virtualHosts = builtins.listToAttrs (map loadVhost vhostFiles);
   };
 
