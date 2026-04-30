@@ -5,35 +5,28 @@
 }:
 let
   cfg = config.programs.ngrok;
-
-  # Render a single endpoint attrset to YAML list item lines
-  endpointToYaml =
-    ep:
-    lib.concatStringsSep "\n" (
-      [
-        "  - name: ${ep.name}"
-        "    url: ${ep.url}"
-        "    upstream:"
-        "      url: ${ep.upstream.url}"
-      ]
-      ++ lib.optional (ep.upstream.protocol != null) "      protocol: ${ep.upstream.protocol}"
-    );
+  yaml = pkgs.formats.yaml { };
 
   # Static config (no secrets) — goes into the Nix store and is symlinked.
   staticConfig =
     let
-      endpointLines = lib.concatStringsSep "\n" (map endpointToYaml (lib.attrValues cfg.endpoints));
-      hasEndpoints = cfg.endpoints != { };
+      renderedConfig = yaml.generate "ngrok-rendered.yml" (
+        {
+          version = "3";
+        }
+        // lib.optionalAttrs (cfg.endpoints != { }) {
+          endpoints = lib.attrValues cfg.endpoints;
+        }
+      );
     in
-    pkgs.writeText "ngrok.yml" (
+    pkgs.runCommand "ngrok.yml"
+      {
+        nativeBuildInputs = [ cfg.package ];
+      }
       ''
-        version: "3"
-      ''
-      + lib.optionalString hasEndpoints ''
-        endpoints:
-        ${endpointLines}
-      ''
-    );
+        install -Dm444 ${renderedConfig} "$out"
+        ${lib.getExe cfg.package} config check --config "$out"
+      '';
 
   # Path where the activation script writes the authtoken-only fragment.
   authtokenConfig = "${config.xdg.configHome}/ngrok/ngrok-authtoken.yml";
@@ -56,6 +49,8 @@ in
     endpoints = lib.mkOption {
       type = lib.types.attrsOf (
         lib.types.submodule {
+          freeformType = yaml.type;
+
           options = {
             name = lib.mkOption {
               type = lib.types.str;
@@ -70,6 +65,8 @@ in
 
             upstream = lib.mkOption {
               type = lib.types.submodule {
+                freeformType = yaml.type;
+
                 options = {
                   url = lib.mkOption {
                     type = lib.types.str;
