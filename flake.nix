@@ -111,34 +111,26 @@
             ];
           };
 
-          phpDefaults = import ./pkgs/php-config.nix;
-          php = pkgs.phpLib phpDefaults;
+          mkSystemPhpShell = version: pkgs.mkShell {
+            shellHook = ''
+              php_bin_dir="$PWD/.direnv/php-bin"
+              mkdir -p "$php_bin_dir"
+
+              printf '%s\n' '#!/bin/sh' 'exec /run/current-system/sw/bin/php${version} "$@"' > "$php_bin_dir/php"
+              printf '%s\n' '#!/bin/sh' 'exec /run/current-system/sw/bin/composer${version} "$@"' > "$php_bin_dir/composer"
+
+              chmod +x "$php_bin_dir/php" "$php_bin_dir/composer"
+              export PATH="$php_bin_dir:$PATH"
+            '';
+          };
         in
         {
           # netsuite-middleware — PHP 8.1 (EOL, via phps overlay); migrate to 8.2 when ready
-          middleware = pkgs.mkShell {
-            buildInputs = [
-              (pkgs.lib.hiPrio pkgs.php81)
-              pkgs.php81.packages.composer
-            ];
-            PHP_INI_SCAN_DIR = php.versions.php81.cliIniScanDir;
-          };
+          middleware = mkSystemPhpShell "81";
           # prbot — PHP 8.1 (EOL, via phps overlay)
-          prbot = pkgs.mkShell {
-            buildInputs = [
-              (pkgs.lib.hiPrio pkgs.php81)
-              pkgs.php81.packages.composer
-            ];
-            PHP_INI_SCAN_DIR = php.versions.php81.cliIniScanDir;
-          };
+          prbot = mkSystemPhpShell "81";
           # admin_ci3 (v3) — PHP 8.3
-          v3 = pkgs.mkShell {
-            buildInputs = [
-              (pkgs.lib.hiPrio pkgs.php83)
-              pkgs.php83.packages.composer
-            ];
-            PHP_INI_SCAN_DIR = php.versions.php83.cliIniScanDir;
-          };
+          v3 = mkSystemPhpShell "83";
           # fc-es-starter-pack — Java 8, Maven 3.6.3 (nixpkgs only ships latest Maven;
           # override version/hash to pin 3.6.3)
           fc-es-starter-pack = pkgs.mkShell {

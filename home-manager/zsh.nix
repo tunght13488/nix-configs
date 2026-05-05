@@ -27,7 +27,9 @@
     let
       zshConfigEarlyInit = lib.mkOrder 500 "# order 500";
       zshConfigBeforeCompInit = lib.mkOrder 550 "# order 550";
-      zshConfig = lib.mkOrder 1000 "# order 1000";
+      zshConfig = lib.mkOrder 1000 ''
+        path=("$HOME/.local/bin" $path)
+      '';
       zshConfigAfter = lib.mkOrder 1500 ''
         if (( $+commands[op])); then
           eval "$(op completion zsh)"; compdef _op op

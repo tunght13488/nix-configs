@@ -67,6 +67,7 @@ let
       cliIni = mergeCliIni versionCfg;
       fpmIniScanDir = mkIniScanDir phpPkg fpmIni;
       cliIniScanDir = mkIniScanDir phpPkg cliIni;
+      composerDrv = phpPkg.packages.composer;
     in
     {
       inherit
@@ -77,35 +78,55 @@ let
         cliIniScanDir
         ;
 
-      # Versioned wrapper scripts (php81, php81-fpm, php81ize, …) using CLI INI.
+      # Versioned wrapper scripts (php81, php81-fpm, php81ize, …).
       versionedPkg = pkgs.runCommand "php${ver}-versioned" { } ''
         mkdir -p $out/bin
         for src in ${phpPkg}/bin/php ${phpPkg}/bin/php-fpm ${phpPkg}/bin/php-cgi ${phpPkg}/bin/phpdbg ${phpPkg}/bin/phpize ${phpPkg}/bin/php-config; do
           [ -e "$src" ] || continue
           base=$(basename "$src")
           versioned=$(echo "$base" | sed "s/^php/php${ver}/")
+          scan_dir="$(
+            if [ "$base" = php-fpm ]; then
+              printf '%s' "${fpmIniScanDir}"
+            else
+              printf '%s' "${cliIniScanDir}"
+            fi
+          )"
           printf '#!/bin/sh\nexport PHP_INI_SCAN_DIR="%s"\nexec "%s" "$@"\n' \
-            "${cliIniScanDir}" "$src" > "$out/bin/$versioned"
+            "$scan_dir" "$src" > "$out/bin/$versioned"
           chmod +x "$out/bin/$versioned"
         done
       '';
 
-      # Default (non-versioned) wrappers using CLI INI.
+      # Default (non-versioned) wrappers.
       defaultPkg = pkgs.runCommand "php-default-with-ini" { } ''
         mkdir -p $out/bin
         for src in ${phpPkg}/bin/php ${phpPkg}/bin/php-fpm ${phpPkg}/bin/php-cgi ${phpPkg}/bin/phpdbg ${phpPkg}/bin/phpize ${phpPkg}/bin/php-config; do
           [ -e "$src" ] || continue
           name=$(basename "$src")
+          scan_dir="$(
+            if [ "$name" = php-fpm ]; then
+              printf '%s' "${fpmIniScanDir}"
+            else
+              printf '%s' "${cliIniScanDir}"
+            fi
+          )"
           printf '#!/bin/sh\nexport PHP_INI_SCAN_DIR="%s"\nexec "%s" "$@"\n' \
-            "${cliIniScanDir}" "$src" > "$out/bin/$name"
+            "$scan_dir" "$src" > "$out/bin/$name"
           chmod +x "$out/bin/$name"
         done
       '';
 
-      # Composer wrapper using CLI INI.
+      # Versioned composer wrapper using CLI INI.
+      composerVersionedPkg = pkgs.writeShellScriptBin "composer${ver}" ''
+        export PHP_INI_SCAN_DIR="${cliIniScanDir}"
+        exec ${composerDrv}/bin/composer "$@"
+      '';
+
+      # Default composer wrapper using CLI INI.
       composerPkg = pkgs.writeShellScriptBin "composer" ''
         export PHP_INI_SCAN_DIR="${cliIniScanDir}"
-        exec ${phpPkg.packages.composer}/bin/composer "$@"
+        exec ${composerDrv}/bin/composer "$@"
       '';
     };
 
