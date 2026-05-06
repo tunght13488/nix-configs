@@ -132,6 +132,13 @@ in
     videoDrivers = [ "vmware" ];
   };
   virtualisation.vmware.guest.enable = true;
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;
+    };
+  };
 
   # GNOME
   services.displayManager.gdm.enable = true;
