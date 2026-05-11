@@ -14,8 +14,11 @@
 ## Commands
 
 ```bash
-make home      # home-manager switch --flake ".#tung@nixos-vmware"
-make system    # sudo nixos-rebuild switch --flake ".#nixos-vmware"
+make home-build # build home-manager config only
+make os-build   # build NixOS config only
+make os-test    # test NixOS config only
+make home       # home-manager switch --flake ".#tung@nixos-vmware"
+make os         # switch NixOS config on the host
 make update    # nix flake update
 make clean     # nix-collect-garbage
 
@@ -23,9 +26,11 @@ nix flake show --no-write-lock-file   # validate without touching flake.lock
 nixpkgs-fmt <file>                          # format after editing (installed system-wide)
 ```
 
-Use `make home` after editing home-manager modules; `make system` after editing `nixos/`.
+For AI agents: only run `make home-build`, `make os-build`, or `make os-test` for verification. Never run `make home`, `make os`, `nh ... switch`, or `nixos-rebuild switch`.
 
-**IMPORTANT**: `make system` and `sudo nixos-rebuild switch` require sudo and will fail without a terminal. Do NOT run them. Instead, run `nixos-rebuild build --flake ".#nixos-vmware"` to verify the build succeeds, then ask the user to run `make system` themselves.
+Use `make home-build` after editing home-manager modules; use `make os-build` after editing `nixos/`. Use `make os-test` only when you specifically need test-mode evaluation.
+
+**IMPORTANT**: `make os` and `nixos-rebuild switch` require sudo and will fail without a terminal. Do NOT run them. Verify with `make os-build` or `make os-test`, then ask the user to run `make os` themselves if they want to apply the system.
 
 ## Architecture
 

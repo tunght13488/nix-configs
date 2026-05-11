@@ -680,6 +680,12 @@
     # vscode
     "*.code-workspace"
 
+    # OpenCode
+    "AGENTS.local.md"
+
+    # direnv
+    ".direnv/"
+    ".envrc"
   ];
 
   programs.git.attributes = [

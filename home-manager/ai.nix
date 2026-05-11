@@ -31,6 +31,8 @@ let
 
     Do not use `command` e.g. command ls /nix/store/... as it asks for approval again and again. Run the actual command directly, e.g. `ls /nix/store/...`.
 
+    For PHP-related shell commands, do not use unversioned `php` or `composer` binaries because their default version may change. Use the explicit versioned binaries instead, such as `php81`, `php82`, `php83`, and the matching Composer command exposed for that PHP version.
+
   '';
 in
 
@@ -46,4 +48,6 @@ in
   programs.opencode.package = pkgs.unstable.opencode-desktop;
   programs.opencode.rules = global_instructions;
   programs.opencode.settings.share = "disabled";
+  programs.opencode.settings.instructions = [ "AGENTS.local.md" ];
+  programs.opencode.settings.experimental.disable_paste_summary = false;
 }
