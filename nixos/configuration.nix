@@ -21,7 +21,7 @@ in
     # Import your generated (nixos-generate-config) hardware configuration
     ./hardware-configuration.nix
 
-    # PHP-FPM pools and nginx virtual hosts
+    ./vmware.nix
     ./php-fpm.nix
     ./nginx.nix
     ./local-dev.nix
@@ -127,11 +127,7 @@ in
   system.stateVersion = "25.11";
 
   # VMWare Guest
-  services.xserver = {
-    enable = true;
-    videoDrivers = [ "vmware" ];
-  };
-  virtualisation.vmware.guest.enable = true;
+  services.xserver.enable = true;
   virtualisation.docker = {
     enable = true;
     rootless = {
