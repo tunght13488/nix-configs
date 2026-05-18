@@ -186,6 +186,7 @@ in
     git
     vscode.fhs
     # firefox
+    brave
     google-chrome
     nixfmt
     nixpkgs-fmt
