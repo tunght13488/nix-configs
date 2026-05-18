@@ -187,6 +187,7 @@ in
     nixfmt
     nixpkgs-fmt
     stow
+    tree
     home-manager
     v81.versionedPkg
     v81.composerVersionedPkg
