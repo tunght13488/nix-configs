@@ -8,9 +8,39 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://wiki.nixos.org/wiki/Overlays
   modifications = final: prev: {
-    # example = prev.example.overrideAttrs (oldAttrs: rec {
-    # ...
-    # });
+    # Compile PHP with zlib statically so IMAGETYPE_SWC is defined.
+    # The constant is gated by #if (defined(HAVE_ZLIB) && !defined(COMPILE_DL_ZLIB))
+    # in ext/standard/basic_functions_arginfo.h, so it only exists when zlib
+    # is compiled into the core binary (not as a shared extension).
+    # We also remove zlib from the extensions list to avoid building the
+    # shared extension which conflicts with the static one.
+    php83 = prev.php83.override (origArgs: {
+      phpAttrsOverrides = attrs: {
+        configureFlags = attrs.configureFlags ++ [ "--with-zlib=${final.zlib.dev}" ];
+        buildInputs = attrs.buildInputs ++ [ final.zlib ];
+      };
+      extensions =
+        { all, enabled, ... }:
+        builtins.filter (ext: ext != all.zlib) (origArgs.extensions { inherit all enabled; });
+    });
+    php82 = prev.php82.override (origArgs: {
+      phpAttrsOverrides = attrs: {
+        configureFlags = attrs.configureFlags ++ [ "--with-zlib=${final.zlib.dev}" ];
+        buildInputs = attrs.buildInputs ++ [ final.zlib ];
+      };
+      extensions =
+        { all, enabled, ... }:
+        builtins.filter (ext: ext != all.zlib) (origArgs.extensions { inherit all enabled; });
+    });
+    php81 = prev.php81.override (origArgs: {
+      phpAttrsOverrides = attrs: {
+        configureFlags = attrs.configureFlags ++ [ "--with-zlib=${final.zlib.dev}" ];
+        buildInputs = attrs.buildInputs ++ [ final.zlib ];
+      };
+      extensions =
+        { all, enabled, ... }:
+        builtins.filter (ext: ext != all.zlib) (origArgs.extensions { inherit all enabled; });
+    });
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
