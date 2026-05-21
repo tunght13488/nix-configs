@@ -3,6 +3,7 @@
 {
   home.packages = with pkgs; [
     git-town
+    xsel
   ];
 
   programs.git.enable = true;
