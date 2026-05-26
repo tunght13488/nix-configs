@@ -697,6 +697,7 @@
     ".opencode/skills/openspec-archive-change/SKILL.md"
     ".opencode/skills/openspec-explore/SKILL.md"
     ".opencode/skills/openspec-propose/SKILL.md"
+    "openspec"
   ];
 
   programs.git.attributes = [
