@@ -26,6 +26,7 @@
     ./terminal.nix
     ./ai.nix
     ./aws.nix
+    ./go.nix
   ];
 
   nixpkgs = {
