@@ -77,6 +77,7 @@
     (pkgs.lib.hiPrio jdk8)
     maven363
     wget
+    gcc
   ];
 
   home.sessionVariables = {
