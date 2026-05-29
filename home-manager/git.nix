@@ -688,16 +688,16 @@
     ".direnv/"
     ".envrc"
 
-    # OpenSpec
-    ".opencode/commands/opsx-apply.md"
-    ".opencode/commands/opsx-archive.md"
-    ".opencode/commands/opsx-explore.md"
-    ".opencode/commands/opsx-propose.md"
-    ".opencode/skills/openspec-apply-change/SKILL.md"
-    ".opencode/skills/openspec-archive-change/SKILL.md"
-    ".opencode/skills/openspec-explore/SKILL.md"
-    ".opencode/skills/openspec-propose/SKILL.md"
-    "openspec"
+    # # OpenSpec
+    # ".opencode/commands/opsx-apply.md"
+    # ".opencode/commands/opsx-archive.md"
+    # ".opencode/commands/opsx-explore.md"
+    # ".opencode/commands/opsx-propose.md"
+    # ".opencode/skills/openspec-apply-change/SKILL.md"
+    # ".opencode/skills/openspec-archive-change/SKILL.md"
+    # ".opencode/skills/openspec-explore/SKILL.md"
+    # ".opencode/skills/openspec-propose/SKILL.md"
+    # "openspec"
   ];
 
   programs.git.attributes = [
