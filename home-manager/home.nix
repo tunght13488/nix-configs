@@ -76,6 +76,7 @@
     unstable.openspec
     (pkgs.lib.hiPrio jdk8)
     maven363
+    wget
   ];
 
   home.sessionVariables = {
