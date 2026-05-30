@@ -78,6 +78,7 @@
     maven363
     wget
     gcc
+    sqlite
   ];
 
   home.sessionVariables = {
