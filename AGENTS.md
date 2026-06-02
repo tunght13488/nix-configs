@@ -21,9 +21,12 @@ make home       # home-manager switch --flake ".#tung@nixos-vmware"
 make os         # switch NixOS config on the host
 make update    # nix flake update
 make clean     # nix-collect-garbage
+make format    # format all .nix files with nixpkgs-fmt
 
 nix flake show --no-write-lock-file   # validate without touching flake.lock
-nixpkgs-fmt <file>                          # format after editing (installed system-wide)
+nix flake check --no-write-lock-file  # deeper evaluation check
+nix fmt                                 # format via flake formatter
+nixpkgs-fmt <file>                      # format single file (installed system-wide)
 ```
 
 For AI agents: only run `make home-build`, `make os-build`, or `make os-test` for verification. Never run `make home`, `make os`, `nh ... switch`, or `nixos-rebuild switch`.
@@ -43,6 +46,7 @@ Flake-based NixOS config for one machine (`nixos-vmware`, user `tung`).
 - `overlays/` — nixpkgs overlays (additions, modifications, unstable-packages, phps)
 - `modules/nixos/` — reusable NixOS modules
 - `modules/home-manager/` — reusable home-manager modules (ngrok, php-config)
+- `modules/shared/` — modules imported by both NixOS and home-manager (e.g. `php-config.nix`)
 
 **`nixos/configuration.nix`** imports:
 - `inputs.self.nixosModules.php-config` — centralized PHP INI options
@@ -51,12 +55,12 @@ Flake-based NixOS config for one machine (`nixos-vmware`, user `tung`).
 - `./nix-ld.nix` — dynamic linking support for unpackaged binaries
 
 **`home-manager/home.nix`** imports (full list):
-`agenix.nix`, `ngrok.nix`, `php.nix`, `ssh.nix`, `git.nix`, `zsh.nix`, `tmux.nix`, `fonts.nix`, `terminal.nix`, `ai.nix`, `aws.nix`
+`agenix.nix`, `ngrok.nix`, `php.nix`, `ssh.nix`, `git.nix`, `zsh.nix`, `tmux.nix`, `fonts.nix`, `terminal.nix`, `ai.nix`, `aws.nix`, `go.nix`
 Plus `inputs.self.homeManagerModules.ngrok`, `inputs.self.homeManagerModules.php-config`, `inputs.nixvim.homeModules.nixvim`; Neovim config lives in `./nixvim.nix` via `programs.nixvim.imports`.
 
 ## Dev Shells (local projects via direnv)
 
-`flake.nix` exposes `devShells.x86_64-linux` for project-local PHP/Java envs:
+`flake.nix` exposes `devShells.x86_64-linux` for project-local PHP/Java/Node envs:
 
 | Shell | Stack |
 |-------|-------|
@@ -64,6 +68,7 @@ Plus `inputs.self.homeManagerModules.ngrok`, `inputs.self.homeManagerModules.php
 | `prbot` | PHP 8.1 + Composer |
 | `v3` | PHP 8.3 + Composer |
 | `fc-es-starter-pack` | JDK 8 + Maven 3.6.3 + Node.js |
+| `fc-omx` | Node 22 + Yarn |
 
 To add a project: add a shell in `flake.nix`, then in the project root: `use flake /home/tung/code/nix-configs#<shell-name>` in `.envrc`, then `direnv allow`.
 
@@ -103,6 +108,18 @@ Local test sites are served by system nginx: `http://php81.local`, `http://php82
 - `allowUnfree = true` is active in both layers; `allowUnfreePredicate = _: true` is also active in home-manager (workaround for [home-manager#2942](https://github.com/nix-community/home-manager/issues/2942))
 - **New files must be `git add`ed before nix evaluation can import them**
 - Keep new flake inputs on the 25.11 release branches (matching existing inputs); use `pkgs.unstable` for bleeding-edge packages
+
+## Nix Code Style
+
+- **Formatting**: Use `nixpkgs-fmt` (enforced by `make format`). Run it after editing any `.nix` file.
+- **Function arguments**: Use destructuring with `,` and line breaks: `{ config, lib, pkgs, ... }:`
+- **Let/in**: Place `let` on its own line, indent bindings 2 spaces, place `in` at the same level as `let`.
+- **Attrsets**: Prefer trailing commas in multi-line attrsets and lists. Use `inherit` for passing through variables.
+- **Modules**: Reusable modules must use `mkEnableOption` + `mkIf` pattern. Place them in `modules/nixos/` or `modules/home-manager/`.
+- **Comments**: Use `#` for single-line comments. Add a header comment to new files explaining purpose and consumers.
+- **Strings**: Prefer `''` indented strings for multi-line shell scripts and configuration blocks. Use `"` for single-line strings.
+- **Paths**: Use `./relative/path.nix` for local imports. Do not string-interpolate paths.
+- **Options**: Use `lib.mkOption` with `type`, `default`, `description`, and `example` for module options.
 
 ## Looking Up Home Manager Options
 
