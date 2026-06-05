@@ -45,7 +45,7 @@ in
   programs.claude-code.memory.text = global_instructions;
 
   programs.opencode.enable = true;
-  # programs.opencode.package = pkgs.unstable.opencode-desktop;
+  programs.opencode.package = pkgs.unstable.opencode;
   programs.opencode.rules = global_instructions;
   programs.opencode.settings.share = "disabled";
   programs.opencode.settings.instructions = [ "AGENTS.local.md" ];
