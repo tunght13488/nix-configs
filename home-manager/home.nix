@@ -79,6 +79,7 @@
     wget
     gcc
     sqlite
+    unstable.zed-editor
   ];
 
   home.sessionVariables = {
