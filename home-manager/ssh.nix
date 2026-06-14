@@ -47,7 +47,7 @@
     };
 
     "sl.prbot.prd" = lib.hm.dag.entryBefore [ "sl.*" ] {
-      hostname = "i-0a38ce66657ceaa58";
+      hostname = "i-09bd2b88ce03daf6c";
     };
 
     "sl.prbot.stg" = lib.hm.dag.entryBefore [ "sl.*" ] {
