@@ -27,6 +27,7 @@
     ./ai.nix
     ./aws.nix
     ./go.nix
+    ./node.nix
   ];
 
   nixpkgs = {

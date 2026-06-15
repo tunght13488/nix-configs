@@ -28,7 +28,7 @@
       zshConfigEarlyInit = lib.mkOrder 500 "# order 500";
       zshConfigBeforeCompInit = lib.mkOrder 550 "# order 550";
       zshConfig = lib.mkOrder 1000 ''
-        path=("$HOME/.local/bin" $path)
+        path=("$HOME/.local/bin" "$HOME/.npm-global/bin" $path)
       '';
       zshConfigAfter = lib.mkOrder 1500 ''
         if (( $+commands[op])); then
