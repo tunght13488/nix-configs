@@ -28,6 +28,8 @@
       run-shell "powerline-daemon -q"
       source "${pkgs.python313Packages.powerline}/share/tmux/powerline.conf"
       set -g update-environment "DISPLAY SSH_ASKPASS SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
     '';
     plugins = with pkgs; [
       tmuxPlugins.sensible

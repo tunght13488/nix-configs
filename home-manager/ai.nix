@@ -50,4 +50,11 @@ in
   programs.opencode.settings.share = "disabled";
   programs.opencode.settings.instructions = [ "AGENTS.local.md" ];
   programs.opencode.settings.experimental.disable_paste_summary = false;
+
+  home = {
+    # Declaratively configure ~/.pi/agent/AGENTS.md
+    file = {
+      ".pi/agent/AGENTS.md".text = global_instructions;
+    };
+  };
 }
