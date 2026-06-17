@@ -62,11 +62,11 @@
       hostname = "i-00eec811b2bbd3c9f";
     };
 
-    "sl.middleware.prd" = lib.hm.dag.entryBefore [ "sl.*" ] {
+    "sl.middleware.prd-old" = lib.hm.dag.entryBefore [ "sl.*" ] {
       hostname = "i-02637399b1339502d";
     };
 
-    "sl.middleware.prd-cis" = lib.hm.dag.entryBefore [ "sl.*" ] {
+    "sl.middleware.prd" = lib.hm.dag.entryBefore [ "sl.*" ] {
       hostname = "i-0ac7915f0910cfee7";
     };
 
