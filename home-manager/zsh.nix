@@ -106,6 +106,6 @@
   programs.zsh.prezto.terminal.autoTitle = true;
   programs.zsh.prezto.terminal.windowTitleFormat = "%n@%m: %s";
   programs.zsh.prezto.terminal.tabTitleFormat = "%m: %s";
-  programs.zsh.prezto.tmux.autoStartLocal = true;
-  programs.zsh.prezto.tmux.autoStartRemote = true;
+  programs.zsh.prezto.tmux.autoStartLocal = false;
+  programs.zsh.prezto.tmux.autoStartRemote = false;
 }
