@@ -74,6 +74,8 @@
     mycli
     postman
     nodejs
+    nil
+    nixd
     unstable.openspec
     (pkgs.lib.hiPrio jdk8)
     maven363
