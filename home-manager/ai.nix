@@ -31,7 +31,7 @@ let
 
     Do not use `command` e.g. command ls /nix/store/... as it asks for approval again and again. Run the actual command directly, e.g. `ls /nix/store/...`.
 
-    For PHP-related shell commands, do not use unversioned `php` or `composer` binaries because their default version may change. Use the explicit versioned binaries instead, such as `php81`, `php82`, `php83`, and the matching Composer command exposed for that PHP version.
+    For PHP-related shell commands, do not use unversioned `php` or `composer` binaries because their default version may change. Use the explicit versioned binaries instead, such as `php81`, `php82`, `php83`, and the matching Composer command exposed for that PHP version such as `composer81`, `composer82`, `composer83`. Check `composer.json` to see which PHP version to use
 
   '';
 in
