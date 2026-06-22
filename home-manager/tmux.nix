@@ -46,7 +46,7 @@
         plugin = tmuxPlugins.continuum;
         extraConfig = "set -g @continuum-restore 'on'";
       }
-      tmuxPlugins.vim-tmux-navigator
+      # tmuxPlugins.vim-tmux-navigator
       {
         plugin = tmuxPlugins.fingers;
         extraConfig = ''
