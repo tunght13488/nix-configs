@@ -134,11 +134,20 @@ in
       enable = true;
       setSocketVariable = true;
       daemon.settings = {
-        dns = [ "1.1.1.1" "8.8.8.8" ];
+        dns = [
+          "1.1.1.1"
+          "8.8.8.8"
+        ];
         registry-mirrors = [ "https://mirror.gcr.io" ];
       };
     };
   };
+  networking.firewall.allowedTCPPortRanges = [
+    {
+      from = 1024;
+      to = 49151;
+    }
+  ];
 
   # GNOME
   services.displayManager.gdm.enable = true;
