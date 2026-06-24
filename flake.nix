@@ -128,7 +128,7 @@
           # netsuite-middleware — PHP 8.3
           middleware = mkSystemPhpShell "83";
           # prbot — PHP 8.1 (EOL, via phps overlay)
-          prbot = mkSystemPhpShell "81";
+          prbot = mkSystemPhpShell "82";
           # admin_ci3 (v3) — PHP 8.3
           v3 = mkSystemPhpShell "83";
           # fc-es-starter-pack — Java 8, Maven 3.6.3 (nixpkgs only ships latest Maven;
