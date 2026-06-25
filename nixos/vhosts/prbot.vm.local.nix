@@ -33,7 +33,7 @@
 
   locations."~ \\.php$" = {
     extraConfig = ''
-      fastcgi_pass unix:${config.services.phpfpm.pools.php81.socket};
+      fastcgi_pass unix:${config.services.phpfpm.pools.php82.socket};
       fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
       include ${config.services.nginx.package}/conf/fastcgi_params;
       # include ${config.services.nginx.package}/conf/fastcgi.conf;
