@@ -4,6 +4,7 @@
   programs.ngrok = {
     enable = true;
     authtokenFile = config.age.secrets.ngrok-authtoken.path;
+    settings.agent.web_addr = "0.0.0.0:4040";
     endpoints = {
       middleware = {
         name = "middleware";

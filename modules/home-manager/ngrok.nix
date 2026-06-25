@@ -14,6 +14,7 @@ let
         {
           version = "3";
         }
+        // cfg.settings
         // lib.optionalAttrs (cfg.endpoints != { }) {
           endpoints = lib.attrValues cfg.endpoints;
         }
@@ -88,9 +89,27 @@ in
       default = { };
       description = "Named ngrok endpoint definitions.";
     };
+
+    settings = lib.mkOption {
+      type = lib.types.attrsOf yaml.type;
+      default = { };
+      description = ''
+        Freeform top-level ngrok configuration keys.
+        "version" and "endpoints" are managed by this module and cannot
+        be set here — evaluation will fail if attempted.
+      '';
+    };
   };
 
   config = lib.mkIf cfg.enable {
+    assertions = [
+      {
+        assertion = !(cfg.settings ? version || cfg.settings ? endpoints);
+        message = "programs.ngrok.settings: 'version' and 'endpoints' are managed "
+          + "by the module and cannot be set here.";
+      }
+    ];
+
     # Wrapper that always passes both config files so the authtoken fragment
     # is merged with the static endpoints config.
     home.packages = [
