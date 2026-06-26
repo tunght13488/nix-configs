@@ -1,8 +1,8 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
 {
   home.packages = with pkgs; [
-    git-town
+    unstable.git-town
     xsel
   ];
 
