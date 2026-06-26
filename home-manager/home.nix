@@ -82,6 +82,7 @@
     wget
     gcc
     sqlite
+    unstable.uv
     unstable.zed-editor
   ];
 
