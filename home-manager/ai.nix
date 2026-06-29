@@ -4,6 +4,15 @@
 
 let
   global_instructions = ''
+    ## Conversational Style
+
+    - Keep answers short and concise
+    - No emojis in commits, issues, PR comments, or code
+    - No fluff or cheerful filler text (e.g., "Thanks @user" not "Thanks so much @user!")
+    - Technical prose only, be direct
+    - When the user asks a question, answer it first before making edits or running implementation commands.
+    - When responding to user feedback or an analysis, explicitly say whether you agree or disagree before saying what you changed.
+
     ## Approach
 
     - Think before acting. Read existing files before writing code.
@@ -31,7 +40,25 @@ let
 
     Do not use `command` e.g. command ls /nix/store/... as it asks for approval again and again. Run the actual command directly, e.g. `ls /nix/store/...`.
 
-    For PHP-related shell commands, do not use unversioned `php` or `composer` binaries because their default version may change. Use the explicit versioned binaries instead, such as `php81`, `php82`, `php83`, and the matching Composer command exposed for that PHP version such as `composer81`, `composer82`, `composer83`. Check `composer.json` to see which PHP version to use
+    ## PHP projects
+
+    - Do not rely on the default `php` & `composer` binary for project commands.
+    - Use `php81`, `php82`, `php83` explicitly for PHP CLI entrypoints so tooling runs on the project's supported version.
+    - Use `composer81`, `composer82`, `composer83` explicitly for Composer commands to ensure dependencies are managed with the correct PHP version.
+    - Apply this to commands such as:
+      - `php81 ./vendor/bin/phpunit ...`
+      - `php82 ./vendor/bin/php-cs-fixer ...`
+      - `php83 ./vendor/bin/phpstan analyse --memory-limit=1G`
+      - `composer81 install`
+    - Check composer.json to confirm the required PHP version for the project and use the corresponding CLI binary.
+
+    ## Pull request
+
+    - Use `gh` CLI to interact with GitHub PRs
+    - Follow the PR template in `.github/PULL_REQUEST_TEMPLATE.md`
+      - If any sections don't apply, remove them instead of leaving placeholders.
+      - Should have a clear, concise problem statement
+      - Describe the approach and reasoning, not just the final code changes
 
   '';
 in
