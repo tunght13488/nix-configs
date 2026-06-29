@@ -72,7 +72,7 @@
     gnumake
     jetbrains-toolbox
     mycli
-    postman
+    unstable.postman
     nodejs
     nil
     nixd
