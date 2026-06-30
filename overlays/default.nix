@@ -8,6 +8,11 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://wiki.nixos.org/wiki/Overlays
   modifications = final: prev: {
+    # docker_28 is marked insecure on nixos-25.11 (unmaintained since Nov 2025);
+    # alias pkgs.docker to docker_29 so virtualisation.docker and
+    # virtualisation.docker.rootless both pull a maintained build.
+    docker = prev.docker_29;
+
     # Enable OpenSSL in libzip so AES-256 zip encryption works.
     libzip = prev.libzip.override { withOpenssl = true; };
 
