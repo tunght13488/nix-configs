@@ -182,6 +182,9 @@ in
     clean.enable = true;
   };
 
+  programs.appimage.enable = true;
+  programs.appimage.binfmt = true;
+
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
   environment.systemPackages = with pkgs; [
