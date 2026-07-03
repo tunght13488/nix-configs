@@ -8,32 +8,36 @@ Both Pi and OpenCode follow the [Agent Skills standard](https://agentskills.io) 
 
 The skill files (`SKILL.md`) are identical between agents. Only the companion files differ: Pi uses prompt templates (`.pi/prompts/`), OpenCode uses command files (`.opencode/commands/`).
 
-The source of truth for these files is `openspec init --tools pi,opencode`, which generates all files in a target project directory.
+The source of truth for these files is `openspec init --tools pi,opencode`, which generates all files in a target project directory. Files are pre-generated and checked into `pkgs/openspec-agent-files/` to avoid running `openspec init` inside the Nix sandbox (Node.js network initialization hangs when sandboxed).
+
+OpenSpec 1.4.1 generates 5 skills (not 4): includes `openspec-sync-specs` and `opsx-sync` as a newer addition.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Generate OpenSpec skill, prompt, and command files from the current `pkgs.unstable.openspec` version at build time
+- Store OpenSpec skill, prompt, and command files in the nix-configs repo for reproducibility
 - Deploy them to global Pi and OpenCode config directories via home-manager
 - Link individual files (not whole directories) to coexist with other global skills
 - Keep the approach consistent with existing nix-configs patterns (derivations in `pkgs/`, modules in `home-manager/`)
 
 **Non-Goals:**
-- Managing these files outside Nix/home-manager
+- Running `openspec init` inside the Nix sandbox (hangs due to Node.js network initialization without network access)
+- Auto-generating files at build time (files are pre-generated and checked in; regenerate manually when openspec updates)
 - Using directory-level symlinks that would shadow other global skills
 - Modifying existing project-level OpenSpec files in nix-configs
 - Installing OpenSpec for other agents (Claude, Codex, etc.)
 
 ## Decisions
 
-### Decision 1: Nix derivation over shell script or checked-in files
+### Decision 1: Checked-in generated files with thin Nix derivation wrapper
 
-**Rationale:** A derivation that runs `openspec init` at build time automatically stays in sync with the OpenSpec version pinned in the flake. When `pkgs.unstable.openspec` updates, the files regenerate on next `make home`. No manual regeneration step, no stale committed files.
+**Rationale:** `openspec init` hangs in the Nix sandbox (Node.js attempts network access during initialization). Instead, files are generated once by running `openspec init --tools pi,opencode --force` and checked into `pkgs/openspec-agent-files/`. The derivation is a thin wrapper that copies these files to `$out`. To regenerate, run `openspec init` outside Nix and copy the output.
 
 **Alternatives considered:**
-- Shell script — rejected; manual step, easy to forget after openspec updates
-- Checked-in generated files — rejected; manual commit step, risk of drift
-- IFD (import from derivation) — rejected; unnecessary complexity, the derivation approach avoids IFD entirely
+- Running `openspec init` at build time — rejected; hangs in sandbox
+- Writing SKILL.md content inline in the derivation — rejected; verbose, drift-prone
+- Shell script outside Nix — rejected; no Nix reproducibility
+- IFD — rejected; adds complexity for no benefit
 
 ### Decision 2: Individual file linking over directory symlinks
 
@@ -41,27 +45,27 @@ The source of truth for these files is `openspec init --tools pi,opencode`, whic
 
 **Alternatives considered:**
 - Directory symlink — rejected; conflicts with other global skills
-- `lib.mapAttrs'` dynamic mapping — rejected; the file list is small and stable (16 entries), explicit entries are clearer and type-safe
+- `lib.mapAttrs'` dynamic mapping — rejected; the file list is small and stable (20 entries), explicit entries are clearer and type-safe
 
 ### Decision 3: Separate home-manager module (`home-manager/openspec.nix`)
 
-**Rationale:** Follows the existing convention of one module per concern (`ai.nix`, `git.nix`, `php.nix`, etc.). Keeps the implementation self-contained and importable. The existing `home-manager/ai.nix` handles Pi's AGENTS.md and OpenCode's config — adding 16 `home.file` entries there would bloat it.
+**Rationale:** Follows the existing convention of one module per concern (`ai.nix`, `git.nix`, `php.nix`, etc.). Keeps the implementation self-contained and importable.
 
 **Alternatives considered:**
 - Inline in `ai.nix` — rejected; would make the file too long and mix unrelated concerns
 - Inline in `home.nix` — rejected; even worse, `home.nix` is an imports hub, not for implementation
 
-### Decision 4: New package in `pkgs/` rather than inline derivation
+### Decision 4: Pre-generated files in `pkgs/openspec-agent-files/`
 
-**Rationale:** Follows the convention in `AGENTS.md`: custom packages go in `pkgs/` and are exposed via overlays. The derivation is a self-contained build step — putting it in `pkgs/` makes it testable independently via `nix build .#openspecAgentFiles`.
+**Rationale:** The generated directory structure is placed alongside the derivation file in `pkgs/`. The derivation references it via `./openspec-agent-files/`, making the relative path stable and Nix-compatible without IFD.
 
 **Alternatives considered:**
-- Inline let-binding in the module — rejected; less reusable, harder to test
-- Overlay package only (no `pkgs/` file) — rejected; `pkgs/` files are the project convention
+- Placing in a top-level `dotfiles/` directory — rejected; derivation would need `../` path reference which is fragile
+- Placing in `openspec/` directory — rejected; that dir is for the OpenSpec tool itself (changes, specs), not for generated outputs
 
 ## Risks / Trade-offs
 
-- [Build dependency] `openspec init` needs a writable directory to generate files — Mitigation: run in `$TMPDIR` within the derivation
-- [New skills] If future OpenSpec adds skills, the explicit file entries need updating — Mitigation: the derivation auto-generates new files; missing `home.file` entries surface as missing files at build time
+- [Staleness] Checked-in files may drift from the openspec CLI version — Mitigation: documented regeneration command in the derivation header; openspec CLI version is pinned via flake
+- [New skills] If future OpenSpec adds skills, the explicit file entries need updating — Mitigation: missed files surface as build errors at `make home-build` time
 - [Name collision] If a project already has OpenSpec skills in `.pi/skills/`, the global ones are loaded first by Pi — Mitigation: no conflict; user can remove project-local skills to rely on global
-- [Build time] Runs `openspec init` on every home-manager build — Mitigation: Nix caches the derivation output; only rebuilds when openspec or the derivation changes
+- [File count] 20 `home.file`/`xdg.configFile` entries is verbose but straightforward — Mitigation: each entry is one line with a clear pattern; easy to add/remove

@@ -28,6 +28,7 @@
     ./aws.nix
     ./go.nix
     ./node.nix
+    ./openspec.nix
   ];
 
   nixpkgs = {

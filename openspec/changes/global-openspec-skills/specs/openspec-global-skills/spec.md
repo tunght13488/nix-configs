@@ -22,12 +22,12 @@ The system SHALL make OpenSpec workflow skills available to OpenCode in all proj
 - **WHEN** OpenCode starts in any project directory
 - **THEN** the OpenSpec command files (`/opsx-apply`, `/opsx-archive`, `/opsx-explore`, `/opsx-propose`) are available
 
-### Requirement: Files generated from installed OpenSpec version
-The system SHALL generate skill, prompt, and command files by running `openspec init` at build time, ensuring they match the version of `openspec` installed via the flake.
+### Requirement: Files match generated OpenSpec output
+The system SHALL store skill, prompt, and command files that match what `openspec init --tools pi,opencode --force` produces, to ensure compatibility with the installed OpenSpec CLI.
 
-#### Scenario: Files regenerate on OpenSpec update
-- **WHEN** `pkgs.unstable.openspec` is updated in the flake lock
-- **THEN** the home-manager build regenerates the agent files from the new OpenSpec version
+#### Scenario: Files are regenerated when openspec updates
+- **WHEN** the openspec CLI version is updated in the flake lock
+- **THEN** run `openspec init` outside Nix and update the checked-in files in `pkgs/openspec-agent-files/`
 
 ### Requirement: Individual file linking
 The system SHALL link individual files to global agent directories rather than replacing entire directories, to coexist with other globally installed skills.
