@@ -7,7 +7,7 @@
   programs.ssh.enable = true;
   programs.ssh.matchBlocks = {
     "*" = {
-      forwardAgent = true;
+      # forwardAgent = true;
       # identityAgent = [ "~/.1password/agent.sock" ];
     };
   }
