@@ -80,10 +80,32 @@
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
   # be accessible through 'pkgs.unstable'
   unstable-packages = final: _prev: {
-    unstable = import inputs.nixpkgs-unstable {
+    unstable = (import inputs.nixpkgs-unstable {
       system = final.system;
       config.allowUnfree = true;
-    };
+    }).extend (final': prev': {
+      openspec = prev'.openspec.overrideAttrs (oldAttrs:
+        let
+          src = final'.fetchFromGitHub {
+            owner = "Fission-AI";
+            repo = "OpenSpec";
+            tag = "v1.5.0";
+            hash = "sha256-CR82VPMGUhZB0yl2aT+ou60n5Bj2cjgG9Rt7A3dXsVQ=";
+          };
+        in
+        {
+          version = "1.5.0";
+          inherit src;
+          pnpmDeps = final'.fetchPnpmDeps {
+            pname = oldAttrs.pname;
+            version = "1.5.0";
+            inherit src;
+            pnpm = final'.pnpm_11;
+            fetcherVersion = 4;
+            hash = "sha256-+392kmJ9fWQZW4R7n3sompLirulmA5VfTUWH6IL9MBU=";
+          };
+        });
+    });
   };
 
   # PHP versions from https://github.com/fossar/nix-phps
