@@ -1,7 +1,14 @@
-# Declarative herdr config.toml generated from Nix attrsets via pkgs.formats.toml.
-# Consumed in home-manager/home.nix.
+# Writable herdr config.toml bootstrapped from Nix attrsets via pkgs.formats.toml.
+# Copied on first activation (or if file is a legacy symlink) instead of symlinked
+# to the Nix store, so settings can be tested quickly via `herdr server reload-config`
+# before incorporating them back into this module.
+#
+# Reset to baseline:
+#   cp ~/.config/herdr/config.toml ~/.config/herdr/config.toml.bak
+#   rm ~/.config/herdr/config.toml
+#   home-manager switch
 
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
   herdrConfig = {
@@ -19,8 +26,15 @@ let
       };
     };
   };
+
+  herdrConfigToml = (pkgs.formats.toml { }).generate "herdr-config" herdrConfig;
 in
 {
-  xdg.configFile."herdr/config.toml".source =
-    (pkgs.formats.toml { }).generate "herdr-config" herdrConfig;
+  home.activation.copyHerdrConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    local target="$HOME/.config/herdr/config.toml"
+    if [ ! -f "$target" ] || [ -L "$target" ]; then
+      $DRY_RUN_CMD mkdir -p "$(dirname "$target")"
+      $DRY_RUN_CMD cp ${herdrConfigToml} "$target"
+    fi
+  '';
 }
