@@ -16,34 +16,34 @@ in
     pv
   ];
   programs.alacritty.enable = true;
-  programs.alacritty.settings.colors.bright = {
-    black = "#4e4e4e";
-    blue = "#82aaff";
-    cyan = "#89ddff";
-    green = "#c3e88d";
-    magenta = "#f07178";
-    red = "#ff5370";
-    white = "#ffffff";
-    yellow = "#ffcb6b";
-  };
-  programs.alacritty.settings.colors.normal = {
-    black = "#000000";
-    blue = "#6182b8";
-    cyan = "#39adb5";
-    green = "#91b859";
-    magenta = "#ff5370";
-    red = "#e53935";
-    white = "#a0a0a0";
-    yellow = "#ffb62c";
-  };
-  programs.alacritty.settings.colors.primary = {
-    background = "#263238";
-    foreground = "#eeffff";
-  };
-  programs.alacritty.settings.colors.cursor = {
-    text = "#263238";
-    cursor = "#eeffff";
-  };
+  # programs.alacritty.settings.colors.bright = {
+  #   black = "#4e4e4e";
+  #   blue = "#82aaff";
+  #   cyan = "#89ddff";
+  #   green = "#c3e88d";
+  #   magenta = "#f07178";
+  #   red = "#ff5370";
+  #   white = "#ffffff";
+  #   yellow = "#ffcb6b";
+  # };
+  # programs.alacritty.settings.colors.normal = {
+  #   black = "#000000";
+  #   blue = "#6182b8";
+  #   cyan = "#39adb5";
+  #   green = "#91b859";
+  #   magenta = "#ff5370";
+  #   red = "#e53935";
+  #   white = "#a0a0a0";
+  #   yellow = "#ffb62c";
+  # };
+  # programs.alacritty.settings.colors.primary = {
+  #   background = "#263238";
+  #   foreground = "#eeffff";
+  # };
+  # programs.alacritty.settings.colors.cursor = {
+  #   text = "#263238";
+  #   cursor = "#eeffff";
+  # };
   programs.alacritty.settings.font.size = fontSize;
   programs.alacritty.settings.font.bold = {
     family = fontFamily;
