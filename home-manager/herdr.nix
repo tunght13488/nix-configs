@@ -37,4 +37,16 @@ in
       $DRY_RUN_CMD cp ${herdrConfigToml} "$target"
     fi
   '';
+
+  # Agent skill file linked from the herdr flake source.
+  # Provides agents with herdr workspace, tab, and pane management knowledge.
+  home.file = {
+    ".pi/agent/skills/herdr/SKILL.md".source =
+      lib.mkDefault "${pkgs.herdrAgentFiles}/.pi/skills/herdr/SKILL.md";
+  };
+
+  xdg.configFile = {
+    "opencode/skills/herdr/SKILL.md".source =
+      lib.mkDefault "${pkgs.herdrAgentFiles}/.opencode/skills/herdr/SKILL.md";
+  };
 }

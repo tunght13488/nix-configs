@@ -4,6 +4,9 @@
   # This one brings our custom packages from the 'pkgs' directory
   additions = final: _prev: import ../pkgs final.pkgs // {
     openspecAgentFiles = final.callPackage ../pkgs/openspec-agent-files.nix { };
+    herdrAgentFiles = final.callPackage ../pkgs/herdr-agent-files.nix {
+      herdrSrc = inputs.herdr.outPath;
+    };
   };
 
   # This one contains whatever you want to overlay
