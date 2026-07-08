@@ -31,7 +31,7 @@ let
 in
 {
   home.activation.copyHerdrConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    local target="$HOME/.config/herdr/config.toml"
+    target="$HOME/.config/herdr/config.toml"
     if [ ! -f "$target" ] || [ -L "$target" ]; then
       $DRY_RUN_CMD mkdir -p "$(dirname "$target")"
       $DRY_RUN_CMD cp ${herdrConfigToml} "$target"
