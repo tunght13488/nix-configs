@@ -26,6 +26,9 @@
 
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Herdr terminal multiplexer
+    herdr.url = "github:ogulcancelik/herdr/v0.7.1";
   };
 
   outputs =
@@ -164,6 +167,7 @@
               self.overlays.modifications
               self.overlays.unstable-packages
               self.overlays.phps
+              inputs.herdr.overlays.default
             ];
           };
           extraSpecialArgs = {

@@ -85,6 +85,7 @@
     sqlite
     unstable.uv
     unstable.zed-editor
+    herdr
   ];
 
   home.sessionVariables = {
