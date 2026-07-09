@@ -6,7 +6,7 @@
 #
 # The package also includes the pi skill file for CLI-based code discovery.
 
-{ lib, stdenv, fetchurl, runCommand, ... }:
+{ lib, stdenv, fetchurl, yamllint, ... }:
 
 let
   version = "0.9.0";
@@ -50,13 +50,24 @@ stdenv.mkDerivation {
 
   sourceRoot = ".";
 
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [ "unpackPhase" "installPhase" "checkPhase" ];
 
   installPhase = ''
     mkdir -p $out/bin $out/share/pi/skills/codebase-memory
     cp codebase-memory-mcp $out/bin/
     chmod 755 $out/bin/codebase-memory-mcp
     cp ${./skill.md} $out/share/pi/skills/codebase-memory/SKILL.md
+  '';
+
+  doCheck = true;
+
+  checkInputs = [ yamllint ];
+
+  checkPhase = ''
+    runHook preCheck
+    skill="$out/share/pi/skills/codebase-memory/SKILL.md"
+    sed -n '/^---$/,/^---$/p' "$skill" | yamllint --strict -d '{rules: {line-length: disable}}' -
+    runHook postCheck
   '';
 
   meta = with lib; {
