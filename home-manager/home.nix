@@ -10,6 +10,7 @@
     # If you want to use modules your own flake exports (from modules/home-manager):
     inputs.self.homeManagerModules.ngrok
     inputs.self.homeManagerModules.php-config
+    inputs.self.homeManagerModules.codebase-memory-mcp
 
     # Or modules exported from other flakes:
     inputs.nixvim.homeModules.nixvim

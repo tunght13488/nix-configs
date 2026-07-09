@@ -3,5 +3,6 @@
 {
   # List your module files here
   ngrok = import ./ngrok.nix;
+  codebase-memory-mcp = import ./codebase-memory-mcp.nix;
   php-config = import ../shared/php-config.nix;
 }
