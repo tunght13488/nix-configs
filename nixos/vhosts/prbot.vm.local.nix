@@ -1,7 +1,7 @@
 { config, ... }:
 {
   serverName = "prbot.vm.local";
-  root = "/home/tung/code/prbot/public";
+  root = "/home/tung/code/prbot/prbot_main/public";
   extraConfig = ''
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";

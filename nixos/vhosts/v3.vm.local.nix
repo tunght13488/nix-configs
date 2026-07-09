@@ -1,7 +1,7 @@
 { config, ... }:
 {
   serverName = "v3.vm.local";
-  root = "/home/tung/code/admin_ci3/public";
+  root = "/home/tung/code/admin_ci3/v3_main/public";
   extraConfig = ''
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";

@@ -1,7 +1,7 @@
 { config, ... }:
 {
   serverName = "middleware.vm.local";
-  root = "/home/tung/code/netsuite-middleware/public";
+  root = "/home/tung/code/netsuite-middleware/middleware_main/public";
   extraConfig = ''
     add_header X-Frame-Options "SAMEORIGIN";
     add_header X-Content-Type-Options "nosniff";
