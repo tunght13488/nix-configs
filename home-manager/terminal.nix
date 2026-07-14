@@ -66,6 +66,17 @@ in
     blinking = "Off";
   };
 
+  programs.ghostty = {
+    enable = true;
+    settings = {
+      font-family = fontFamily;
+      font-size = fontSize;
+      cursor-style = "bar";
+      cursor-style-blink = false;
+    };
+    enableZshIntegration = true;
+  };
+
   programs.starship.enable = true;
   programs.starship.enableZshIntegration = true;
   programs.starship.settings = { };
