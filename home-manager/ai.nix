@@ -61,6 +61,10 @@ let
       - Should have a clear, concise problem statement
       - Describe the approach and reasoning, not just the final code changes
 
+    ## Skills
+
+    Prefer using skill codebase-memory over fd/rg whenever possible
+
   '';
 in
 
