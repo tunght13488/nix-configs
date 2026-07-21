@@ -39,7 +39,7 @@
     };
 
     "sl.hrbot" = lib.hm.dag.entryBefore [ "sl.*" ] {
-      hostname = "i-07a2b716eaa1111e0";
+      hostname = "i-04c51e46906e296a5";
     };
 
     "sl.couchdb" = lib.hm.dag.entryBefore [ "sl.*" ] {
