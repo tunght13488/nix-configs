@@ -68,10 +68,10 @@ in
     github-copilot-cli
   ];
 
-  programs.claude-code.enable = true;
+  programs.claude-code.enable = false;
   programs.claude-code.memory.text = global_instructions;
 
-  programs.opencode.enable = true;
+  programs.opencode.enable = false;
   programs.opencode.package = pkgs.unstable.opencode;
   programs.opencode.rules = global_instructions;
   programs.opencode.settings.share = "disabled";
