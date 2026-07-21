@@ -51,6 +51,7 @@ let
       - `php83 ./vendor/bin/phpstan analyse --memory-limit=1G`
       - `composer81 install`
     - Check composer.json to confirm the required PHP version for the project and use the corresponding CLI binary.
+    - For some projects, tests may rely on a test database. In such case, do not run tests in parallel.
 
     ## Pull request
 
