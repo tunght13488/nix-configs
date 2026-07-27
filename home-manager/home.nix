@@ -73,7 +73,7 @@
     nerd-fonts.monaspace
     httpie
     gnumake
-    jetbrains-toolbox
+    unstable.jetbrains-toolbox
     mycli
     unstable.postman
     nodejs
