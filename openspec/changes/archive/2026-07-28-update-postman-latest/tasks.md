@@ -33,5 +33,5 @@
 ## 6. Handoff
 
 - [x] 6.1 Commit the `overlays/default.nix` change with a clear message (no emojis per AGENTS.md) and no `flake.lock` change
-- [ ] 6.2 Ask the user to run `make home` to apply (AI agents do NOT run `make home` / `nixos-rebuild switch`)
-- [ ] 6.3 Post-apply runtime verification: launch Postman; Help/About reports version 12.20.4
+- [x] 6.2 Ask the user to run `make home` to apply (AI agents do NOT run `make home` / `nixos-rebuild switch`)
+- [x] 6.3 Post-apply runtime verification: launch Postman; Help/About reports version 12.20.4
