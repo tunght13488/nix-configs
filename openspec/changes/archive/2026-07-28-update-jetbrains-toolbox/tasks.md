@@ -23,4 +23,4 @@
 
 - [x] 5.1 Commit the `home.nix` change + `flake.lock` bump with a clear message (no emojis per AGENTS.md)
 - [x] 5.2 Ask the user to run `make home` to apply (AI agents do not run `make home` / `nixos-rebuild switch`)
-- [ ] 5.3 Post-apply runtime verification: `which jetbrains-toolbox` resolves to a `*-jetbrains-toolbox-3.6.x.*` store path and `jetbrains-toolbox --version` prints the new version
+- [x] 5.3 Post-apply runtime verification: `which jetbrains-toolbox` resolves to a `*-jetbrains-toolbox-3.6.x.*` store path and `jetbrains-toolbox --version` prints the new version
