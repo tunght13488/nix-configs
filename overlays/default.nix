@@ -108,6 +108,16 @@
             hash = "sha256-+392kmJ9fWQZW4R7n3sompLirulmA5VfTUWH6IL9MBU=";
           };
         });
+      # Override postman to latest upstream version because the nixpkgs
+      # postman package lags at 11.94.0 (no 12.x PR on nixos-unstable).
+      postman = prev'.postman.overrideAttrs (old: {
+        version = "12.20.4";
+        src = final'.fetchurl {
+          name = "postman-12.20.4.tar.gz";
+          url = "https://dl.pstmn.io/download/version/12.20.4/linux64";
+          hash = "sha256-r8UNaNTtd1laBxBhEEnNBm/bKx6PuXNRIGQ86fw2zxw=";
+        };
+      });
     });
   };
 
