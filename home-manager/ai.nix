@@ -26,32 +26,17 @@ let
 
     ## Shell Environment
 
-    Default shell is **zsh** with Prezto. The following aliases replace standard commands:
-
-    | Alias | Actual Command |
-    |-------|----------------|
-    | `cat` | `bat --paging=never --style=plain` |
-    | `find` | `fd` |
-    | `grep` | `rg` (ripgrep) |
-    | `ls` | `eza --group-directories-first` |
-    | `du` | `ncdu` |
-
-    When running shell commands, be aware these replacements affect syntax and flags.
-
-    Do not use `command` e.g. command ls /nix/store/... as it asks for approval again and again. Run the actual command directly, e.g. `ls /nix/store/...`.
+    - Default shell is **zsh** with Prezto, not bash
+    - use `bat` instead of `cat`
+    - use `fd` instead of `find`
+    - use `rg` instead of `grep`
+    - use `eza` instead of `ls`
 
     ## PHP projects
 
-    - Do not rely on the default `php` & `composer` binary for project commands.
-    - Use `php81`, `php82`, `php83` explicitly for PHP CLI entrypoints so tooling runs on the project's supported version.
-    - Use `composer81`, `composer82`, `composer83` explicitly for Composer commands to ensure dependencies are managed with the correct PHP version.
-    - Apply this to commands such as:
-      - `php81 ./vendor/bin/phpunit ...`
-      - `php82 ./vendor/bin/php-cs-fixer ...`
-      - `php83 ./vendor/bin/phpstan analyse --memory-limit=1G`
-      - `composer81 install`
-    - Check composer.json to confirm the required PHP version for the project and use the corresponding CLI binary.
-    - For some projects, tests may rely on a test database. In such case, do not run tests in parallel.
+    - There are multiple PHP projects with different supported PHP versions. Always check the `composer.json` file for the required PHP version before running any commands.
+    - Do not rely on the default `php` & `composer` binary for project commands. Use versioned binaries instead: `php81`, `php82`, `php83`, `composer81`, `composer82`, `composer83`
+    - Tests may rely on a test database. In such case, do not run tests in parallel
 
     ## Pull request
 
@@ -63,8 +48,11 @@ let
 
     ## Skills
 
-    Prefer using skill codebase-memory over fd/rg whenever possible
+    - Prefer using skill codebase-memory over fd/rg whenever possible
 
+    ## Guardrails
+
+    - Do not make changes outside of the current working directory unless explicitly instructed by the user. If you need to make changes outside the current working directory, ask for confirmation first.
   '';
 in
 
