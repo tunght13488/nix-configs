@@ -5,10 +5,10 @@ Make the herdr agent skill (SKILL.md from the herdr flake input) available globa
 ## Requirements
 
 ### Requirement: Herdr agent skill derivation sources from flake input
-The system SHALL provide a Nix derivation (`pkgs/herdr-agent-files.nix`) that copies `SKILL.md` from `${inputs.herdr.outPath}` into a structured output directory for agent consumption.
+The system SHALL provide a Nix derivation (`pkgs/herdr-agent-files.nix`) that copies `SKILL.md` from `${inputs.herdr.outPath}/skills/herdr/SKILL.md` into a structured output directory for agent consumption.
 
 #### Scenario: Derivation succeeds when SKILL.md exists in flake source
-- **WHEN** the derivation is built and `${inputs.herdr.outPath}/SKILL.md` exists
+- **WHEN** the derivation is built and `${inputs.herdr.outPath}/skills/herdr/SKILL.md` exists
 - **THEN** the output contains `$out/.pi/skills/herdr/SKILL.md` and `$out/.opencode/skills/herdr/SKILL.md` with identical content to the flake source
 
 #### Scenario: Derivation follows the openspec-agent-files pattern
