@@ -11,12 +11,12 @@
 { stdenv, fetchFromGitHub, esbuild, nodejs }:
 
 let
-  version = "1.5.0";
+  version = "1.8.0";
   src = fetchFromGitHub {
     owner = "Fission-AI";
     repo = "OpenSpec";
     rev = "v${version}";
-    hash = "sha256-CR82VPMGUhZB0yl2aT+ou60n5Bj2cjgG9Rt7A3dXsVQ=";
+    hash = "sha256-somG/01vz+TfFs/X2GOXYwG4WShOZUWz2Za9l/RGHSM=";
   };
 in
 stdenv.mkDerivation rec {

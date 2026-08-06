@@ -92,20 +92,20 @@
           src = final'.fetchFromGitHub {
             owner = "Fission-AI";
             repo = "OpenSpec";
-            tag = "v1.5.0";
-            hash = "sha256-CR82VPMGUhZB0yl2aT+ou60n5Bj2cjgG9Rt7A3dXsVQ=";
+            tag = "v1.8.0";
+            hash = "sha256-somG/01vz+TfFs/X2GOXYwG4WShOZUWz2Za9l/RGHSM=";
           };
         in
         {
-          version = "1.5.0";
+          version = "1.8.0";
           inherit src;
           pnpmDeps = final'.fetchPnpmDeps {
             pname = oldAttrs.pname;
-            version = "1.5.0";
+            version = "1.8.0";
             inherit src;
             pnpm = final'.pnpm_11;
             fetcherVersion = 4;
-            hash = "sha256-+392kmJ9fWQZW4R7n3sompLirulmA5VfTUWH6IL9MBU=";
+            hash = "sha256-Y4QfTtV6DJQF2BpYoPV41M1Oh3vlMv9rOwUt6vyNsdw=";
           };
         });
       # Override postman to latest upstream version because the nixpkgs

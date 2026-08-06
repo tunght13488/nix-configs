@@ -34,6 +34,8 @@ in
       mkSource "/.pi/skills/openspec-sync-specs/SKILL.md";
     ".pi/agent/skills/openspec-verify-change/SKILL.md".source =
       mkSource "/.pi/skills/openspec-verify-change/SKILL.md";
+    ".pi/agent/skills/openspec-update-change/SKILL.md".source =
+      mkSource "/.pi/skills/openspec-update-change/SKILL.md";
 
     # Pi prompts
     ".pi/agent/prompts/opsx-apply.md".source =
@@ -58,6 +60,8 @@ in
       mkSource "/.pi/prompts/opsx-sync.md";
     ".pi/agent/prompts/opsx-verify.md".source =
       mkSource "/.pi/prompts/opsx-verify.md";
+    ".pi/agent/prompts/opsx-update.md".source =
+      mkSource "/.pi/prompts/opsx-update.md";
   };
 
   xdg.configFile = {
@@ -84,6 +88,8 @@ in
       mkSource "/.opencode/skills/openspec-sync-specs/SKILL.md";
     "opencode/skills/openspec-verify-change/SKILL.md".source =
       mkSource "/.opencode/skills/openspec-verify-change/SKILL.md";
+    "opencode/skills/openspec-update-change/SKILL.md".source =
+      mkSource "/.opencode/skills/openspec-update-change/SKILL.md";
 
     # OpenCode commands
     "opencode/commands/opsx-apply.md".source =
@@ -108,5 +114,7 @@ in
       mkSource "/.opencode/commands/opsx-sync.md";
     "opencode/commands/opsx-verify.md".source =
       mkSource "/.opencode/commands/opsx-verify.md";
+    "opencode/commands/opsx-update.md".source =
+      mkSource "/.opencode/commands/opsx-update.md";
   };
 }

@@ -20,7 +20,8 @@ import {
 import { piAdapter } from './src/core/command-generation/adapters/pi.ts';
 import { opencodeAdapter } from './src/core/command-generation/adapters/opencode.ts';
 import { generateCommands } from './src/core/command-generation/generator.ts';
-import { transformToHyphenCommands } from './src/utils/command-references.ts';
+import { getTransformerForTool } from './src/utils/command-references.ts';
+import { getInvocationForAdapter } from './src/core/command-generation/invocation.ts';
 
 const VERSION = process.env.OPENSPEC_VERSION || '0.0.0';
 
@@ -37,8 +38,18 @@ function writeFile(path, content) {
 // Skills (SKILL.md) for Pi and OpenCode
 // ---------------------------------------------------------------------------
 
+// Pi and OpenCode both name commands by filename (flat invocation, `/opsx-<id>`),
+// so their skills get the same `/opsx-` spelling (v1.6+ API; replaces the old
+// `transformToHyphenCommands` helper).
+const skillRefTransformer = getTransformerForTool(
+  'pi',
+  'both',
+  'adapter-backed',
+  getInvocationForAdapter(piAdapter)
+);
+
 for (const { template, dirName } of getSkillTemplates()) {
-  const md = generateSkillContent(template, VERSION, transformToHyphenCommands);
+  const md = generateSkillContent(template, VERSION, skillRefTransformer);
 
   // Pi
   writeFile(`.pi/skills/${dirName}/SKILL.md`, md);
