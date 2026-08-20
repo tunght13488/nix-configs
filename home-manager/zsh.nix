@@ -5,13 +5,13 @@
 {
   programs.zsh.enable = true;
   programs.zsh.shellAliases = {
-    grep = "rg";
+    # grep = "rg";
     tf = "terraform";
-    ls = "eza --group-directories-first";
+    # ls = "eza --group-directories-first";
     l = "ls -l";
     la = "l -a";
     cat = "bat --paging=never --style=plain";
-    find = "fd";
+    # find = "fd";
     du = "ncdu --color dark -rr -x --exclude .git --exclude node_modules";
 
     a = "php artisan";

@@ -132,9 +132,6 @@ Do NOT guess option names. Verify before use:
 | Alias | Actual command |
 |-------|----------------|
 | `cat` | `bat --paging=never --style=plain` |
-| `find` | `fd` |
-| `grep` | `rg` |
-| `ls` | `eza --group-directories-first` |
 | `du` | `ncdu` |
 
 Do not use `command ls` etc. — it triggers repeated approval prompts. Run aliases directly.
