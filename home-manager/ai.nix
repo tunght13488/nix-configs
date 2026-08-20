@@ -28,9 +28,6 @@ let
 
     - Default shell is **zsh** with Prezto, not bash
     - use `bat` instead of `cat`
-    - use `fd` instead of `find`
-    - use `rg` instead of `grep`
-    - use `eza` instead of `ls`
 
     ## PHP projects
 
