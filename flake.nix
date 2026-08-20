@@ -28,7 +28,7 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     # Herdr terminal multiplexer
-    herdr.url = "github:herdrdev/herdr/v0.8.0";
+    herdr.url = "github:herdrdev/herdr/v0.8.2";
   };
 
   outputs =
