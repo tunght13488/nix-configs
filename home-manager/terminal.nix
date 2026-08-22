@@ -77,6 +77,19 @@ in
     enableZshIntegration = true;
   };
 
+  programs.kitty = {
+    enable = true;
+    font = {
+      name = fontFamily;
+      size = fontSize;
+    };
+    settings = {
+      cursor_shape = "beam";
+      cursor_blink_interval = 0;
+    };
+    shellIntegration.enableZshIntegration = true;
+  };
+
   programs.starship.enable = true;
   programs.starship.enableZshIntegration = true;
   programs.starship.settings = { };
