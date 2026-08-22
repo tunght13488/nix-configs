@@ -31,9 +31,11 @@ No custom fnott settings are required for the initial capability. Its package de
 
 ### Gate service startup using the session environment
 
-Home Manager's Wayland service modules normally attach to `graphical-session.target`. The service units will additionally be conditioned on a Wayland Hyprland session, using the session-provided environment (`WAYLAND_DISPLAY` and `XDG_CURRENT_DESKTOP=Hyprland`). The fnott unit's existing Wayland condition will be preserved while adding the Hyprland condition; the hyprpolkitagent unit will receive the same Hyprland session guard.
+Home Manager's Wayland service modules normally attach to `graphical-session.target`. The service units are conditioned on `XDG_CURRENT_DESKTOP=Hyprland` in the systemd user manager environment.
 
-This keeps the services usable from both GDM entries because both Hyprland desktop entries identify themselves as `Hyprland`, while the GNOME session fails the condition and continues using its own notification and authentication components.
+During implementation this decision was corrected: the UWSM design deliberately never sets `WAYLAND_DISPLAY` in the user manager environment (it belongs to uwsm's `always_unset` set and is delivered per-unit via `EnvironmentFile=`), so keeping fnott's module-default `WAYLAND_DISPLAY` condition — as originally planned — would make the gate unsatisfiable in the primary UWSM session. That condition is therefore overridden with `lib.mkForce` and the gate uses the Hyprland session variable alone.
+
+UWSM exports `XDG_CURRENT_DESKTOP` to the user manager (uwsm `always_export`), both Hyprland GDM desktop entries identify the session as `Hyprland`, and the GNOME session's manager environment carries `XDG_CURRENT_DESKTOP=GNOME` and fails the condition. This keeps the services usable from both GDM entries where the variable is present, while GNOME continues using its own notification and authentication components.
 
 ### Do not enable Home Manager's Hyprland window-manager module
 

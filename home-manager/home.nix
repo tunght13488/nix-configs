@@ -29,6 +29,7 @@
     ./aws.nix
     ./go.nix
     ./herdr.nix
+    ./hyprland.nix
     ./node.nix
     ./openspec.nix
   ];
