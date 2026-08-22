@@ -153,6 +153,7 @@ in
   # GNOME
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+  services.displayManager.defaultSession = "gnome";
   # services.gnome.core-apps.enable = false;
   # services.gnome.core-developer-tools.enable = false;
   services.gnome.games.enable = false;
@@ -160,6 +161,13 @@ in
     gnome-tour
     gnome-user-docs
   ];
+
+  # Hyprland — experimental optional session for testing (do not change the
+  # GNOME default; see openspec/changes/add-hyprland-session)
+  programs.hyprland = {
+    enable = true;
+    withUWSM = true;
+  };
 
   programs.vim.enable = true;
   programs.zsh.enable = true;

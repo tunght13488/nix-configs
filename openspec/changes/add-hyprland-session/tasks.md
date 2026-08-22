@@ -1,14 +1,14 @@
 ## 1. Add Hyprland as an Additional System Session
 
-- [ ] 1.1 Enable the NixOS Hyprland module with UWSM integration in `nixos/configuration.nix`.
-- [ ] 1.2 Set `services.displayManager.defaultSession` to `gnome` while retaining the existing GDM, GNOME, X server, and VMware declarations.
-- [ ] 1.3 Confirm the change does not add a Home Manager Hyprland configuration, remove GNOME/GDM, alter `nixos/vmware.nix`, or add a separate Hyprland flake input.
+- [x] 1.1 Enable the NixOS Hyprland module with UWSM integration in `nixos/configuration.nix`.
+- [x] 1.2 Set `services.displayManager.defaultSession` to `gnome` while retaining the existing GDM, GNOME, X server, and VMware declarations.
+- [x] 1.3 Confirm the change does not add a Home Manager Hyprland configuration, remove GNOME/GDM, alter `nixos/vmware.nix`, or add a separate Hyprland flake input.
 
 ## 2. Evaluate and Build the Configuration
 
-- [ ] 2.1 Format the modified Nix configuration with `nixpkgs-fmt`.
-- [ ] 2.2 Run `make os-build` and resolve any evaluation or build errors.
-- [ ] 2.3 Verify the evaluated display-manager session data contains `gnome`, `hyprland`, and `hyprland-uwsm`, with `gnome` as the default.
+- [x] 2.1 Format the modified Nix configuration with `nixpkgs-fmt`.
+- [x] 2.2 Run `make os-build` and resolve any evaluation or build errors.
+- [x] 2.3 Verify the evaluated display-manager session data contains `gnome`, `hyprland`, and `hyprland-uwsm`, with `gnome` as the default.
 
 ## 3. User Session Validation
 
