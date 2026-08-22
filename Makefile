@@ -9,6 +9,8 @@ os-test:
 os:
 	nh os switch . --hostname nixos-vmware --ask --max-jobs $(NPROCS) --no-update-lock-file
 	sudo -u tung env TRUST_STORES=nss CAROOT=/var/lib/mkcert mkcert -install
+os-boot:
+	nh os boot . --hostname nixos-vmware --max-jobs $(NPROCS) --no-update-lock-file
 home-build:
 	nh home build . --configuration tung@nixos-vmware --max-jobs $(NPROCS) --no-update-lock-file --no-nom
 home:

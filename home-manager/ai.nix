@@ -59,11 +59,11 @@ in
   ];
 
   programs.claude-code.enable = false;
-  programs.claude-code.memory.text = global_instructions;
+  programs.claude-code.context = global_instructions;
 
   programs.opencode.enable = false;
   programs.opencode.package = pkgs.unstable.opencode;
-  programs.opencode.rules = global_instructions;
+  programs.opencode.context = global_instructions;
   programs.opencode.settings.share = "disabled";
   programs.opencode.settings.instructions = [ "AGENTS.local.md" ];
   programs.opencode.settings.experimental.disable_paste_summary = false;

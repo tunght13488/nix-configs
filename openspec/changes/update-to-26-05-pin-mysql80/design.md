@@ -20,7 +20,7 @@ Non-Goals (design-level):
 
 ### D1: Side-pin via a dedicated flake input, not `nixpkgs-unstable` and not `follows`
 
-Add `nixpkgs-mysql80.url = "github:NixOS/nixpkgs/nixos-25.11"` and expose only `mysql80` from it.
+Add `nixpkgs-2511.url = "github:NixOS/nixpkgs/nixos-25.11"` and expose only `mysql80` from it.
 
 - Alternative rejected: pull mysql80 from the *existing* `nixos-25.11` main input and only bump the other inputs — impossible, the main input is the thing being bumped.
 - Alternative rejected: `follows` from some other input (agenix/nix-index-database follow main nixpkgs and will move to 26.05 with it; none of them stay on 25.11 by design).
@@ -30,7 +30,7 @@ The input follows nothing; it is pinned independently in `flake.lock`.
 
 ### D2: Expose as a top-level attr in a new overlay entry, not via `pkgs.unstable`-style nested set
 
-Add to `overlays/default.nix` a small overlay (e.g. `mysql80-packages`) setting `mysql80 = (import inputs.nixpkgs-mysql80 { inherit (final) system; }).mysql80;`, and append it to the overlay lists in `nixosConfigurations` and (if needed for devShells/home) the other import sites.
+Add to `overlays/default.nix` a small overlay (e.g. `mysql80-packages`) setting `mysql80 = (import inputs.nixpkgs-2511 { inherit (final) system; }).mysql80;`, and append it to the overlay lists in `nixosConfigurations` and (if needed for devShells/home) the other import sites.
 
 - Rationale: `nixos/mysql.nix` keeps referencing plain `pkgs.mysql80`; no churn in the module usage.
 - Alternative rejected: `pkgs.mysql80-pinned.mysql80` nesting — more explicit but forces edits in `mysql.nix` for no real gain; the plain name is what every other consumer (services.mysql docs, muscle memory) expects.
@@ -63,11 +63,12 @@ Platform-layer drift within 26.05 is accepted: nodejs 22→24 for the default `n
 
 ## Migration Plan
 
-1. Edit inputs (nixpkgs, home-manager, nixvim → 26.05 branches; add nixpkgs-mysql80).
+1. Edit inputs (nixpkgs, home-manager, nixvim → 26.05 branches; add nixpkgs-2511).
 2. Wire the side-pin overlay and append to the system overlay list.
 3. `nix flake update` (or targeted `nix flake lock --update-input` for the changed inputs) — expect a large diff on the nixpkgs node.
 4. `make os-build` then `make home-build`; fix any eval fallout.
-5. User runs `make os` / `make home` to apply (agent never runs switch commands).
+5. User applies with boot-first staging (NOT `make os` / plain `switch`): `make os-boot`, reboot, verify desktop, then `make home`. Plain `switch` on a GNOME stack bump restarts the display manager mid-activation — it kills the session (and the terminal running the switch), and the new greeter can fail against the still-running old kernel, leaving a black screen and an unregistered generation.
+   Fallback if GDM fails to start after reboot: boot the previous generation from the GRUB menu (it is registered by `boot`), then debug via TTY (`journalctl -u display-manager -b`); escape hatches: `services.displayManager.gdm.wayland = false;` or disabling 3D acceleration in the VMware VM settings.
 6. Post-switch smoke test: `systemctl status mysql`, `mysql -e 'SELECT VERSION();'` shows 8.0.x, php*.local sites respond.
 
 Rollback: `nixos-rebuild --rollback`-equivalent via `nh` — generation switch back to the previous 25.11 config; datadir untouched.

@@ -7,7 +7,7 @@ The main `nixpkgs` input is pinned to an August 2025 commit on `nixos-25.11` —
 - Bump the main `nixpkgs` input from `nixos-25.11` to `nixos-26.05`, and update `flake.lock` for it.
 - Bump `home-manager` from `release-25.11` to `release-26.05` (branch must match nixpkgs release).
 - Bump `nixvim` from `nixos-25.11` to `nixos-26.05` (branch must match nixpkgs release).
-- Add a new flake input `nixpkgs-mysql80` pinned to the `nixos-25.11` branch (which still ships `mysql80` 8.0.46) and expose `mysql80` from it via the existing overlay pattern (same shape as `unstable-packages`).
+- Add a new flake input `nixpkgs-2511` pinned to the `nixos-25.11` branch (which still ships `mysql80` 8.0.46) and expose `mysql80` from it via the existing overlay pattern (same shape as `unstable-packages`).
 - Keep `nixos/mysql.nix` pointing at `pkgs.mysql80` — no change to the module usage.
 - Keep `phps`, `agenix`, `nix-index-database`, `herdr`, and `nixpkgs-unstable` inputs as-is; refresh their lock entries to match the new 26.05 base where they follow nixpkgs.
 
@@ -32,7 +32,7 @@ Pure infrastructure/tooling change: system behavior is unchanged (same services,
 
 ## Impact
 
-- **`flake.nix`**: input URLs (nixpkgs, home-manager, nixvim), new `nixpkgs-mysql80` input, overlay wiring for the mysql80 side-pin.
+- **`flake.nix`**: input URLs (nixpkgs, home-manager, nixvim), new `nixpkgs-2511` input, overlay wiring for the mysql80 side-pin.
 - **`overlays/default.nix`**: new overlay (or extension of an existing one) exposing `mysql80` from the pinned 25.11 input.
 - **`nixos/configuration.nix`** / **`flake.nix` devShells**: no functional change expected, but both must still evaluate against 26.05.
 - **Risk points** (verified during exploration):

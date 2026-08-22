@@ -84,7 +84,7 @@
   # be accessible through 'pkgs.unstable'
   unstable-packages = final: _prev: {
     unstable = (import inputs.nixpkgs-unstable {
-      system = final.system;
+      system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     }).extend (final': prev': {
       openspec = prev'.openspec.overrideAttrs (oldAttrs:
@@ -119,6 +119,13 @@
         };
       });
     });
+  };
+
+  # MySQL 8.0 (EOL upstream, dropped from newer nixpkgs) for the local LAMP
+  # stack. Imported from the pinned nixos-25.11 input; builds from the 25.11
+  # binary cache.
+  mysql80-packages = final: _prev: {
+    mysql80 = (import inputs.nixpkgs-2511 { system = final.stdenv.hostPlatform.system; }).mysql80;
   };
 
   # PHP versions from https://github.com/fossar/nix-phps

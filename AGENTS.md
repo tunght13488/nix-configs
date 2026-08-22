@@ -17,6 +17,7 @@
 make home-build # build home-manager config only
 make os-build   # build NixOS config only
 make os-test    # test NixOS config only
+make os-boot    # stage NixOS config as boot default, activate on next reboot (use for major upgrades)
 make home       # home-manager switch --flake ".#tung@nixos-vmware"
 make os         # switch NixOS config on the host
 make update    # nix flake update
@@ -35,15 +36,17 @@ Use `make home-build` after editing home-manager modules; use `make os-build` af
 
 **IMPORTANT**: `make os` and `nixos-rebuild switch` require sudo and will fail without a terminal. Do NOT run them. Verify with `make os-build` or `make os-test`, then ask the user to run `make os` themselves if they want to apply the system.
 
+For major NixOS version upgrades (e.g. 25.11 → 26.05), use `make os-boot` + reboot instead of `make os`: plain `switch` restarts the display manager mid-activation, which kills the GNOME session (and the terminal running the switch) and can leave a black screen with an unregistered generation. `boot` stages the generation in GRUB without touching the running system; the previous generation stays bootable as a fallback.
+
 ## Architecture
 
 Flake-based NixOS config for one machine (`nixos-vmware`, user `tung`).
 
-**Flake inputs are pinned to the `25.11` release branches** — `nixos-25.11`, `home-manager/release-25.11`, `nixvim/nixos-25.11`. A separate `nixpkgs-unstable` input is available for bleeding-edge packages via the `pkgs.unstable` overlay (see `overlays/default.nix`).
+**Flake inputs are pinned to the `26.05` release branches** — `nixos-26.05`, `home-manager/release-26.05`, `nixvim/nixos-26.05`. A separate `nixpkgs-unstable` input is available for bleeding-edge packages via the `pkgs.unstable` overlay (see `overlays/default.nix`). Exception: `nixpkgs-2511` stays pinned to `nixos-25.11` — it supplies `mysql80` (dropped from newer nixpkgs, upstream EOL) for the local dev stack via the `mysql80-packages` overlay.
 
 **Standard structure** follows [Misterio77/nix-starter-configs](https://github.com/Misterio77/nix-starter-configs):
 - `pkgs/` — custom packages and shared package helpers (accessible via `nix build .#name` or overlays)
-- `overlays/` — nixpkgs overlays (additions, modifications, unstable-packages, phps)
+- `overlays/` — nixpkgs overlays (additions, modifications, unstable-packages, phps, mysql80-packages)
 - `modules/nixos/` — reusable NixOS modules
 - `modules/home-manager/` — reusable home-manager modules (ngrok, php-config)
 - `modules/shared/` — modules imported by both NixOS and home-manager (e.g. `php-config.nix`)
@@ -107,7 +110,7 @@ Local test sites are served by system nginx: `http://php81.local`, `http://php82
 - SSH uses `~/.1password/agent.sock`; GitHub identity changes belong in `home-manager/ssh.nix`
 - `allowUnfree = true` is active in both layers; `allowUnfreePredicate = _: true` is also active in home-manager (workaround for [home-manager#2942](https://github.com/nix-community/home-manager/issues/2942))
 - **New files must be `git add`ed before nix evaluation can import them**
-- Keep new flake inputs on the 25.11 release branches (matching existing inputs); use `pkgs.unstable` for bleeding-edge packages
+- Keep new flake inputs on the 26.05 release branches (matching existing inputs, except `nixpkgs-2511` which must stay on `nixos-25.11`); use `pkgs.unstable` for bleeding-edge packages
 
 ## Nix Code Style
 
@@ -124,7 +127,7 @@ Local test sites are served by system nginx: `http://php81.local`, `http://php82
 ## Looking Up Home Manager Options
 
 Do NOT guess option names. Verify before use:
-- Module source: `https://github.com/nix-community/home-manager/blob/release-25.11/modules/programs/<name>.nix`
+- Module source: `https://github.com/nix-community/home-manager/blob/release-26.05/modules/programs/<name>.nix`
 - Search docs (large — use targeted query): `https://nix-community.github.io/home-manager/options.xhtml`
 
 ## Shell Aliases (active in this environment)
