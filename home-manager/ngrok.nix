@@ -1,8 +1,9 @@
 # ngrok — managed tunnel config; authtoken injected from agenix secret
-{ config, ... }:
+{ config, pkgs, ... }:
 {
   programs.ngrok = {
     enable = true;
+    package = pkgs.unstable.ngrok;
     authtokenFile = config.age.secrets.ngrok-authtoken.path;
     settings.agent.web_addr = "0.0.0.0:4040";
     endpoints = {

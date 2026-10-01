@@ -3,17 +3,17 @@
 ## Why
 
 The ngrok agent is pinned to nixos-26.05 stable, which ships 3.31.0 — well
-behind upstream (3.39.10 on nixos-unstable). Staying on an old tunnel agent
-means missing upstream fixes, protocol improvements, and dashboard-feature
-compatibility. The repo already has an established `pkgs.unstable` overlay
+behind upstream (3.39.5 at the repo's `nixpkgs-unstable` pin, 3.39.10 at the
+current nixos-unstable tip). Staying on an old tunnel agent means missing
+upstream fixes, protocol improvements, and dashboard-feature compatibility. The repo already has an established `pkgs.unstable` overlay
 for exactly this situation, and other long-lived tools (opencode, git-town,
 1password) already track unstable.
 
 ## What Changes
 
 - `programs.ngrok.package` is set to `pkgs.unstable.ngrok` in
-  `home-manager/ngrok.nix`, moving the agent from 3.31.0 to the version on
-  nixos-unstable (currently 3.39.10).
+  `home-manager/ngrok.nix`, moving the agent from 3.31.0 to 3.39.5 — the
+  version at the repo's current `nixpkgs-unstable` pin.
 - No changes to endpoints, settings, authtoken handling, or the module
   itself — only the package source.
 

@@ -13,7 +13,8 @@ proposal.md — Why for motivation.
 ## Goals / Non-Goals
 
 **Goals:**
-- ngrok agent tracks nixos-unstable (currently 3.39.10).
+- ngrok agent tracks nixos-unstable (3.39.5 at the current pin; the
+  upstream tip is 3.39.10).
 - Follow the repo's existing unstable opt-in pattern.
 - Keep build-time config validation working against the new binary.
 
