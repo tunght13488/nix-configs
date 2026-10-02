@@ -27,7 +27,9 @@ let
     ## Shell Environment
 
     - Default shell is **zsh** with Prezto, not bash
-    - use `bat` instead of `cat`
+    - Prefer `bat` over `cat`
+    - Prefer `rg` over `grep`
+    - Prefer `fd` over `find`
 
     ## PHP projects
 
@@ -42,10 +44,6 @@ let
       - If any sections don't apply, remove them instead of leaving placeholders.
       - Should have a clear, concise problem statement
       - Describe the approach and reasoning, not just the final code changes
-
-    ## Skills
-
-    - Prefer using skill codebase-memory over fd/rg whenever possible
 
     ## Guardrails
 
