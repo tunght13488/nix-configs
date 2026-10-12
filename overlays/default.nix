@@ -3,7 +3,6 @@
 {
   # This one brings our custom packages from the 'pkgs' directory
   additions = final: _prev: import ../pkgs final.pkgs // {
-    openspecAgentFiles = final.callPackage ../pkgs/openspec-agent-files.nix { };
     herdrAgentFiles = final.callPackage ../pkgs/herdr-agent-files.nix {
       herdrSrc = inputs.herdr.outPath;
     };
@@ -87,27 +86,6 @@
       system = final.stdenv.hostPlatform.system;
       config.allowUnfree = true;
     }).extend (final': prev': {
-      openspec = prev'.openspec.overrideAttrs (oldAttrs:
-        let
-          src = final'.fetchFromGitHub {
-            owner = "Fission-AI";
-            repo = "OpenSpec";
-            tag = "v1.13.2";
-            hash = "sha256-n/unizEPcJ4zLsh9T3kCEUR54x06ZKAgKBwL92MIzcQ=";
-          };
-        in
-        {
-          version = "1.13.2";
-          inherit src;
-          pnpmDeps = final'.fetchPnpmDeps {
-            pname = oldAttrs.pname;
-            version = "1.13.2";
-            inherit src;
-            pnpm = final'.pnpm_11;
-            fetcherVersion = 4;
-            hash = "sha256-nwsfbTt5rSvQmW3AVpTunuDqI/XD5T9RRiZjWju3uPo=";
-          };
-        });
       # Override postman to latest upstream version because the nixpkgs
       # postman package lags at 11.94.0 (no 12.x PR on nixos-unstable).
       postman = prev'.postman.overrideAttrs (old: {

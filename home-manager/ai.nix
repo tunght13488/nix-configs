@@ -66,8 +66,6 @@ in
   programs.opencode.settings.instructions = [ "AGENTS.local.md" ];
   programs.opencode.settings.experimental.disable_paste_summary = false;
 
-  programs.codebase-memory-mcp.enable = true;
-
   home = {
     # Declaratively configure ~/.pi/agent/AGENTS.md
     file = {
