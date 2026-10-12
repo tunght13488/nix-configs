@@ -110,6 +110,23 @@
       User = "admin";
     };
 
+  }
+  // {
+    # Personal SSH
+    "hetzner-*" = lib.hm.dag.entryBefore [ "*" ] {
+      IdentityFile = [ "~/.ssh/ssh_tunght13488" ];
+      IdentitiesOnly = true;
+      User = "root";
+    };
+
+    "hetzner-roomote" = lib.hm.dag.entryBefore [ "hetzner-*" ] {
+      HostName = "65.109.254.142";
+    };
+
+    "hetzner-ubuntu-8gb-hel1-1" = lib.hm.dag.entryBefore [ "hetzner-*" ] {
+      HostName = "37.27.158.126";
+    };
+
   };
   services.ssh-agent.enable = true;
   # services.ssh-agent.enableZshIntegration = true;
