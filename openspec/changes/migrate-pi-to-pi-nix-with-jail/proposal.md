@@ -6,7 +6,8 @@ pi currently runs as a self-managed install (`~/.pi/agent/install/releases/1.2.0
 
 ## What Changes
 
-- Add the `lukasl-dev/pi.nix` flake input (packages pi v1.2.0 — exact version parity with the current install) and enable its Home Manager module (`programs.pi.coding-agent`).
+- Add the `lukasl-dev/pi.nix` flake input (its current revision packages pi **v1.3.0**) and enable its Home Manager module (`programs.pi.coding-agent`).
+- Include the minor pi upgrade this brings: the self-managed install is **1.2.0**, the flake input packages **1.3.0**. The three npm extensions installed under 1.2.0 are re-verified after activation and refreshed with `pi update --extensions` if the version bump requires it.
 - Enable the module's jail (bubblewrap via jail.nix) with a tight permission set: cwd read-write, `~/.pi/agent` read-write (always, by the module), full `/nix/store` read-only, nix daemon socket, system `/etc/nix` read-only, gh config read-only, openspec CLI, and the base dev toolchain (`nix`, `direnv`, `make`, `gh`, `nixpkgs-fmt`).
 - Expose the four worktree-based repos the agent works in (`nix-configs`, `netsuite-middleware`, `fc-es-starter-pack`, `fc-omx`) read-only at their roots — with `.bare` read-write for commits and read-only sibling worktrees — plus persistent language dependency caches (`~/.m2`, `~/.npm`, `~/.cache/yarn`, `~/.cache/composer`).
 - Provide project toolchains inside the jail: PHP 8.1/8.2/8.3 with versioned Composer (the same `phpConfig` wrappers the system layer installs), JDK 8 + Maven 3.6.3 + Node.js + jq (the fc-es-starter-pack set), and Node 22 + Yarn (the fc-omx set).
@@ -31,6 +32,7 @@ None. `herdr-agent-skill`'s requirements concern skill file availability (deriva
 ## Impact
 
 - `flake.nix`: new `pi` input (follows `nixpkgs-unstable`).
+- pi version: 1.2.0 (self-managed install) → 1.3.0 (flake input); the three npm extensions installed for 1.2.0 are re-verified and refreshed if needed.
 - `home-manager/home.nix`: import `inputs.pi.homeModules.default` + new `home-manager/pi.nix` (module config, jail permissions, jail-local gitconfig, openspec binds).
 - `nixos/configuration.nix`: `nix.settings` substituters/trusted keys for `pi.cachix.org`.
 - `~/.pi/agent`: `install/`, `bin/pi`, and `~/.local/bin/pi` removed at cutover; everything else preserved.

@@ -15,7 +15,7 @@ The user environment SHALL provide the `pi` coding agent binary built from the `
 
 #### Scenario: pi version matches the packaged input
 - **WHEN** a user runs `pi --version`
-- **THEN** it prints the version packaged by the current `pi.nix` flake input (1.2.0 at migration time)
+- **THEN** it prints the version packaged by the current `pi.nix` flake input (1.3.0 at migration time — the self-managed install it replaces is 1.2.0)
 
 #### Scenario: pi update does not self-install
 - **WHEN** a user runs `pi update` with the flake-provided binary
@@ -27,6 +27,10 @@ The user environment SHALL keep all existing agent-directory state in `~/.pi/age
 #### Scenario: npm extensions resolve from the agent directory
 - **WHEN** the flake-provided pi starts
 - **THEN** the `npm:` packages listed in `settings.json` (pi-web-access, pi-powerline-footer, @plannotator/pi-extension) load from `~/.pi/agent/npm`
+
+#### Scenario: extensions work after the version upgrade
+- **WHEN** the flake-provided pi (1.3.0) starts with the npm extensions installed under 1.2.0
+- **THEN** the extensions load, refreshed in place with `pi update --extensions` if the version bump requires it
 
 #### Scenario: settings and credentials are untouched
 - **WHEN** the migration is complete

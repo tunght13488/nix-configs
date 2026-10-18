@@ -33,6 +33,12 @@
 
     # Herdr terminal multiplexer
     herdr.url = "github:herdrdev/herdr/v0.9.5";
+
+    # pi coding agent (flake-provided binary, jail.nix sandbox via its
+    # home-manager module). pi.nix CI targets nixos-unstable; there are no
+    # release branches, so flake.lock pins the packaged pi version.
+    pi.url = "github:lukasl-dev/pi.nix";
+    pi.inputs.nixpkgs.follows = "nixpkgs-unstable";
   };
 
   outputs =

@@ -71,9 +71,11 @@ in
         # Cache configuration
         substituters = [
           "https://nix-community.cachix.org" # Community packages
+          "https://pi.cachix.org" # pi coding agent (flake input, see home-manager/pi.nix)
         ];
         trusted-public-keys = [
           "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+          "pi.cachix.org-1:lGeoGJaZ5ZDabuRzkcD5EBTNnDM4HJ1vqeOxlWk1Flk="
         ];
         http-connections = 120;
         max-substitution-jobs = 120;

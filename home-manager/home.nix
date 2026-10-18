@@ -13,6 +13,7 @@
 
     # Or modules exported from other flakes:
     inputs.nixvim.homeModules.nixvim
+    inputs.pi.homeModules.default
 
     # You can also split up your configuration and import pieces of it here:
     ./agenix.nix
@@ -25,6 +26,7 @@
     ./fonts.nix
     ./terminal.nix
     ./ai.nix
+    ./pi.nix
     ./aws.nix
     ./go.nix
     ./herdr.nix
