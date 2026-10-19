@@ -86,6 +86,7 @@
     unstable.uv
     unstable.zed-editor
     herdr
+    obsidian
   ];
 
   home.sessionVariables = {
