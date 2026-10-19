@@ -15,6 +15,7 @@ in
     unzip
     pv
     dnsutils
+    wl-clipboard
   ];
   programs.alacritty.enable = true;
   # programs.alacritty.settings.colors.bright = {
