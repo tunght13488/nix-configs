@@ -14,6 +14,7 @@ in
   home.packages = with pkgs; [
     unzip
     pv
+    dnsutils
   ];
   programs.alacritty.enable = true;
   # programs.alacritty.settings.colors.bright = {
