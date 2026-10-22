@@ -22,6 +22,21 @@
           }
         ];
       };
+      v3 = {
+        name = "v3";
+        url = "https://inherently-good-tarpon.ngrok-free.app";
+        upstream.url = "v3.vm.local:80";
+        traffic_policy.on_http_request = [
+          {
+            actions = [
+              {
+                type = "add-headers";
+                config.headers.host = "v3.vm.local";
+              }
+            ];
+          }
+        ];
+      };
       prbot = {
         name = "prbot";
         url = "https://inherently-good-tarpon.ngrok-free.app";
