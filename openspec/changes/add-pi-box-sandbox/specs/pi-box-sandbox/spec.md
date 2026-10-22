@@ -24,7 +24,7 @@ Running `pi-box` in a project directory SHALL start an interactive Pi session in
 
 ### Requirement: Least-privilege default grant set
 
-By default the sandbox SHALL receive exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), and `~/.config/gh` (read-only). The sandbox SHALL NOT receive `~/.aws`, `~/.ssh`, the 1Password agent socket, or any other host path.
+By default the sandbox SHALL receive exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), `~/.config/gh` (read-only), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write). The sandbox SHALL NOT receive `~/.aws`, `~/.ssh`, the 1Password agent socket, or any other host path.
 
 #### Scenario: AWS credentials inaccessible
 - **WHEN** a process in the sandbox reads `~/.aws` (including the SSO token cache)
@@ -36,7 +36,15 @@ By default the sandbox SHALL receive exactly these host resources: the project w
 
 #### Scenario: Only granted paths are mounted
 - **WHEN** the container's mounts are inspected on a default run
-- **THEN** the host-backed mounts are exactly the workspace, `~/.pi/agent`, `~/.config/git`, and `~/.config/gh`
+- **THEN** the host-backed mounts are exactly the workspace, `~/.pi/agent`, `~/.config/git`, `~/.config/gh`, plus the project's git directory when it lives outside the workspace
+
+#### Scenario: Git metadata outside the workspace is usable
+- **WHEN** the project is a worktree in a bare-repository layout and `git status`, `git log`, or a commit runs inside the sandbox
+- **THEN** the command succeeds against the same repository as on the host
+
+#### Scenario: Plain project adds no extra mount
+- **WHEN** the project's `.git` is a directory inside the workspace
+- **THEN** no git directory is mounted beyond the workspace
 
 ### Requirement: Shared Pi identity, state, and instructions
 
@@ -60,15 +68,11 @@ The sandbox SHALL use the host's `~/.pi/agent` read-write as its Pi state: provi
 
 ### Requirement: Git and GitHub identity in the sandbox
 
-The sandbox SHALL carry the host's git and GitHub configuration via read-only mounts of `~/.config/git` and `~/.config/gh`. Host-only references inside that configuration (the `/nix/store` credential helper path, host editor, askpass, and diff/merge tools) SHALL be neutralized or redirected to in-container equivalents.
+The sandbox SHALL carry the host's git and GitHub configuration via read-only mounts of `~/.config/git` and `~/.config/gh`, and SHALL neutralize or redirect host-only references inside that configuration (the `/nix/store` credential helper path, host editor, askpass, and diff/merge tools) to in-container equivalents.
 
 #### Scenario: Commits carry host identity
 - **WHEN** a commit is created inside the sandbox
 - **THEN** the author name and email match the host git configuration
-
-#### Scenario: gh can read pull requests
-- **WHEN** `gh pr view` runs inside the sandbox
-- **THEN** it authenticates using the host gh configuration and returns the pull request details
 
 #### Scenario: Git over HTTPS uses the in-container credential helper
 - **WHEN** git authenticates against `https://github.com` inside the sandbox
@@ -77,6 +81,22 @@ The sandbox SHALL carry the host's git and GitHub configuration via read-only mo
 #### Scenario: Host-only tools are not invoked
 - **WHEN** git requires an editor or credential prompt inside the sandbox
 - **THEN** it uses container-safe fallbacks instead of `nvim`, `vscode`, or `git-gui--askpass`
+
+### Requirement: GitHub authentication in the sandbox
+
+Because the host's `gh` keeps its credential in the OS keyring, which does not cross the sandbox boundary, the sandbox SHALL authenticate `gh` through a read-only mounted token file. The token SHALL NOT be passed through the container environment or appear in `docker inspect`.
+
+#### Scenario: gh can read pull requests
+- **WHEN** `gh pr view` runs inside the sandbox with a token file present
+- **THEN** it authenticates with that token and returns the pull request details
+
+#### Scenario: Token stays out of the container environment
+- **WHEN** the container environment and configuration are inspected
+- **THEN** the GitHub token appears only in the read-only mounted file, not in environment variables
+
+#### Scenario: Missing token file leaves gh unauthenticated
+- **WHEN** no token file exists
+- **THEN** the sandbox still starts and `gh` reports an authentication failure instead of failing the run
 
 ### Requirement: Per-project opt-in grants via manifest
 

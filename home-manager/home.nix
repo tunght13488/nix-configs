@@ -30,6 +30,7 @@
     ./herdr.nix
     ./hyprland.nix
     ./node.nix
+    ./pi-sandbox.nix
   ];
 
   nixpkgs = {

@@ -139,6 +139,79 @@ Do NOT guess option names. Verify before use:
 
 Do not use `command ls` etc. — it triggers repeated approval prompts. Run aliases directly.
 
+## Sandboxed Pi (`pi-box`)
+
+`pi-box` runs Pi in a per-project rootless-Docker container instead of on the host, so the
+agent never sees `~/.aws`, `~/.ssh`, or the 1Password socket. Installed by
+`home-manager/pi-sandbox.nix`; the base image Dockerfile deploys to
+`~/.pi/sandbox/Dockerfile`.
+
+```bash
+pi-box                    # start Pi in the current directory's sandbox
+pi-box -p "run the tests" # pass arguments to Pi (non-interactive here)
+pi-box init               # scaffold Dockerfile.pi and pi-box.toml
+pi-box help               # usage summary
+```
+
+Default grants: the project directory (read-write, at its host absolute path),
+`~/.pi/agent` (read-write — provider credentials, settings, sessions, skills and trust are
+shared with host Pi, so no login step is needed in the sandbox), `~/.config/git`
+(read-only), `~/.config/gh` (read-only). Never granted: `~/.aws`, `~/.ssh`, the 1Password
+agent socket, and every other host path.
+
+Worktree projects also get their git directory: when `git rev-parse --git-common-dir` for the
+workspace resolves outside it (the bare+worktree layout used here), `pi-box` mounts that
+directory read-write, so `git status`, `git log` and commits work inside the sandbox. Plain
+single-directory repositories get no extra mount.
+
+GitHub identity needs one extra file: host `gh` keeps its token in the OS keyring, which
+does not cross into the container, so `pi-box` reads `~/.pi/sandbox/gh-token` (mode 600)
+when present, mounts it read-only, and exports `GH_TOKEN` inside the container only.
+
+```bash
+mkdir -p ~/.pi/sandbox && install -m 600 /dev/null ~/.pi/sandbox/gh-token
+# paste the token, then Ctrl-D
+cat > ~/.pi/sandbox/gh-token
+```
+
+**The token is a classic PAT with `repo` + `read:org`, and it is write-capable.** Classic
+tokens have no read-only scope for private repos, and `Secretlabsg` blocks fine-grained PATs
+needing org approval, so a classic PAT is the only token that works against that org today.
+Consequence: sandboxed Pi can push to every private repo the token reaches. Treat the
+sandbox as trusted for git writes, or drop the file for projects that must not have it.
+See the design doc's risks section for the read-only alternatives (GitHub App, org-approved
+fine-grained PAT).
+
+Without that file the sandbox still starts; `gh` just reports unauthenticated. SSH remotes
+(`git@github.com:...`) cannot authenticate in the sandbox — use HTTPS remotes there, since
+the 1Password agent socket is deliberately never mounted.
+
+The base image (`pi-sandbox`) holds the common toolchain — git, gh, ripgrep, fd, node,
+and a pinned Pi. Per-project images are `FROM pi-sandbox`, so common layers are stored once
+and shared across projects and worktrees. Pi itself is pinned to the host version in
+`home-manager/pi-sandbox.nix` (`piVersion`).
+
+### Per-project files (untracked, gitignored)
+
+`pi-box init` writes both from templates; it never overwrites existing files. Both are in
+`programs.git.ignores`, so they stay untracked in every repository — which also means each
+new worktree starts without them and needs `pi-box init` again.
+
+- `Dockerfile.pi` — project toolchain, `FROM pi-sandbox`
+- `pi-box.toml` — extra grants:
+
+```toml
+gh = true                          # false drops the ~/.config/gh GitHub identity mount
+ports = ["8080:8080"]              # publish container ports
+mounts = ["/host/path"]            # extra read-only host mounts, at the same path
+
+[env]
+DB_HOST = "host.docker.internal"   # reach host MySQL etc. from the sandbox
+```
+
+Rebuild the base image after upgrading Pi by running `pi-box` (it rebuilds on every run;
+Docker layer caching makes an unchanged build a no-op).
+
 ## Scratch Space
 
 `.tmp/` (repo root) is gitignored — use it for temp files and test outputs instead of `/tmp`.
