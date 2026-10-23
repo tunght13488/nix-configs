@@ -153,6 +153,10 @@ pi-box init               # scaffold Dockerfile.pi and pi-box.toml
 pi-box help               # usage summary
 ```
 
+Herdr recognizes `pi-box` panes as the `pi` agent (screen-manifest detection; `HERDR_AGENT`
+is set to `pi` on the host-side wrapper process). Override per run with `HERDR_AGENT=... pi-box`
+if ever needed.
+
 Default grants: the project directory (read-write, at its host absolute path),
 `~/.pi/agent` (read-write — provider credentials, settings, sessions, skills and trust are
 shared with host Pi, so no login step is needed in the sandbox), `~/.config/git`

@@ -159,6 +159,12 @@ cmd_run() {
   workspace="$(pwd)"
   pi_args=("$@")
 
+  # Herdr cannot see the agent process behind a sandbox wrapper, so tell it
+  # which screen manifest to use for this pane. The hint lives on the host-side
+  # foreground process (this script, then the exec'd docker), never inside the
+  # container. Override with HERDR_AGENT=... when invoking pi-box.
+  export HERDR_AGENT="${HERDR_AGENT:-pi}"
+
   build_base_image
 
   local image="$BASE_IMAGE"
