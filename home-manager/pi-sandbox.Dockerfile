@@ -18,6 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       fd-find \
       gh \
       git \
+      jq \
       less \
       ripgrep \
       unzip \
