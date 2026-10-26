@@ -1,0 +1,75 @@
+# Spec Delta
+
+## Purpose
+
+Defines the pi-box template catalog: the toolchain templates shipped with pi-box, where they live, and what each one provides.
+
+## ADDED Requirements
+
+### Requirement: Template catalog under the sandbox directory
+
+Templates SHALL live in `~/.pi/sandbox/templates/<name>/`, deployed declaratively by home-manager from the `home-manager/pi-box-templates/` directory in the configuration repository. Every template SHALL provide a `Dockerfile.pi` and MAY provide a `pi-box.toml`.
+
+#### Scenario: Shipped templates are deployed
+- **WHEN** home-manager has been applied
+- **THEN** `~/.pi/sandbox/templates/` contains `php83`, `php82`, `java8`, `node22`, and `default`, each with a `Dockerfile.pi`
+
+#### Scenario: Templates are versioned with the configuration
+- **WHEN** a template file is changed in `home-manager/pi-box-templates/` and home-manager is applied
+- **THEN** the deployed template reflects the change
+
+### Requirement: php83 template
+
+The `php83` template SHALL build a project image on top of the shared base that provides PHP 8.3 from the sury.org repository together with composer and the extensions bcmath, cli, curl, dom, gd, mbstring, mysql, soap, xml, and zip. Its manifest SHALL set `DB_HOST=host.docker.internal` so database traffic reaches the host MySQL.
+
+#### Scenario: Laravel 12 project installs on PHP 8.3
+- **WHEN** `pi-box init php83` scaffolds a Laravel 12 project and `composer install` runs inside the sandbox
+- **THEN** the install succeeds on PHP 8.3 with all required extensions loaded
+
+#### Scenario: Host database reachable
+- **WHEN** the project's feature tests run inside a sandbox scaffolded from `php83`
+- **THEN** the tests connect to the host MySQL without credentials duplicated in the manifest
+
+### Requirement: php82 template
+
+The `php82` template SHALL build a project image on top of the shared base that provides PHP 8.2 from the sury.org repository with the same extension set as `php83`, and SHALL ship the same `DB_HOST` manifest.
+
+#### Scenario: PHP 8.2 project installs
+- **WHEN** `pi-box init php82` scaffolds a project whose composer requires PHP ^8.2 and `composer install` runs inside the sandbox
+- **THEN** the install succeeds on PHP 8.2
+
+#### Scenario: Extension parity with php83
+- **WHEN** the loaded extensions of a `php82` image are inspected
+- **THEN** the bcmath, cli, curl, dom, gd, mbstring, mysql, soap, xml, and zip extensions are present
+
+### Requirement: java8 template
+
+The `java8` template SHALL build a project image on top of the shared base that provides a Java 8 JDK and Maven 3.6.3 on PATH, with `JAVA_HOME` pointing at the JDK. Its manifest SHALL declare a named Docker volume for the Maven local repository so downloaded dependencies persist across sandbox runs.
+
+#### Scenario: Toolchain reports the pinned versions
+- **WHEN** `mvn -version` runs inside a sandbox scaffolded from `java8`
+- **THEN** it reports Maven 3.6.3 running on a Java 8 JDK
+
+#### Scenario: Maven cache survives runs
+- **WHEN** a second sandbox run executes `mvn test` after a first run downloaded the dependencies
+- **THEN** dependencies already in the named volume are reused and are not re-downloaded
+
+### Requirement: node22 template
+
+The `node22` template SHALL build a project image on top of the shared base that provides Node 22 (at least 22.19, so the pinned Pi agent still runs) and yarn classic 1.22.x on PATH.
+
+#### Scenario: Node 22 and yarn available
+- **WHEN** `node --version` and `yarn --version` run inside a sandbox scaffolded from `node22`
+- **THEN** node reports a 22.x version and yarn reports 1.22.x
+
+#### Scenario: Pi still starts on Node 22
+- **WHEN** `pi-box` starts a sandbox scaffolded from `node22`
+- **THEN** the Pi agent launches successfully on the Node 22 runtime
+
+### Requirement: default template
+
+The `default` template SHALL reproduce the current generic scaffold: a `Dockerfile.pi` whose toolchain instructions are commented examples, and the generic `pi-box.toml` with empty grants.
+
+#### Scenario: Bare init uses the default template
+- **WHEN** `pi-box init` runs without a template name in a project without scaffold files
+- **THEN** the written files match the generic scaffold of today
