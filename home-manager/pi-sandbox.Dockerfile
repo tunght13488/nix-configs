@@ -34,6 +34,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # reads this file (~/.gitconfig) after the XDG global config, so single-valued
 # settings here win, and an empty credential.helper resets the accumulator -
 # which drops the host's /nix/store credential-helper path (absent in here).
+#
+# The url.*.insteadOf entry lets GitHub SCP-style SSH remotes (`git@github.com:`)
+# resolve over HTTPS, where the gh credential helper above can authenticate them.
+# No SSH agent is ever mounted, so without this every SSH-form remote would fail.
+# The rewrite is transport-level only: each checkout keeps its configured origin.
 RUN cat > /root/.gitconfig <<'GITCONFIG'
 [credential]
 	helper =
@@ -43,6 +48,8 @@ RUN cat > /root/.gitconfig <<'GITCONFIG'
 [credential "https://gist.github.com"]
 	helper = ""
 	helper = /usr/bin/gh auth git-credential
+[url "https://github.com/"]
+	insteadOf = git@github.com:
 [core]
 	editor = vi
 	askpass =

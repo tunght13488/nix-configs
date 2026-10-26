@@ -186,9 +186,15 @@ sandbox as trusted for git writes, or drop the file for projects that must not h
 See the design doc's risks section for the read-only alternatives (GitHub App, org-approved
 fine-grained PAT).
 
-Without that file the sandbox still starts; `gh` just reports unauthenticated. SSH remotes
-(`git@github.com:...`) cannot authenticate in the sandbox — use HTTPS remotes there, since
-the 1Password agent socket is deliberately never mounted.
+Without that file the sandbox still starts; `gh` just reports unauthenticated.
+
+GitHub remotes written in SSH form work anyway: the base image's `/root/.gitconfig` rewrites
+`git@github.com:` to `https://github.com/`, so those operations go over HTTPS with the same
+`gh` credential helper, and each checkout keeps its configured `origin` untouched. That
+rewrite covers the `git@github.com:ORG/REPO.git` form only — `ssh://git@github.com/...` URLs
+and remotes on any other SSH host are not rewritten and still fail in the sandbox, since the
+1Password agent socket is deliberately never mounted. Note that `git remote get-url` prints
+the rewritten HTTPS URL while `git config --get remote.origin.url` shows the stored SSH value.
 
 The base image (`pi-sandbox`) holds the common toolchain — git, gh, ripgrep, fd, node,
 and a pinned Pi. Per-project images are `FROM pi-sandbox`, so common layers are stored once
