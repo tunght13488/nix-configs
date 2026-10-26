@@ -35,6 +35,7 @@ let
     ./vhosts/middleware.vm.local.nix
     ./vhosts/v3.vm.local.nix
     ./vhosts/prbot.vm.local.nix
+    ./vhosts/litellm.vm.local.nix
   ];
 
   # Turn a file path into { name = serverName; value = <vhost attrset>; }.
