@@ -1,5 +1,5 @@
 # Per-project pi-box image for a Node 22 project (yarn classic).
-# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+# The shared base (git, gh, rg, fd, node, python3, pi) is ~/.pi/sandbox/Dockerfile.
 FROM pi-sandbox
 
 # Node 22: the base ships Node 24, and this project pins engines.node = 22.*.

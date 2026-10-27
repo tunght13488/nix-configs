@@ -1,5 +1,5 @@
 # Per-project pi-box image for a PHP 8.2 project (Laravel 9/10 and similar).
-# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+# The shared base (git, gh, rg, fd, node, python3, pi) is ~/.pi/sandbox/Dockerfile.
 FROM pi-sandbox
 
 # PHP: Debian does not ship 8.2, so use the sury.org repository.
