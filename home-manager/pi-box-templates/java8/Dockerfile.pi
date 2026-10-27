@@ -1,5 +1,5 @@
 # Per-project pi-box image for a Java 8 project built with Maven 3.6.3.
-# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+# The shared base (git, gh, rg, fd, node, python3, pi) is ~/.pi/sandbox/Dockerfile.
 FROM pi-sandbox
 
 # JDK 8: Debian bookworm ships Java 17+, so use the Adoptium apt repository.

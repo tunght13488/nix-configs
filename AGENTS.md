@@ -200,7 +200,7 @@ and remotes on any other SSH host are not rewritten and still fail in the sandbo
 the rewritten HTTPS URL while `git config --get remote.origin.url` shows the stored SSH value.
 
 The base image (`pi-sandbox`) holds the common toolchain — git, gh, ripgrep, fd, node,
-and a pinned Pi. Per-project images are `FROM pi-sandbox`, so common layers are stored once
+python3, and a pinned Pi. Per-project images are `FROM pi-sandbox`, so common layers are stored once
 and shared across projects and worktrees. Pi itself is pinned to the host version in
 `home-manager/pi-sandbox.nix` (`piVersion`).
 
