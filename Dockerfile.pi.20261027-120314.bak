@@ -1,0 +1,11 @@
+# Per-project pi-box image for nix-configs.
+# The shared base (git, gh, jq, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+FROM pi-sandbox
+
+# OpenSpec CLI for spec/change workflows (the openspec/ directory in this repo).
+# Pinned to the host version; bump when the host `openspec` is upgraded.
+USER root
+RUN npm install -g "@fission-ai/openspec@1.14.1" \
+    && npm cache clean --force
+
+WORKDIR /workspace

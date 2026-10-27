@@ -8,7 +8,7 @@ Document the sourcing, version tracking, and integration contract for the JetBra
 
 ### Requirement: JetBrains Toolbox is sourced from the nixpkgs-unstable input
 
-The home-manager configuration SHALL provide `jetbrains-toolbox` from the `pkgs.unstable` overlay (the `nixpkgs-unstable` flake input) using the flat top-level attribute `unstable.jetbrains-toolbox`, and SHALL NOT source it from the `nixos-25.11` (`nixpkgs`) input. This follows the existing `unstable.*` convention already used for `unstable.postman`, `unstable.zed-editor`, `unstable.uv`, and `unstable.openspec`.
+The home-manager configuration SHALL provide `jetbrains-toolbox` through `pkgs.unstable` (the `nixpkgs-unstable` flake input) using the flat top-level attribute `unstable.jetbrains-toolbox`, and SHALL NOT source it from the `nixos-25.11` (`nixpkgs`) input. The extended `unstable` set SHALL provide that attribute from the repository's own `pkgs/jetbrains-toolbox.nix`, pinned to the latest upstream release and built against the unstable package set.
 
 #### Scenario: Package entry resolves to the unstable input
 
@@ -18,19 +18,29 @@ The home-manager configuration SHALL provide `jetbrains-toolbox` from the `pkgs.
 
 #### Scenario: Resolved version tracks a current upstream build
 
-- **WHEN** the `nixpkgs-unstable` flake input has been bumped to a revision containing nixpkgs PR #542679 (`jetbrains-toolbox: 3.6.1.85592 -> 3.6.2.85969`) or later
-- **THEN** the built `jetbrains-toolbox` store path version is `3.6.2.85969` or newer
-- **THEN** `jetbrains-toolbox --version` prints a version `>= 3.6.2`
+- **WHEN** the `unstable.jetbrains-toolbox` derivation is evaluated
+- **THEN** its version is `3.9.0.88839`
+- **THEN** `jetbrains-toolbox --version` prints `3.9.0.88839`
+
+#### Scenario: Source download uses a working JetBrains host
+
+- **WHEN** the derivation's source is fetched during a build
+- **THEN** it is downloaded from `https://download.jetbrains.com/toolbox/`, not from `download-cdn.jetbrains.com`
+- **THEN** the build succeeds on a store that has no cached copy of the package
 
 ### Requirement: The nixpkgs-unstable bump is targeted
 
-The `flake.lock` update accompanying this change SHALL advance only the `nixpkgs-unstable` node (via `nix flake update nixpkgs-unstable` or equivalent). The `nixos-25.11` nixpkgs, `home-manager`, `nixvim`, `agenix`, `nix-index-database`, and `phps` input revisions SHALL remain unchanged.
+The version pin SHALL be delivered entirely by the `unstable-packages` overlay and the repository's `pkgs/jetbrains-toolbox.nix`. `flake.lock` SHALL remain unchanged by this change, and the `nixpkgs-unstable`, `nixpkgs`, `home-manager`, `nixvim`, `agenix`, `nix-index-database`, and `phps` input revisions SHALL stay byte-identical to the prior commit. Advancing `nixpkgs-unstable` is not part of the pin, so no input node moves.
 
 #### Scenario: Only the unstable input moves
 
 - **WHEN** the `flake.lock` diff is reviewed after the change
-- **THEN** only the `nixpkgs-unstable` node's `rev`/`narHash`/`lastModified` differ from the prior commit
-- **THEN** the `nixpkgs`, `home-manager`, `nixvim`, `agenix`, `nix-index-database`, and `phps` nodes are byte-identical to the prior commit
+- **THEN** no input node differs from the prior commit, because the pin lands in the overlay instead of the lockfile
+
+#### Scenario: Other unstable packages are unaffected
+
+- **WHEN** the change is applied
+- **THEN** `unstable.postman`, `unstable.zed-editor`, `unstable.uv`, and `unstable.openspec` resolve to the same derivations as before the change
 
 ### Requirement: JetBrains IDEs remain Toolbox-managed and out of scope
 

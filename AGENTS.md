@@ -30,13 +30,13 @@ nix fmt                                 # format via flake formatter
 nixpkgs-fmt <file>                      # format single file (installed system-wide)
 ```
 
-For AI agents: only run `make home-build`, `make os-build`, or `make os-test` for verification. Never run `make home`, `make os`, `nh ... switch`, or `nixos-rebuild switch`.
+For AI agents: the runnable Makefile targets are `make format`, `make home-build`, `make os-build`, and `make update`. `make os`, `make os-boot`, `make home`, `make clean`, and `make os-test` are reserved for humans — never run them. This is a policy, not an enforced gate; the Makefile has no guards.
 
-Use `make home-build` after editing home-manager modules; use `make os-build` after editing `nixos/`. Use `make os-test` only when you specifically need test-mode evaluation.
+Use `make home-build` after editing home-manager modules; use `make os-build` after editing `nixos/`.
 
-**IMPORTANT**: `make os` and `nixos-rebuild switch` require sudo and will fail without a terminal. Do NOT run them. Verify with `make os-build` or `make os-test`, then ask the user to run `make os` themselves if they want to apply the system.
+**IMPORTANT**: `make os` and `make home` require sudo and a terminal, and `make os-test` activates a test generation on the running system. The user runs those themselves if they want to apply changes.
 
-For major NixOS version upgrades (e.g. 25.11 → 26.05), use `make os-boot` + reboot instead of `make os`: plain `switch` restarts the display manager mid-activation, which kills the GNOME session (and the terminal running the switch) and can leave a black screen with an unregistered generation. `boot` stages the generation in GRUB without touching the running system; the previous generation stays bootable as a fallback.
+For major NixOS version upgrades (e.g. 25.11 → 26.05), humans use `make os-boot` + reboot instead of `make os`: plain `switch` restarts the display manager mid-activation, which kills the GNOME session (and the terminal running the switch) and can leave a black screen with an unregistered generation. `boot` stages the generation in GRUB without touching the running system; the previous generation stays bootable as a fallback.
 
 ## Architecture
 
@@ -230,10 +230,11 @@ deployed by home-manager to `~/.pi/sandbox/templates/`, one directory each:
 | `php82` | same extension list on PHP 8.2 (sury) | `DB_HOST=host.docker.internal` |
 | `java8` | Temurin 8 JDK + Maven 3.6.3 | named volume for `/root/.m2` |
 | `node22` | Node 22 + yarn classic 1.22 | generic |
+| `nix-configs` | private Nix (flakes) + make + `nh` + `nixos-rebuild` + `nixpkgs-fmt` + openspec | `privileged = true`, named volume for `/nix` |
 
 Use `php83` for Laravel 11/12 projects, `php82` for older Laravel (9/10) and any project that
-pins PHP 8.2, `java8` for the Fluent Commerce backend, and `node22` for the frontend. A
-template may omit `pi-box.toml`; the generic manifest is then used.
+pins PHP 8.2, `java8` for the Fluent Commerce backend, `node22` for the frontend, and
+`nix-configs` for this repository, whose Makefile targets are meant to run inside the sandbox.
 
 ```bash
 pi-box init php83     # in the project root, then adjust Dockerfile.pi as needed
@@ -241,7 +242,24 @@ pi-box init php83     # in the project root, then adjust Dockerfile.pi as needed
 
 Adding a template means adding a directory under `home-manager/pi-box-templates/` and
 force-adding its files to git (`git add -f`), because the global gitignore ignores the
-scaffold names `Dockerfile.pi` and `pi-box.toml` everywhere.
+scaffold names `Dockerfile.pi` and `pi-box.toml` everywhere. A template may omit
+`pi-box.toml`; the generic manifest is then used.
+
+### Nix builds in the sandbox (`nix-configs` template)
+
+Adopt it in this repository with `pi-box init --force nix-configs` (backups are written
+first). The template adds a private, flake-capable Nix whose store lives in the named volume
+`pi-nix-configs-nix`, so nixpkgs and built paths survive the `--rm` runs; the host `/nix` and
+the host Nix daemon stay outside the sandbox. Worktrees share that volume deliberately — Nix
+store paths are content addressed, so sharing only saves downloads. Remove it with
+`docker volume rm pi-nix-configs-nix` when it is no longer wanted.
+
+Nix's build sandbox needs nested user/mount/PID namespaces, which rootless Docker grants only
+in privileged mode — capabilities alone are not enough. That is why the template declares
+`privileged = true`: without it, a build fails with "this system does not support the kernel
+namespaces that are required for sandboxing" instead of silently running unsandboxed (the
+template also sets `sandbox-fallback = false`). Builds stay hermetic, so a sandboxed build
+here behaves like a sandboxed build on the host.
 
 ### Per-project files (untracked, gitignored)
 
@@ -259,6 +277,7 @@ Existing files are not touched by default: `pi-box init` asks once before replac
 
 ```toml
 gh = true                          # false drops the ~/.config/gh GitHub identity mount
+privileged = true                  # only for workloads needing nested namespaces (Nix)
 ports = ["8080:8080"]              # publish container ports
 mounts = ["/host/path"]            # extra read-only host mounts, at the same path
 volumes = ["pi-m2-oms:/root/.m2"]  # named Docker volume, kept across runs
