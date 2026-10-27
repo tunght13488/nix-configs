@@ -40,6 +40,32 @@
         if (( $+commands[gh])); then
           eval "$(gh completion -s zsh)";
         fi
+
+        # Herdr resumes a restarted pane by typing `pi --session <host path>`
+        # into the pane shell. For pi-box panes that resume must stay inside the
+        # sandbox, so route exactly that invocation through pi-box; every other
+        # pi invocation runs the real binary.
+        pi() {
+          if [[ "''${HERDR_ENV:-}" == "1" ]]; then
+            local arg prev=""
+            for arg in "$@"; do
+              if [[ "$prev" == "--session" && "$arg" == "$HOME/.pi/agent/"* ]]; then
+                pi-box "$@"
+                return
+              fi
+              case "$arg" in
+                --session=*)
+                  if [[ "''${arg#--session=}" == "$HOME/.pi/agent/"* ]]; then
+                    pi-box "$@"
+                    return
+                  fi
+                  ;;
+              esac
+              prev="$arg"
+            done
+          fi
+          command pi "$@"
+        }
       '';
     in
     lib.mkMerge [

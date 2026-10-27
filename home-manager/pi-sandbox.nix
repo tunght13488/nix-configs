@@ -25,6 +25,7 @@ let
       gnugrep
       gnused
       iproute2
+      python3
       yq-go
     ];
     text = lib.replaceStrings [ "__PI_VERSION__" ] [ piVersion ]
@@ -36,6 +37,10 @@ in
 
   # The wrapper builds this on demand; keep it alongside the Pi agent state.
   home.file.".pi/sandbox/Dockerfile".source = ./pi-sandbox.Dockerfile;
+
+  # Herdr state reporting relay: the wrapper starts it per run inside a herdr
+  # pane and publishes only its socket to the container, never herdr's own.
+  home.file.".pi/sandbox/pi-herdr-relay.py".source = ./pi-herdr-relay.py;
 
   # `pi-box init [template]` copies from here. The sources must be tracked in
   # git (force-added, since the global gitignore ignores the scaffold names)

@@ -160,6 +160,20 @@ Herdr recognizes `pi-box` panes as the `pi` agent (screen-manifest detection; `H
 is set to `pi` on the host-side wrapper process). Override per run with `HERDR_AGENT=... pi-box`
 if ever needed.
 
+Agent states (working, blocked, idle) come from Pi's own herdr extension, not from screen
+matching: inside a herdr pane `pi-box` starts `~/.pi/sandbox/pi-herdr-relay.py` and gives the
+container only that relay socket. The relay forwards nothing but `pane.report_agent` and
+`pane.report_agent_session`, forces the host pane id, and rewrites reported session paths to
+the host view. Herdr's own API socket is never mounted — it can read and drive every pane.
+Outside a herdr pane no relay starts and nothing is forwarded.
+
+Herdr resumes a restarted pane by typing `pi --session <host path>` into the pane shell, which
+would run the agent on the host. A `pi` zsh function in `home-manager/zsh.nix` routes exactly
+that invocation (only when `HERDR_ENV=1` and the path is under `~/.pi/agent/`) through
+`pi-box`, and `pi-box` maps the path to `/root/.pi/agent/...` inside the container, so a
+resumed session stays sandboxed. Every other `pi` invocation runs the real binary, including
+all of them outside herdr panes. Limitation: this relies on the pane shell being zsh.
+
 Default grants: the project directory (read-write, at its host absolute path),
 `~/.pi/agent` (read-write — provider credentials, settings, sessions, skills and trust are
 shared with host Pi, so no login step is needed in the sandbox), `~/.config/git`
