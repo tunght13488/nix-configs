@@ -149,7 +149,10 @@ agent never sees `~/.aws`, `~/.ssh`, or the 1Password socket. Installed by
 ```bash
 pi-box                    # start Pi in the current directory's sandbox
 pi-box -p "run the tests" # pass arguments to Pi (non-interactive here)
-pi-box init               # scaffold Dockerfile.pi and pi-box.toml
+pi-box init               # scaffold Dockerfile.pi and pi-box.toml (default template)
+pi-box init php83         # scaffold from a named template
+pi-box init --list        # list the available templates
+pi-box init --force php83 # back up and overwrite existing scaffold files
 pi-box help               # usage summary
 ```
 
@@ -201,11 +204,41 @@ and a pinned Pi. Per-project images are `FROM pi-sandbox`, so common layers are 
 and shared across projects and worktrees. Pi itself is pinned to the host version in
 `home-manager/pi-sandbox.nix` (`piVersion`).
 
+### Templates
+
+The stack templates live in `home-manager/pi-box-templates/` (the source of truth) and are
+deployed by home-manager to `~/.pi/sandbox/templates/`, one directory each:
+
+| Template | Toolchain | Manifest |
+|----------|-----------|----------|
+| `default` | nothing installed, commented examples only | generic, no grants |
+| `php83` | PHP 8.3 (sury) + composer + bcmath cli curl dom gd mbstring mysql soap xml zip | `DB_HOST=host.docker.internal` |
+| `php82` | same extension list on PHP 8.2 (sury) | `DB_HOST=host.docker.internal` |
+| `java8` | Temurin 8 JDK + Maven 3.6.3 | named volume for `/root/.m2` |
+| `node22` | Node 22 + yarn classic 1.22 | generic |
+
+Use `php83` for Laravel 11/12 projects, `php82` for older Laravel (9/10) and any project that
+pins PHP 8.2, `java8` for the Fluent Commerce backend, and `node22` for the frontend. A
+template may omit `pi-box.toml`; the generic manifest is then used.
+
+```bash
+pi-box init php83     # in the project root, then adjust Dockerfile.pi as needed
+```
+
+Adding a template means adding a directory under `home-manager/pi-box-templates/` and
+force-adding its files to git (`git add -f`), because the global gitignore ignores the
+scaffold names `Dockerfile.pi` and `pi-box.toml` everywhere.
+
 ### Per-project files (untracked, gitignored)
 
-`pi-box init` writes both from templates; it never overwrites existing files. Both are in
+`pi-box init [template]` writes both files from the chosen template. Both are in
 `programs.git.ignores`, so they stay untracked in every repository — which also means each
 new worktree starts without them and needs `pi-box init` again.
+
+Existing files are not touched by default: `pi-box init` asks once before replacing anything
+(and does nothing when there is no terminal to ask), each replaced file is first copied to
+`<file>.<YYYYmmdd-HHMMSS>.bak`, and all backups from one run share a single timestamp. Pass
+`--force` to skip the prompt; the backups are still written.
 
 - `Dockerfile.pi` — project toolchain, `FROM pi-sandbox`
 - `pi-box.toml` — extra grants:
@@ -214,10 +247,16 @@ new worktree starts without them and needs `pi-box init` again.
 gh = true                          # false drops the ~/.config/gh GitHub identity mount
 ports = ["8080:8080"]              # publish container ports
 mounts = ["/host/path"]            # extra read-only host mounts, at the same path
+volumes = ["pi-m2-oms:/root/.m2"]  # named Docker volume, kept across runs
 
 [env]
 DB_HOST = "host.docker.internal"   # reach host MySQL etc. from the sandbox
 ```
+
+Named volumes are Docker-managed, so nothing on the host is exposed and the contents survive
+the `--rm` runs. Give each project its own name (the `java8` template ships
+`pi-m2-example`, which it tells you to rename) and drop the volume with `docker volume rm
+<name>` once the project is gone.
 
 Rebuild the base image after upgrading Pi by running `pi-box` (it rebuilds on every run;
 Docker layer caching makes an unchanged build a no-op).

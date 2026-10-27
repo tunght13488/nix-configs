@@ -1,0 +1,30 @@
+# Per-project pi-box image for a PHP 8.3 project (Laravel 11/12 and similar).
+# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+FROM pi-sandbox
+
+# PHP: Debian does not ship 8.3, so use the sury.org repository.
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      gnupg \
+      lsb-release \
+    && curl -fsSL https://packages.sury.org/php/apt.gpg \
+       -o /usr/share/keyrings/sury-php.gpg \
+    && echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" \
+       > /etc/apt/sources.list.d/sury-php.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+      composer \
+      php8.3-bcmath \
+      php8.3-cli \
+      php8.3-curl \
+      php8.3-dom \
+      php8.3-gd \
+      php8.3-mbstring \
+      php8.3-mysql \
+      php8.3-soap \
+      php8.3-xml \
+      php8.3-zip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /workspace

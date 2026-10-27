@@ -19,6 +19,7 @@ PI_VERSION="__PI_VERSION__"
 
 SANDBOX_DIR="${PI_BOX_SANDBOX_DIR:-$HOME/.pi/sandbox}"
 BASE_DOCKERFILE="$SANDBOX_DIR/Dockerfile"
+TEMPLATE_DIR="$SANDBOX_DIR/templates"
 GH_TOKEN_FILE="$SANDBOX_DIR/gh-token"
 BASE_IMAGE="pi-sandbox"
 PI_STATE_DIR="$HOME/.pi/agent"
@@ -35,10 +36,19 @@ usage() {
 pi-box - run Pi in a per-project rootless-Docker sandbox
 
 Usage:
-pi-box                start Pi in the current directory's sandbox
-pi-box <pi args>      pass arguments to Pi (e.g. pi-box -p "run the tests")
-pi-box init           scaffold Dockerfile.pi and pi-box.toml here
-pi-box help           show this help
+pi-box                 start Pi in the current directory's sandbox
+pi-box <pi args>       pass arguments to Pi (e.g. pi-box -p "run the tests")
+pi-box init [template] scaffold Dockerfile.pi and pi-box.toml from a template
+                       (defaults to the 'default' template)
+pi-box init --force [template]
+                       same, but overwrite existing files after backing them up
+pi-box init --list     list the available templates
+pi-box help            show this help
+
+Templates live in ~/.pi/sandbox/templates and are deployed by home-manager from
+home-manager/pi-box-templates. A project's files are only replaced when you
+confirm the prompt or pass --force, and the previous versions are kept as
+<file>.<YYYYmmdd-HHMMSS>.bak, all backups of one run sharing one timestamp.
 
 Default grants: the project directory (read-write), ~/.pi/agent (read-write),
 ~/.config/git (read-only), ~/.config/gh (read-only). ~/.aws, ~/.ssh and the
@@ -56,7 +66,7 @@ EOF
 # and multi-line values behave as TOML specifies rather than as a hand-rolled
 # parser guesses. Records are emitted as TAB-separated `KIND<TAB>value` lines:
 #
-#   PORT <spec>   MOUNT <path>   ENV <key=value>   GH <bool>
+#   PORT <spec>   MOUNT <path>   VOLUME <spec>   ENV <key=value>   GH <bool>
 #
 # A key that is absent produces no record, so the caller's defaults stand (gh
 # defaults to on).
@@ -64,6 +74,7 @@ parse_manifest() {
   yq -p toml -o json -r '
     (.ports[]? | "PORT\t" + tostring),
     (.mounts[]? | "MOUNT\t" + tostring),
+    (.volumes[]? | "VOLUME\t" + tostring),
     ((.env // {}) | to_entries | .[] | "ENV\t" + .key + "=" + (.value | tostring)),
     (select(has("gh")) | "GH\t" + (.gh | tostring))
   ' "$1"
@@ -175,7 +186,7 @@ cmd_run() {
     printf 'pi-box: no Dockerfile.pi in %s, using the base image\n' "$workspace" >&2
   fi
 
-  local -a ports=() mounts=() envs=()
+  local -a ports=() mounts=() envs=() volumes=()
   local gh_enabled=1
   if [ -f "$workspace/pi-box.toml" ]; then
     local kind value
@@ -183,6 +194,7 @@ cmd_run() {
       case "$kind" in
         PORT) ports+=("$value") ;;
         MOUNT) mounts+=("$value") ;;
+        VOLUME) volumes+=("$value") ;;
         ENV) envs+=("$value") ;;
         GH)
           case "$value" in
@@ -219,6 +231,9 @@ cmd_run() {
   for item in ${mounts[@]+"${mounts[@]}"}; do
     args+=(--volume "$item:$item:ro")
   done
+  for item in ${volumes[@]+"${volumes[@]}"}; do
+    args+=(--volume "$item")
+  done
   for item in ${envs[@]+"${envs[@]}"}; do
     args+=(--env "$item")
   done
@@ -235,6 +250,8 @@ cmd_run() {
       *) printf 'pi-box: warning: %s is readable by others (chmod 600 it)\n' "$GH_TOKEN_FILE" >&2 ;;
     esac
     args+=(--volume "$GH_TOKEN_FILE:/run/pi-box/gh-token:ro")
+    # The single quotes are deliberate: the container-side shell expands these.
+    # shellcheck disable=SC2016
     command=(sh -c 'if [ -r /run/pi-box/gh-token ]; then GH_TOKEN="$(cat /run/pi-box/gh-token)"; export GH_TOKEN; fi; exec pi "$@"' pi-box)
   fi
 
@@ -243,71 +260,97 @@ cmd_run() {
 }
 
 # --- init -------------------------------------------------------------------
-DOCKERFILE_TEMPLATE='# Per-project pi-box image, automatically built and used by `pi-box`.
-# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
-FROM pi-sandbox
-
-# Install the project toolchain below. Keep stable setup first: everything above
-# the slowest-changing step stays cached across rebuilds.
-USER root
-
-# Example: PHP 8.3 from sury.org (Debian does not ship 8.3 in its own repos).
-# RUN apt-get update && apt-get install -y --no-install-recommends \
-#       ca-certificates curl gnupg lsb-release \
-#     && curl -fsSL https://packages.sury.org/php/apt.gpg \
-#        -o /usr/share/keyrings/sury-php.gpg \
-#     && echo "deb [signed-by=/usr/share/keyrings/sury-php.gpg] https://packages.sury.org/php/ $(lsb_release -sc) main" \
-#        > /etc/apt/sources.list.d/sury-php.list \
-#     && apt-get update && apt-get install -y --no-install-recommends \
-#       php8.3-cli php8.3-mbstring php8.3-mysql php8.3-soap php8.3-xml \
-#       composer \
-#     && rm -rf /var/lib/apt/lists/*
-
-WORKDIR /workspace
-'
-
-MANIFEST_TEMPLATE='# pi-box manifest - grants beyond the default sandbox access.
-#
-# Default grants (no manifest needed): the project directory (read-write),
-# ~/.pi/agent (read-write), ~/.config/git (read-only), ~/.config/gh
-# (read-only). ~/.aws, ~/.ssh and the 1Password socket are never mounted.
-#
-# Grants:
-#   ports  = ["8080:8080"]     publish container ports to the host
-#   mounts = ["/host/path"]    extra read-only host mounts, at the same path
-#   gh     = false             drop the ~/.config/gh GitHub identity mount
-#
-# [env] passes extra environment variables into the container.
-# host.docker.internal reaches services on the host, such as MySQL.
-
-gh = true
-
-ports = []
-
-mounts = []
-
-[env]
-# DB_HOST = "host.docker.internal"
-'
+# Templates are deployed by home-manager alongside the base Dockerfile; the
+# repository copy under home-manager/pi-box-templates is the source of truth.
+list_templates() {
+  local dir
+  for dir in "$TEMPLATE_DIR"/*/; do
+    if [ -f "$dir/Dockerfile.pi" ]; then
+      basename "$dir"
+    fi
+  done
+}
 
 cmd_init() {
-  local created=0 path
-  for path in Dockerfile.pi pi-box.toml; do
-    if [ -e "$path" ]; then
-      printf 'pi-box: %s already exists, leaving it alone\n' "$path" >&2
-      continue
-    fi
-    if [ "$path" = "Dockerfile.pi" ]; then
-      printf '%s' "$DOCKERFILE_TEMPLATE" >"$path"
-    else
-      printf '%s' "$MANIFEST_TEMPLATE" >"$path"
-    fi
-    printf 'pi-box: created %s\n' "$path" >&2
-    created=1
+  local template="default" force=0
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --list | -l)
+        list_templates
+        return 0
+        ;;
+      -f | --force)
+        force=1
+        ;;
+      -*)
+        die "unknown option: $1 (see: pi-box help)"
+        ;;
+      *)
+        template="$1"
+        ;;
+    esac
+    shift
   done
-  if [ "$created" -eq 0 ]; then
-    printf 'pi-box: nothing to do\n' >&2
+
+  local template_dir="$TEMPLATE_DIR/$template" docker_src manifest_src
+  if [ ! -f "$template_dir/Dockerfile.pi" ]; then
+    local available
+    available="$(list_templates | tr '\n' ' ')"
+    [ -n "$available" ] || die "no templates found in $TEMPLATE_DIR (apply home-manager: make home)"
+    die "unknown template '$template'; available: $available"
   fi
+  docker_src="$template_dir/Dockerfile.pi"
+  # A template may omit the manifest; the generic one then applies.
+  manifest_src="$template_dir/pi-box.toml"
+  [ -f "$manifest_src" ] || manifest_src="$TEMPLATE_DIR/default/pi-box.toml"
+  [ -f "$manifest_src" ] \
+    || die "default manifest missing at $TEMPLATE_DIR/default/pi-box.toml (apply home-manager: make home)"
+
+  local -a targets=(Dockerfile.pi pi-box.toml) sources=("$docker_src" "$manifest_src")
+  local i path overwrite=0
+  local -a existing=()
+  for path in "${targets[@]}"; do
+    if [ -e "$path" ]; then
+      existing+=("$path")
+    fi
+  done
+
+  # One prompt for the whole batch, so a single answer decides the run and all
+  # backups share one timestamp. Without a terminal the answer is no: scripted
+  # runs must not silently destroy files.
+  if [ "${#existing[@]}" -gt 0 ]; then
+    if [ "$force" -eq 1 ]; then
+      overwrite=1
+    elif [ -t 0 ]; then
+      printf 'pi-box: found existing %s. Back up and overwrite from template %s? [y/N] ' "${existing[*]}" "$template" >&2
+      local answer=""
+      read -r answer || answer=""
+      case "$answer" in
+        [yY] | [yY][eE][sS]) overwrite=1 ;;
+      esac
+    else
+      printf 'pi-box: %s already exists, and there is no terminal to ask; leaving it alone (use --force)\n' "${existing[*]}" >&2
+    fi
+    if [ "$overwrite" -eq 0 ]; then
+      return 0
+    fi
+
+    # shortcut: second-resolution stamp, so a second init within the same second
+    # overwrites the earlier backup. Add a counter loop if that ever bites.
+    local stamp
+    stamp="$(date +%Y%m%d-%H%M%S)"
+    for path in "${existing[@]}"; do
+      cp -a "$path" "$path.$stamp.bak"
+      printf 'pi-box: backed up %s -> %s.bak\n' "$path" "$path.$stamp" >&2
+    done
+  fi
+
+  for i in "${!targets[@]}"; do
+    # rm first: writing through a symlinked target would land outside the project.
+    rm -f "${targets[$i]}"
+    cp "${sources[$i]}" "${targets[$i]}"
+    printf 'pi-box: created %s from template %s\n' "${targets[$i]}" "$template" >&2
+  done
 }
 
 # --- dispatch ---------------------------------------------------------------

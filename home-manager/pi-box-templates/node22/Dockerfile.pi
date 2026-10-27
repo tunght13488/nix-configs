@@ -1,0 +1,19 @@
+# Per-project pi-box image for a Node 22 project (yarn classic).
+# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+FROM pi-sandbox
+
+# Node 22: the base ships Node 24, and this project pins engines.node = 22.*.
+# The tarball lands in /usr/local so it shadows the base binary; the globally
+# installed Pi agent stays in /usr/local/lib/node_modules and keeps working
+# (Pi requires Node >= 22.19). x64 only, matching the host.
+#
+# The tarball's corepack shims claim /usr/local/bin/yarn for corepack's own
+# release, so drop them before installing yarn classic explicitly.
+USER root
+RUN curl -fsSL https://nodejs.org/dist/v22.23.4/node-v22.23.4-linux-x64.tar.xz \
+      | tar -xJ -C /usr/local --strip-components=1 \
+    && rm -f /usr/local/bin/yarn /usr/local/bin/yarnpkg /usr/local/bin/pnpm /usr/local/bin/pnpx \
+    && npm install -g --ignore-scripts yarn@1.22.22 \
+    && npm cache clean --force
+
+WORKDIR /workspace

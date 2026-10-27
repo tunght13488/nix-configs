@@ -4,6 +4,10 @@
 # installed on PATH, and it builds the base image from the Dockerfile deployed
 # to ~/.pi/sandbox/Dockerfile. Per-project images extend that base via an
 # untracked Dockerfile.pi, with extra grants declared in pi-box.toml.
+#
+# The stack templates the wrapper scaffolds from are deployed as a directory of
+# store symlinks under ~/.pi/sandbox/templates; the repository copy in
+# ./pi-box-templates stays the source of truth.
 { pkgs
 , lib
 , ...
@@ -23,8 +27,6 @@ let
       iproute2
       yq-go
     ];
-    # SC2016: the init templates are literals, their $(...) must not expand.
-    excludeShellChecks = [ "SC2016" ];
     text = lib.replaceStrings [ "__PI_VERSION__" ] [ piVersion ]
       (builtins.readFile ./pi-box.sh);
   };
@@ -34,6 +36,14 @@ in
 
   # The wrapper builds this on demand; keep it alongside the Pi agent state.
   home.file.".pi/sandbox/Dockerfile".source = ./pi-sandbox.Dockerfile;
+
+  # `pi-box init [template]` copies from here. The sources must be tracked in
+  # git (force-added, since the global gitignore ignores the scaffold names)
+  # or the flake would not see them.
+  home.file.".pi/sandbox/templates" = {
+    source = ./pi-box-templates;
+    recursive = true;
+  };
 
   # Housekeeping note for future readers: no system-level Docker changes are
   # needed here - nixos/configuration.nix already enables rootless Docker,

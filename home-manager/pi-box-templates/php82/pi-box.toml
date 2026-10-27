@@ -1,0 +1,17 @@
+# pi-box manifest for a PHP 8.2 project.
+#
+# Default grants (no manifest needed): the project directory (read-write),
+# ~/.pi/agent (read-write), ~/.config/git (read-only), ~/.config/gh
+# (read-only). ~/.aws, ~/.ssh and the 1Password socket are never mounted.
+#
+# Laravel's .env in the workspace carries the database credentials; only the
+# host address differs, since 127.0.0.1 inside the container is itself.
+
+gh = true
+
+ports = []
+
+mounts = []
+
+[env]
+DB_HOST = "host.docker.internal"

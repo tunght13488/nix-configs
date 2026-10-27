@@ -1,0 +1,27 @@
+# Per-project pi-box image for a Java 8 project built with Maven 3.6.3.
+# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+FROM pi-sandbox
+
+# JDK 8: Debian bookworm ships Java 17+, so use the Adoptium apt repository.
+USER root
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      ca-certificates \
+      curl \
+      gnupg \
+    && mkdir -p /etc/apt/keyrings \
+    && curl -fsSL https://packages.adoptium.net/artifactory/api/gpg/key/public \
+       -o /etc/apt/keyrings/adoptium.asc \
+    && echo "deb [signed-by=/etc/apt/keyrings/adoptium.asc] https://packages.adoptium.net/artifactory/deb $(awk -F= '/^VERSION_CODENAME/{print $2}' /etc/os-release) main" \
+       > /etc/apt/sources.list.d/adoptium.list \
+    && apt-get update && apt-get install -y --no-install-recommends \
+      temurin-8-jdk \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV JAVA_HOME=/usr/lib/jvm/temurin-8-jdk-amd64
+
+# Maven 3.6.3: nixpkgs and Debian both ship newer, so take the pinned tarball.
+RUN curl -fsSL https://archive.apache.org/dist/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz \
+      | tar -xz -C /opt \
+    && ln -sf /opt/apache-maven-3.6.3/bin/mvn /usr/local/bin/mvn
+
+WORKDIR /workspace

@@ -1,0 +1,21 @@
+# pi-box manifest for a Java 8 / Maven project.
+#
+# Default grants (no manifest needed): the project directory (read-write),
+# ~/.pi/agent (read-write), ~/.config/git (read-only), ~/.config/gh
+# (read-only). ~/.aws, ~/.ssh and the 1Password socket are never mounted.
+#
+# The named volume below keeps the Maven local repository across sandbox runs,
+# so dependencies are downloaded once instead of on every run. Rename it to
+# pi-m2-<project> when a second Java project uses this template, so the caches
+# stay independent. Docker creates the volume on first use; it outlives the
+# project, so remove it with `docker volume rm <name>` once the project is gone.
+
+gh = true
+
+ports = []
+
+mounts = []
+
+volumes = ["pi-m2-example:/root/.m2"]
+
+[env]

@@ -1,0 +1,29 @@
+# pi-box manifest - grants beyond the default sandbox access.
+#
+# Default grants (no manifest needed): the project directory (read-write),
+# ~/.pi/agent (read-write), ~/.config/git (read-only), ~/.config/gh
+# (read-only). ~/.aws, ~/.ssh and the 1Password socket are never mounted.
+#
+# Grants:
+#   ports   = ["8080:8080"]         publish container ports to the host
+#   mounts  = ["/host/path"]        extra read-only host mounts, at the same path
+#   volumes = ["name:/path"]        named Docker volume, kept across runs
+#   gh      = false                 drop the ~/.config/gh GitHub identity mount
+#
+# Named volumes live in Docker, not on the host filesystem, so they carry no
+# host credentials and survive `--rm`. Use a per-project name (`pi-m2-<project>`)
+# and remove it with `docker volume rm <name>` once the project is gone.
+#
+# [env] passes extra environment variables into the container.
+# host.docker.internal reaches services on the host, such as MySQL.
+
+gh = true
+
+ports = []
+
+mounts = []
+
+volumes = []
+
+[env]
+# DB_HOST = "host.docker.internal"
