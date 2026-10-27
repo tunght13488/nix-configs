@@ -11,6 +11,9 @@
 # 1Password agent socket, or any other host path.
 #
 # Extra grants come only from an untracked pi-box.toml in the project directory.
+#
+# Inside a herdr pane the sandbox also gets a filtered relay socket for agent
+# state reporting; herdr's API socket itself is never mounted.
 
 set -euo pipefail
 
@@ -23,8 +26,11 @@ TEMPLATE_DIR="$SANDBOX_DIR/templates"
 GH_TOKEN_FILE="$SANDBOX_DIR/gh-token"
 BASE_IMAGE="pi-sandbox"
 PI_STATE_DIR="$HOME/.pi/agent"
+CONTAINER_PI_STATE_DIR="/root/.pi/agent"
 GIT_CONFIG_DIR="$HOME/.config/git"
 GH_CONFIG_DIR="$HOME/.config/gh"
+RELAY_SCRIPT="$SANDBOX_DIR/pi-herdr-relay.py"
+CONTAINER_RELAY_SOCKET="/run/pi-box/herdr-relay.sock"
 
 die() {
   printf 'pi-box: %s\n' "$*" >&2
@@ -164,6 +170,15 @@ append_config_mounts() {
   done
 }
 
+# Map a host Pi state path to the container view for --session arguments.
+# Herdr's restart-resume types the host path; the same file is mounted inside.
+map_session_path() {
+  case "${1:-}" in
+    "$PI_STATE_DIR"/*) printf '%s/%s' "$CONTAINER_PI_STATE_DIR" "${1#"$PI_STATE_DIR"/}" ;;
+    *) printf '%s' "${1:-}" ;;
+  esac
+}
+
 # --- run --------------------------------------------------------------------
 cmd_run() {
   local workspace pi_args=()
@@ -212,7 +227,7 @@ cmd_run() {
   fi
   args+=(--add-host "host.docker.internal:$(host_gateway_address)")
   args+=(--volume "$workspace:$workspace")
-  args+=(--volume "$PI_STATE_DIR:/root/.pi/agent")
+  args+=(--volume "$PI_STATE_DIR:$CONTAINER_PI_STATE_DIR")
   append_gitdir_mount "$workspace"
 
   # Home-manager deploys these as symlinks into the Nix store, whose targets do
@@ -238,6 +253,51 @@ cmd_run() {
     args+=(--env "$item")
   done
 
+  # Herdr state reporting: the sandbox gets a filtered relay socket instead of
+  # the herdr API socket, which can read and drive every pane. The relay
+  # forwards only this pane's agent state reports and maps reported session
+  # paths back to the host view so restart-resume stores a usable path.
+  local relay_pid="" relay_socket=""
+  if [ "${HERDR_ENV:-}" = "1" ] && [ -n "${HERDR_PANE_ID:-}" ] && [ -n "${HERDR_SOCKET_PATH:-}" ]; then
+    [ -f "$RELAY_SCRIPT" ] || die "relay script missing at $RELAY_SCRIPT (apply home-manager: make home)"
+    relay_socket="$SANDBOX_DIR/relay-$(printf '%s' "$HERDR_PANE_ID" | tr -c '[:alnum:]._-' '-').sock"
+    rm -f "$relay_socket"
+    python3 "$RELAY_SCRIPT" \
+      --socket "$relay_socket" \
+      --api-socket "$HERDR_SOCKET_PATH" \
+      --pane-id "$HERDR_PANE_ID" \
+      --host-state-dir "$PI_STATE_DIR" &
+    relay_pid=$!
+    local waited=0
+    while [ ! -S "$relay_socket" ]; do
+      if [ "$waited" -ge 200 ] || ! kill -0 "$relay_pid" 2>/dev/null; then
+        printf 'pi-box: warning: herdr relay did not start; agent states fall back to screen detection\n' >&2
+        break
+      fi
+      sleep 0.01
+      waited=$((waited + 1))
+    done
+    if [ -S "$relay_socket" ]; then
+      args+=(--env "HERDR_ENV=1" --env "HERDR_PANE_ID=$HERDR_PANE_ID")
+      args+=(--env "HERDR_SOCKET_PATH=$CONTAINER_RELAY_SOCKET")
+      args+=(--volume "$relay_socket:$CONTAINER_RELAY_SOCKET")
+    fi
+  fi
+
+  # Invoked indirectly by the EXIT trap below.
+  # shellcheck disable=SC2329
+  cleanup_relay() {
+    if [ -n "$relay_pid" ]; then
+      kill "$relay_pid" 2>/dev/null || true
+      wait "$relay_pid" 2>/dev/null || true
+      relay_pid=""
+    fi
+    if [ -n "$relay_socket" ]; then
+      rm -f "$relay_socket"
+    fi
+  }
+  trap cleanup_relay EXIT
+
   # GitHub token: the host's gh keeps its credential in the OS keyring, which
   # does not cross into the container, and ~/.config/gh/hosts.yml carries only
   # settings. A fine-grained read-only token is mounted as a file instead, and
@@ -255,8 +315,34 @@ cmd_run() {
     command=(sh -c 'if [ -r /run/pi-box/gh-token ]; then GH_TOKEN="$(cat /run/pi-box/gh-token)"; export GH_TOKEN; fi; exec pi "$@"' pi-box)
   fi
 
-  args+=("$image" "${command[@]}" ${pi_args[@]+"${pi_args[@]}"})
-  exec docker "${args[@]}"
+  # Session paths herdr types for restart-resume point at the host Pi state
+  # directory; map them to the container view. Ids and other args pass through.
+  local -a sandbox_pi_args=()
+  local idx=0 arg
+  while [ "$idx" -lt "${#pi_args[@]}" ]; do
+    arg="${pi_args[$idx]}"
+    idx=$((idx + 1))
+    case "$arg" in
+      --session=*)
+        sandbox_pi_args+=("--session=$(map_session_path "${arg#--session=}")")
+        ;;
+      --session)
+        sandbox_pi_args+=("--session")
+        if [ "$idx" -lt "${#pi_args[@]}" ]; then
+          sandbox_pi_args+=("$(map_session_path "${pi_args[$idx]}")")
+          idx=$((idx + 1))
+        fi
+        ;;
+      *)
+        sandbox_pi_args+=("$arg")
+        ;;
+    esac
+  done
+
+  args+=("$image" "${command[@]}" ${sandbox_pi_args[@]+"${sandbox_pi_args[@]}"})
+  local status=0
+  docker "${args[@]}" || status=$?
+  exit "$status"
 }
 
 # --- init -------------------------------------------------------------------
