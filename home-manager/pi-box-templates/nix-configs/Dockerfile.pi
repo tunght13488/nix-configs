@@ -1,0 +1,50 @@
+# syntax=docker/dockerfile:1.7
+# Per-project pi-box image for this Nix configuration repository.
+#
+# The shared base (~/.pi/sandbox/Dockerfile) has git, gh, node and pi but no
+# Nix. This template adds a private, single-user Nix with flakes so the
+# Makefile's agent-runnable targets (format, home-build, os-build, update) work
+# inside the sandbox. The host /nix store and the host Nix daemon are never
+# mounted; /nix here is the named volume declared in pi-box.toml.
+FROM nixos/nix:2.35.4 AS nix
+
+FROM pi-sandbox
+
+USER root
+
+# make and nproc drive the Makefile; xz is needed by Nix's fetchers.
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      make \
+      xz-utils \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the store instead of running the official installer: the installer
+# refuses single-user installs as root, and this keeps the Nix version pinned.
+COPY --from=nix /nix /nix
+
+RUN mkdir -p /etc/nix \
+    && cat > /etc/nix/nix.conf <<'NIXCONF'
+experimental-features = nix-command flakes
+sandbox = true
+# Fail loudly instead of silently building unsandboxed when namespaces are
+# missing (rootless Docker must be able to provide them).
+sandbox-fallback = false
+# Single-user mode: builds run as the invoking user, so no build users exist.
+build-users-group =
+trusted-public-keys = cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=
+NIXCONF
+
+ENV PATH=/nix/var/nix/profiles/pi-tools/bin:/nix/var/nix/profiles/default/bin:$PATH
+
+# Toolchain the Makefile calls that is not part of the Nix closure itself,
+# plus the OpenSpec CLI this repository's openspec/ workflows use. Installed
+# here so a fresh /nix volume already contains them on first run. BuildKit has
+# no namespaces, so this one step builds with sandboxing off; it only
+# substitutes published cache paths for the sandbox runtime that follows.
+RUN nix profile install --profile /nix/var/nix/profiles/pi-tools \
+      --option sandbox false \
+      nixpkgs#nh nixpkgs#nixos-rebuild nixpkgs#nixpkgs-fmt \
+    && npm install -g --ignore-scripts "@fission-ai/openspec@1.14.1" \
+    && npm cache clean --force
+
+WORKDIR /workspace

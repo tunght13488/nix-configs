@@ -24,6 +24,17 @@ The `nix-configs` template SHALL persist its Nix store across pi-box runs in a n
 - **WHEN** the sandbox runs from the `nix-configs` template
 - **THEN** the host Nix store and daemon socket are not mounted in the container
 
+### Requirement: nix-configs template keeps Nix build sandboxing enabled
+The `nix-configs` template SHALL keep Nix's build sandbox enabled with sandbox fallback disabled, and SHALL declare the sandbox privileges that Nix requires to create its build namespaces, so builds run hermetic instead of silently degrading.
+
+#### Scenario: Sandboxed build succeeds
+- **WHEN** a derivation is built inside the sandbox from this template
+- **THEN** the build completes with Nix sandboxing enabled
+
+#### Scenario: Missing privileges fail instead of degrading
+- **WHEN** the sandbox runs without the required privileges
+- **THEN** Nix reports that sandboxing is unsupported rather than building unsandboxed
+
 ### Requirement: nix-configs pi-box instructions distinguish human-only targets
 The project instructions SHALL mark `make os`, `make os-boot`, `make home`, `make clean`, and `make os-test` as human-only, and permit Pi to invoke the other Makefile targets. This policy SHALL be instruction-only, without Makefile target gating.
 

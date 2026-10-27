@@ -52,7 +52,8 @@ confirm the prompt or pass --force, and the previous versions are kept as
 
 Default grants: the project directory (read-write), ~/.pi/agent (read-write),
 ~/.config/git (read-only), ~/.config/gh (read-only). ~/.aws, ~/.ssh and the
-1Password socket are never mounted. Add grants with pi-box.toml.
+1Password socket are never mounted. Add grants with pi-box.toml, including
+`privileged = true` for workloads that need nested namespaces (Nix builds).
 
 The base image is rebuilt on every run; Docker layer caching makes that a no-op
 unless the Dockerfile or --build-arg changed. Rebuild it after upgrading Pi.
@@ -67,16 +68,18 @@ EOF
 # parser guesses. Records are emitted as TAB-separated `KIND<TAB>value` lines:
 #
 #   PORT <spec>   MOUNT <path>   VOLUME <spec>   ENV <key=value>   GH <bool>
+#   PRIVILEGED <bool>
 #
 # A key that is absent produces no record, so the caller's defaults stand (gh
-# defaults to on).
+# defaults to on, privileged mode to off).
 parse_manifest() {
   yq -p toml -o json -r '
     (.ports[]? | "PORT\t" + tostring),
     (.mounts[]? | "MOUNT\t" + tostring),
     (.volumes[]? | "VOLUME\t" + tostring),
     ((.env // {}) | to_entries | .[] | "ENV\t" + .key + "=" + (.value | tostring)),
-    (select(has("gh")) | "GH\t" + (.gh | tostring))
+    (select(has("gh")) | "GH\t" + (.gh | tostring)),
+    (select(has("privileged")) | "PRIVILEGED\t" + (.privileged | tostring))
   ' "$1"
 }
 
@@ -187,7 +190,7 @@ cmd_run() {
   fi
 
   local -a ports=() mounts=() envs=() volumes=()
-  local gh_enabled=1
+  local gh_enabled=1 privileged=0
   if [ -f "$workspace/pi-box.toml" ]; then
     local kind value
     while IFS=$'\t' read -r kind value; do
@@ -202,6 +205,12 @@ cmd_run() {
             *) gh_enabled=1 ;;
           esac
           ;;
+        PRIVILEGED)
+          case "$value" in
+            true | True | TRUE | 1 | yes | on) privileged=1 ;;
+            *) privileged=0 ;;
+          esac
+          ;;
       esac
     done < <(parse_manifest "$workspace/pi-box.toml")
   fi
@@ -209,6 +218,11 @@ cmd_run() {
   local -a args=(run --rm --interactive --workdir "$workspace")
   if [ -t 0 ] && [ -t 1 ]; then
     args+=(--tty)
+  fi
+  # Opt-in: Nix's build sandbox needs nested namespaces, which rootless Docker
+  # only grants in privileged mode. Off unless the manifest declares it.
+  if [ "$privileged" -eq 1 ]; then
+    args+=(--privileged)
   fi
   args+=(--add-host "host.docker.internal:$(host_gateway_address)")
   args+=(--volume "$workspace:$workspace")
