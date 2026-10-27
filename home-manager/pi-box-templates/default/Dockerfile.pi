@@ -1,5 +1,5 @@
 # Per-project pi-box image, automatically built and used by `pi-box`.
-# The shared base (git, gh, rg, fd, node, pi) is ~/.pi/sandbox/Dockerfile.
+# The shared base (git, gh, rg, fd, node, python3, pi) is ~/.pi/sandbox/Dockerfile.
 FROM pi-sandbox
 
 # Install the project toolchain below. Keep stable setup first: everything above

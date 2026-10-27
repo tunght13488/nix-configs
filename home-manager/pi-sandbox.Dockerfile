@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       git \
       jq \
       less \
+      python3 \
       ripgrep \
       unzip \
       vim-tiny \
