@@ -36,6 +36,12 @@ NIXCONF
 
 ENV PATH=/nix/var/nix/profiles/pi-tools/bin:/nix/var/nix/profiles/default/bin:$PATH
 
+# `nh` resolves the invoking user from the environment; docker leaves USER and
+# LOGNAME unset, which makes `make home-build` fail with "Couldn't get
+# username" after the generation has already been built.
+ENV USER=root \
+    LOGNAME=root
+
 # Toolchain the Makefile calls that is not part of the Nix closure itself,
 # plus the OpenSpec CLI this repository's openspec/ workflows use. Installed
 # here so a fresh /nix volume already contains them on first run. BuildKit has

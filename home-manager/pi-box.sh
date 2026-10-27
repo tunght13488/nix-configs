@@ -363,6 +363,9 @@ cmd_init() {
     # rm first: writing through a symlinked target would land outside the project.
     rm -f "${targets[$i]}"
     cp "${sources[$i]}" "${targets[$i]}"
+    # Templates live in the Nix store, whose files are read-only; without this the
+    # scaffold could not be edited after `init`.
+    chmod u+w "${targets[$i]}"
     printf 'pi-box: created %s from template %s\n' "${targets[$i]}" "$template" >&2
   done
 }

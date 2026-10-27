@@ -96,6 +96,11 @@
           hash = "sha256-r8UNaNTtd1laBxBhEEnNBm/bKx6PuXNRIGQ86fw2zxw=";
         };
       });
+
+      # Latest Toolbox (3.9.0) is only on nixpkgs master; the pinned unstable
+      # revision still fetches 3.6.2 from a host that now 404s it. See
+      # pkgs/jetbrains-toolbox.nix for the pin and its update steps.
+      jetbrains-toolbox = final'.callPackage ../pkgs/jetbrains-toolbox.nix { };
     });
   };
 
