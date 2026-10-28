@@ -88,6 +88,9 @@
     unstable.zed-editor
     herdr
     obsidian
+    # agenix CLI (from the flake input, not nixpkgs) for editing/decrypting
+    # secrets/*.age as the user: `agenix -d secrets/litellm-env.age`.
+    inputs.agenix.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 
   home.sessionVariables = {

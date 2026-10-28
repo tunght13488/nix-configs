@@ -27,6 +27,9 @@ in
     ./local-dev.nix
     ./mysql.nix
     ./nix-ld.nix
+    ./agenix.nix
+    ./postgres.nix
+    ./litellm.nix
   ];
 
   nixpkgs = {
