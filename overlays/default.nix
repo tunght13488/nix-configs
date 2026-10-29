@@ -17,6 +17,53 @@
     # virtualisation.docker.rootless both pull a maintained build.
     docker = prev.docker_29;
 
+    # LiteLLM's database support cannot work from the plain nixpkgs package:
+    #
+    #   1. prisma-client-py ships without a generated client, and LiteLLM imports
+    #      `prisma.Prisma` at startup. Upstream generates it at container boot,
+    #      which is impossible here because site-packages is read-only. Generate
+    #      it at build time against LiteLLM's own schema instead.
+    #   2. Its default schema bootstrap path runs `prisma migrate deploy` through
+    #      litellm-proxy-extras, which is not packaged in nixpkgs ("FIXME package
+    #      litellm-proxy-extras"), so setup always failed. `prisma db push` needs
+    #      no migrations package and is idempotent.
+    #
+    # 5.17.0 is pinned because prisma-client-py 0.15 refuses any other engine
+    # version; see pkgs/prisma-engines_5.nix / pkgs/prisma_5.nix.
+    #
+    # Version comes from nixpkgs-unstable (`pkgs.unstable`), on its Python 3.13
+    # package set: unstable's default is 3.14, while the pinned Prisma runtime
+    # (pkgs/prisma_5*.nix) is built for 3.13. release-26.05 ships LiteLLM 1.86.0,
+    # unstable ships a newer one with the GitHub Copilot OAuth fixes. Everything
+    # else — the
+    # generated prisma client and the db-push patch — is ours, so the newer
+    # package only contributes sources and dependency metadata.
+    litellm =
+      let
+        litellmPy = final.unstable.python313Packages.litellm.override {
+          # Generated against the same schema this litellm is built from.
+          prisma = final.prisma_5-litellm_schema;
+        };
+
+        litellmPyPatched = litellmPy.overridePythonAttrs (oldAttrs: {
+          postPatch = (oldAttrs.postPatch or "") + ''
+            substituteInPlace litellm/proxy/proxy_cli.py \
+              --replace-fail "use_migrate=not use_prisma_db_push" "use_migrate=False"
+          '';
+        });
+      in
+      # Mirrors pkgs/by-name/li/litellm/package.nix, which enables the proxy
+        # extras (that is what pulls the overridden prisma client in).
+      final.unstable.python313Packages.toPythonApplication (
+        litellmPyPatched.overridePythonAttrs (oldAttrs: {
+          dependencies =
+            (oldAttrs.dependencies or [ ])
+            ++ litellmPy.optional-dependencies.proxy
+            ++ litellmPy.optional-dependencies.extra_proxy
+            ++ litellmPy.optional-dependencies.proxy-runtime;
+        })
+      );
+
     # Enable OpenSSL in libzip so AES-256 zip encryption works.
     libzip = prev.libzip.override { withOpenssl = true; };
 

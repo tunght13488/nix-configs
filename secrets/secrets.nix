@@ -9,4 +9,7 @@ in
 {
   "ngrok-authtoken.age".publicKeys = allKeys;
   "github-token.age".publicKeys = allKeys;
+  # System-wide LiteLLM service environment (master key, salt key).
+  # Decrypt from this directory: agenix -d litellm-env.age -i ~/.ssh/ssh_agenix
+  "litellm-env.age".publicKeys = allKeys;
 }

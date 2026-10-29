@@ -87,6 +87,7 @@
           modules = [
             ./nixos/configuration.nix
             nix-index-database.nixosModules.default
+            agenix.nixosModules.default
           ];
         };
       };
