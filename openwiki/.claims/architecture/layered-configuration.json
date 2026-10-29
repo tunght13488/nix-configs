@@ -1,0 +1,196 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:e2aaf4077759f6dad567386ae5cef0d9b8c94ebc07fbeffb1ab20eb63934a6cc",
+  "claims": [
+    {
+      "id": "claim_39e7380ffc92448abe1a90d775b98d20",
+      "statement": "The flake exposes two independently evaluated configuration products: the NixOS system `nixos-vmware` and standalone Home Manager profile `tung@nixos-vmware`; each has its own package set, overlays, and module list, so applying one does not apply the other.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L162-L186",
+          "version": "repo-lines-v1:sha256:f12aa843541ed1918e6fbad33303e5123aa63102ac8c192ac03b9628854df177:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MDgxYjhlMWM5ODFjNjJmMzIwNzFkNGVlNGQyYmUzNGMwZmYwMTcwMjFlMDFkMjk2ZmNkZDEwYThlODU2MDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZlMzNkYzczMWU3ZDA3YjFmMGMwNWNmZWJkN2UxOTIyMDIzZTYwNzdiYzBhZTdiYTMwMTQ4ZjUwODMzYTI1YTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk0NDk2MzRiYmY0MDgyMmVlY2NhYTQzYmE0M2QyNGM1YzU0ZmMwMWFlNjYyOTdhNTVlNDI2YWFmOTIxZWQ4YmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk1Yzk3NzBlMjQ3M2Y1ZDNmYjlhODlmYWNiM2NjMzllYWYwODYwYjI2NmM4MTg5ZjY1NTg4ZWQ1YjU0MmM0ZDcifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L80-L92",
+          "version": "repo-lines-v1:sha256:4399b3b40843cf42334f0eda75f00392caf9c891d9aa2f40eec8a644bbfa3cd5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZThmMGYyMDhjNGIyNjRiYjgyZjUyYjYzY2NhODM4YjQ1MGFkZDIwYTgzMGJjNTUyMTRmZDc0Y2E4OTA3ZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZlMzNkYzczMWU3ZDA3YjFmMGMwNWNmZWJkN2UxOTIyMDIzZTYwNzdiYzBhZTdiYTMwMTQ4ZjUwODMzYTI1YTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyOTE4NmZjMjRiNDM2ZDNiMjJlYWJjZDVmMjE3Mjc0MmU0ZmI5YmFkMmQyYzZlYzdhNzY2ZjUyYzg2NTE5ZjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI5ZjIxODZjMTYxYzFiZjkzZWJkOTE5OGUwZTJlYjIzNzc2Y2JkMThkNjhkZTk2MDhjMjU1MWQxYzFiZmViMDIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9d4f7084653d4c729316de8555ecf68d",
+      "statement": "`nixos/configuration.nix` is the host composition point: it imports generated hardware state and host-specific VMware, PHP-FPM, Nginx, local-development, MySQL, and Nix-ld modules, while owning machine-wide system policy and packages.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/configuration.nix#L15-L30",
+          "version": "repo-lines-v1:sha256:c1f13d27d72ffd96d7cbb880e3d285d9001732ee557f57c687337f8969eb1c2f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MDE5MGEzMDU4ZDliMWU3NmIzYzU1MzdlNzI3YjViYzM2ZGIwNTU0Yjg3MWU1MGRiYjhkYzk1Yjg2OTgyNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg5YjkwODBmYjZmYTQxYWZkMzU1ZTA0MjllMTkzYzI0MjUwOWMzNzVlM2E4M2Q1YmExMjE2NjI0YTA3N2ZiNzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmOWYzNmQ4OTI4YzVhZDhhODlhOTYzNjA0NzBjNmMyOWU3ZmMxNTgzZWRjOWJhNjFjMDIzYzY4OGNjNGZkYWQifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L199-L221",
+          "version": "repo-lines-v1:sha256:3f4077b9bce38451d0e3c43d62781d51b65b78442454e4708c2fd565da19c924:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE1NGY2NzY1YjVhYzZiNzViZTdmOWI3MTZmZTRjZWI4YzQ4MzU5YjNkMDUxNDFiNWE4MzgzM2Q0ZjFmMmE2MGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MDE5MGEzMDU4ZDliMWU3NmIzYzU1MzdlNzI3YjViYzM2ZGIwNTU0Yjg3MWU1MGRiYjhkYzk1Yjg2OTgyNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBmMjBlZTJlZDg2NmU4ODI3ODUwNjAwN2JhMTM2OTAyMzU1YjkyMWIyNWJjYjZiOTNkMzA3MjVmN2QxMDFlNGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L90-L112",
+          "version": "repo-lines-v1:sha256:10d07f76bb7c4c2658fd77499fca35b0291bc1c92fb3e0a76e6683e18a3c2ac3:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI4ZjI1ZGM0ODcwMGNkNjJiZTIxNmZlYjJkMDAwNzkyM2U4MmZkODRlMTc3MTg4OThkNjRlZThiZWRmNzQ3NmMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRiOThmYmFiM2NiYTgzMjgyMzczMzFlNjJjZjUyMjVmMjM4Y2M0NzdmNTkxZjNkNGM4NWVmZGViNjFjYzdlMzciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ5MGVhNmJkNjE2MGM1MzdmNDY3MTk1ZjJjMjA5MTM2ZTNkM2QzZTMyZWZkMDRkNTRmYzBiOGZkMDZiMWE1MmEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_fc461ea0a86c4b7aa9169f3b9f5d6dc3",
+      "statement": "`nixos/hardware-configuration.nix` is generated hardware state imported by the host configuration and contains hardware-derived boot, filesystem, swap, kernel-module, and platform settings; it should be changed for hardware-driven updates rather than application or user policy.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/configuration.nix#L21-L22",
+          "version": "repo-lines-v1:sha256:daeb0fdc0938eb1fc570e940dfddf3da8f0369748b34aff6cddcbeb28e5a0218:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzFlNDkyZDc4MDgwOTUyZmE0ZmZjNjAwYWE4ODIxYWU5ZGRhNWZkNTU3ODBlYzA2MWY1MzAzZGNiNGY0YzlmYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTdmMmRjMzU5OTBjZGExOTlkYTgwYTRmOTU3NTE0ZWI4ZDdhNzE4MDY3ODJjMzIxYTNjYmNmZWQ3ZGQ0Yjk2NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTMzNTFlMWQ1Y2E3NjFkNTc3MjIwMGYxMzkyNDdmMDJiMjRjNGI1ODc2M2YyZTIzZGJiMTdjMzkwZjIwNDI0ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTEyZjdmNTFlMzFkYTNjYTUyNDEyZThmNWY5YWNiYmM1NDBlYjkzZDRkZGViMjEyZTRmMjNlNTBlOGY2YTRkMSJ9"
+        },
+        {
+          "resource": "repo://nixos/hardware-configuration.nix#L7-L37",
+          "version": "repo-lines-v1:sha256:6db5f66b46228bf00c557bd510c8228ed9f129684048130ff33f67b4967bb141:eyJzZWxlY3RlZExpbmVDb3VudCI6MzEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcxYzFmNDc5NmUxYjU5ZGRmYWEyYTZjOWRhNTc1YjFlYTY0ODdjNGUzMjI5MmExYzg5NDNlNzRmYTMwMDlmY2EiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMxMWIzYmE4MmIzZmQzMGIxYzEwZGUwYWUyNTE5NWNmY2E4ZDJlMTY0MjQ0MDQ2NzY2ZTEyZTM3ZDBhMjc4NTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c564375ab37546e48d5af24e37aefc10",
+      "statement": "`home-manager/home.nix` owns the `tung` user profile and imports personal feature files alongside reusable Home Manager modules and external modules; it configures user packages, home identity, session behavior, and activation/state-version settings.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/home.nix#L64-L67",
+          "version": "repo-lines-v1:sha256:3ee5045850c130460fb0116f1c9e1c3ee906ef431ea1146ad67d70662d75cd9c:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTdlNTdlOWI0OGE5ZWM3MDczZjNhZWExY2M2MDQwOTdmODYwNzU3MWE0ZWJiMGU4YmI4ZmJiODdiMzk1MDQwOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWRjYTQ0MDUxZTY1NGY5NTI4ZWIxOGRiNWI0NzI0MGEzZDAwNDk2YWQ4NzBhNWE1ZTM5ZThhMjFlYzk1OGM5ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDU4MTYwM2JhODFjY2JlMTU1NmNlZTY0NzZhODBkN2Q3ZDUwMzljNjRkMDc2MDdmMmQ3NGMxMzQwYmNkNjc0ZCJ9"
+        },
+        {
+          "resource": "repo://home-manager/home.nix#L8-L34",
+          "version": "repo-lines-v1:sha256:2adde89b1484fe5104a69294bd3f1f373fa4675f7ec71c71649f026bfa1098cf:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdkMjVkMDdhNDUyMGQyMzcxZWVmMzY0OTgwMjdiMzIwYzU3MGYyZWM3NTViMzM4NzA2YWI2ODMxY2Q1OTMyY2MiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MDE5MGEzMDU4ZDliMWU3NmIzYzU1MzdlNzI3YjViYzM2ZGIwNTU0Yjg3MWU1MGRiYjhkYzk1Yjg2OTgyNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJhNmVkNjhiNWUzM2YxN2U3MTU3MTBlNzBhYjlmYmQyYmM1MjQyZmYyYWEwMmYxYzg0OTBiMDI0OWJlMzViZjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmOWYzNmQ4OTI4YzVhZDhhODlhOTYzNjA0NzBjNmMyOWU3ZmMxNTgzZWRjOWJhNjFjMDIzYzY4OGNjNGZkYWQifQ"
+        },
+        {
+          "resource": "repo://home-manager/home.nix#L97-L111",
+          "version": "repo-lines-v1:sha256:e04d62c59be54828e5d3b2906fc63c558b2dd4e3ca10f9ed0f9e34260e7f6d2c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk1OWFkMzhmMGM1MTY0ZTQ5MTIzNTk2MjJiMzU2ZTRmYzNiOTU2ODA1MWI2OThlNTQyYTJlMmI0MWM1M2EyMzUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU3NDcxMTYxOWQ5NmNlNWZhYzA3ZGY4MjRlODMzMmY2ZDE2MmRmZWEyMGVmZGEyYTMyOTVmYTU2MzJhMjg2OGYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEyY2ZiN2UwNjllZjk4ODEyNDBmYjFlZmExZWM2OGU5Y2MwOGQzOTgzNjk4OTFkNWM1MzI2ZmMzZGQxMzAwY2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cd1f1aaade04499396bb4695dc2bcd00",
+      "statement": "The module indexes are export registries rather than automatic configuration: the NixOS index exports `php-config`, while the Home Manager index exports `ngrok` and `php-config`; consumers must explicitly import the exported attributes.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/home.nix#L8-L16",
+          "version": "repo-lines-v1:sha256:b6df12f43407bcb6d442a38c46f368502b8dbf9d24bf8aeee20357d22956409f:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2QyNWQwN2E0NTIwZDIzNzFlZWYzNjQ5ODAyN2IzMjBjNTcwZjJlYzc1NWIzMzg3MDZhYjY4MzFjZDU5MzJjYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmE2ZWQ2OGI1ZTMzZjE3ZTcxNTcxMGU3MGFiOWZiZDJiYzUyNDJmZjJhYTAyZjFjODQ5MGIwMjQ5YmUzNWJmNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMzdiNzFlMzIxN2FhMGFkMzZkYjdmZDZiMDc4ZGY2NDYzZWYwZmRhZjJkNjZkZTJlOGJiN2EzNTMzMWQzZjM2YSJ9"
+        },
+        {
+          "resource": "repo://modules/home-manager/default.nix#L1-L7",
+          "version": "repo-lines-v1:sha256:9404d20447756a90050908c19d3a62f19cb7d1a070217d557a077e05796def66:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDcyOGNmYTMyMDkzNTRkOWNiNTUwMWQxZjYwYzFmNDVmN2U5NGE3ODIyOGY3ODgwYzEyOTRjYmYzYzkwZjdkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://modules/nixos/default.nix#L1-L7",
+          "version": "repo-lines-v1:sha256:e0bbcd5beb6fc97a31a09372ef1732a883a48a8dc5ce74f96464229f80d502fe:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTJjZmNhZWQ4NjIyMjE4ZTJmYzM4NTg3NmZlMjM1MDE4NTQ5NTU4MTRhY2RmOTUyNmFhNDcwYTcwMjU2ZDQyOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L16-L22",
+          "version": "repo-lines-v1:sha256:14fa162f9e8076c1a052afff255874c76a6b939cdc78702c10d4f9c240e81363:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2JkYTJiYzZhYmVhZDZlYmFjYTYyMzFmYWQ5ZmNlMzlhNWFkOTYyNzM5ZmIzNThhYWYyNjI0MWY0NjI4ZTA0MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTdmMmRjMzU5OTBjZGExOTlkYTgwYTRmOTU3NTE0ZWI4ZDdhNzE4MDY3ODJjMzIxYTNjYmNmZWQ3ZGQ0Yjk2NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzM5NDljMzJhNWMwNmRjNjM4NDRjMjdlNjUxZTIxNzgyNTJjMGRkMmQ1M2YwMTZkOGRlMzY0M2ZlOGU1NWQ4MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTEyZjdmNTFlMzFkYTNjYTUyNDEyZThmNWY5YWNiYmM1NDBlYjkzZDRkZGViMjEyZTRmMjNlNTBlOGY2YTRkMSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_ace1d9c44eb9474a941da8a3c33650b9",
+      "statement": "`modules/shared/php-config.nix` provides a typed PHP configuration interface to both module systems and computes read-only `config.phpConfig._lib` helpers from `pkgs/php-lib.nix`, allowing NixOS and Home Manager to consume common PHP policy while retaining separate consumers.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/php.nix#L1-L25",
+          "version": "repo-lines-v1:sha256:aebbefab91abf7142181f4f89b2df25005f3856d2f6a4e0591edbaceb388600a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc1ZGZjYjY3MDQzNWU5MWNhMDU1YjcyNjg3YWVkMWY3NjAyY2ZjMWJkNTI0MDk5YjE5YzJlNTdjNzZlYWU5NzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwZTZmNGNlNzFlNjMyZGFkMjM4OTViNTM2MWQ2ODA4YWVmOTk1MGE1MGE5ZDhkMzZkODg5MzkxNDQ2MWYxMzYifQ"
+        },
+        {
+          "resource": "repo://modules/shared/php-config.nix#L1-L13",
+          "version": "repo-lines-v1:sha256:36fe241fedf34e96d9355d91a0eab98acee02eaf75137a68e281dfb88b798039:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkODBjNzU4MDRhMDFjYzYwMGExZmU4NTM4OTFmMGVjMWU2NTc2NTI2NWI5MTViYzgzYjJhMzc4OTk1OGZlZDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU3MDQxMDJjYjc4ODdjNjEzMTA2MWU1ZGMyNDg2MGQxM2EyZmZjZTU1NmYyYzQ0NGFmYWExN2EzMWJmZDY5M2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNiMDA0ZWI1ZTlmOGNjODIxNjc3YjFiZjc4NjI0YTFmZTdkMGI1NjBhYjI3MmUyNjA3MTMwZDMxNmQ0NTM1NzkifQ"
+        },
+        {
+          "resource": "repo://modules/shared/php-config.nix#L47-L106",
+          "version": "repo-lines-v1:sha256:9b7629225975838a22fab77f302c89e88bf515259bfa9b14d5b54243f92c9adc:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU1Y2YwZDQ4Yjg3YzgwYzVlY2E4MmZhZDliNzY1YTU3OGY3NzhhYTE3NjhiYzE3YzBmMTc2MGY4YWZkZDdiMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjZmI5YzU3MzFkOTE0YTJmMTdlY2U4ZmZiMjIxMDAyMWQxZjAyNjQ0MjQ1MzRhYWY5MzdlYzllMzEwZmE2MDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L15-L19",
+          "version": "repo-lines-v1:sha256:79f3679b4dbd70ea6ba9a82900227c8ac42bd04286ce69674831587b7c458e5e:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjVkYjNlNGIxOWY3NWRiZDA1MzgxMTNmYmUwMTdlMGY2MTZhNDFhMzRhZDM0OTAzNDI4Y2I2MmQ5NDc3OGI5OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2QzZjU1NGQyZTg4NDZmOWIwN2U5ZTBmOTVlODNmYmYxODEwMDljOTRiYTBlYWFiYTI4Y2ExYTBhYzQxYzJkNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzhlNDg2YTg4NTExNzMyNmI1MjYzMzc1MjQ3OWVmZGY1OTg4NWJhMTM3OTEwYmRiZTZkMzlhZmU1ZWEyYTkzZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDgwY2Y2Y2U5ZDBiMjY4NzZjYWY2ZjBkNTg4YWRhMWJlYTU1NmE4ZmQ3Yjg2NTFmNDZiMjZmZjJlMTk2MjA0ZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_d1508f59a7fa41b0999287f12550f740",
+      "statement": "The local PHP development stack crosses ownership layers: Home Manager provisions PHP site files and directory traversal permissions, while NixOS owns Nginx virtual hosts, PHP-FPM pools, sockets, and service access to the user's site tree.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/php.nix#L27-L43",
+          "version": "repo-lines-v1:sha256:8df692d66d594e0d064af5e5fc661b1664faf6bc2e795cce0a0be90ba47a4707:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkyZDVlNjU3MDg0ZDlhMDJjOTk5ODM3ODE1YjFmMjM5NjczMDJhNWQ1NTViNjkzZGY2Mjg0ZTIwNzYwNTVjNWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5OWJmN2NlMWJlMjdjYzI4MmRmZjk5ZmIzMmUzNjdiZDk1NDdiNmMzZWM2NmY5NDBmN2IzOGY3ZjM2N2I4Y2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYyYWM3YzlmMDM0NTU3Mzg1MzAwOTNiNTJiOGQ1ZjljMzJiYzIwN2UxZWMxMGE3MzBkOWZjMDJjZTU5NDM2NjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/nginx.nix#L29-L67",
+          "version": "repo-lines-v1:sha256:4f026d096fe25e0a36aa043536b333b4f3865ffb7cfc65f86c39a7226671f605:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkxYmE4ODllY2ZmZGJjYjJmMGUwYmZlZGM0MjYxZWJjNWJmNDM3OGFiNDQwYjdlMzJkMzNhMjFkMDJkN2NhMGUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU5MTkzMzM1OGRjYzdlODU2MDk2MWNiYmE1ZDllYjVkOTA1Y2E5YjA2ZDdhMzJkZjU3MGE0MzE0OWE5NTBmYjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1MjA0MGNiNDUyOGRmYTRkNmM5OWEyNDU1MzA0ZDNhODYwMTc4OGUyOTdkMWNjNzFiMjBmMmZmZWE4MzQwMzEifQ"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L35-L60",
+          "version": "repo-lines-v1:sha256:bf25c37d41e35cfe42cf369c5780c4cccd493a76dd5777f19b2f6a3624290f9a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMxYjhjNWNmYjY1NDk2Nzc1Y2RhODE3YWQ3ZWViYzZlYjVhYzkxOWRhMGYxYmY2ZDNmNGE1ODJmYjA3Mzc5YzgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM0NmQ5NDUxZjZhNmQ2Y2Q2M2I2NmMxZDFhNWEwNDVjNWQ4MDFlOWE5ZjgxYTFmODA3ODU5OGU4ZWIzOWFjYWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjZmI5YzU3MzFkOTE0YTJmMTdlY2U4ZmZiMjIxMDAyMWQxZjAyNjQ0MjQ1MzRhYWY5MzdlYzllMzEwZmE2MDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5ZTAwYzFiZTRhNTI0ZmEyM2EzZWQyYWIxYmZkZTNiNzM0Y2Q5N2NkZWUxODcyOWUxN2E3NjVjM2M0MzZhZmYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9e709b793b7f4adea1e5672a7024a866",
+      "statement": "Local development certificate generation is a NixOS service lifecycle dependency: `mkcert-vm-local` generates certificates before Nginx, and Nginx consumes the resulting certificate and key for local virtual hosts.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/local-dev.nix#L31-L76",
+          "version": "repo-lines-v1:sha256:8929d276e38e86e80070ccea607f0d2449017d6972861a117854581c849861f6:eyJzZWxlY3RlZExpbmVDb3VudCI6NDYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjNjVmODI1NzkzOThhYmY4YzZlYWRiYjMyZTNkNmZlNGU0YjI0ZGIwMDA4YjgwMTAyZjdiNmFhNjE4NGE1OTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNiYjVjZDY3ZGY3YWQ0Mjk4ZDgxODMzYjgyZDAwYzZjMjE2MDA1OGY4NDUzYjg3NjVmMzlkNDZmNDhiYjEyNjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/nginx.nix#L18-L27",
+          "version": "repo-lines-v1:sha256:04525ca2a08dbba82e89f92a9d0c98613b327b0c6d6c7120b84ad6f85727189f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZGIzZTRiMTlmNzVkYmQwNTM4MTEzZmJlMDE3ZTBmNjE2YTQxYTM0YWQzNDkwMzQyOGNiNjJkOTQ3NzhiOTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc3ZjU1OTc5YmEyMjhlNWU0OTQ4MjBjNzgwM2UyYWFmYjUwZDMyOWVkNTgwZGMzY2QzODMyMzlkN2MyZmJjZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhiMzQzZDllZWU4NjgwM2RmNmI3YTNjNTVlNWNkZjQxMTg1MDlmYzI4ZGVlZWIyMjdiZmYwYTAxYTM5OTFkYjcifQ"
+        },
+        {
+          "resource": "repo://nixos/nginx.nix#L51-L59",
+          "version": "repo-lines-v1:sha256:34943c1a5d51174d4366b7bc24cdaea8aec61b93805cfee45d96dbbedeb3589d:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZmYjA4ZmRhMWFjYjk1N2I2MTE2YmQzNzgxMWExZmU0MWEwMTYxMWMwNjMxZWRiZjc4NmQ2ODg5YTI3YTU1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTM1MTg4NWFjNzVlNDI0YjFlMWUwYWE3NDZlNmNjYTNlMmJkNzBhMTBlY2YxOGMyNGViODhiZGU5NGVmOTdmZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTdmMGEyNGU1ODg4NTcxMDg4NGU0MTBlMmZkZTgwNDA5ZGZmNjlhY2E4MDY5MjI2NTUyYTkxMDcyNjA2NTliNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_11dcaf603e5b4c24bad729a428a09378",
+      "statement": "Adding a local PHP site requires coordinated host and user changes because Nginx's vhost list, PHP-FPM pool definitions, and Home Manager site files are maintained in separate configuration layers.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/php.nix#L27-L31",
+          "version": "repo-lines-v1:sha256:e8686ee9df75494bd9272c3c104e0c0a649a928281672633168b1d4a8fd4ca8b:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTJkNWU2NTcwODRkOWEwMmM5OTk4Mzc4MTViMWYyMzk2NzMwMmE1ZDU1NWI2OTNkZjYyODRlMjA3NjA1NWM1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDc1ZGRmNWRkNjA5YjA2MThiM2QxYzNlYmNiZjdhMDFiNjQyNTZmM2JlZTU4ZjYyZDY5YjcyOThiNWYxMDA3ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjJhYzdjOWYwMzQ1NTczODUzMDA5M2I1MmI4ZDVmOWMzMmJjMjA3ZTFlYzEwYTczMGQ5ZmMwMmNlNTk0MzY2MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDBiYWNkZjFmYzVhN2E3OGI1YjYzMTU3MTVhOTY4NTg4OGIxZWM1YTViYTA4YjY5YWU2OTZiOTg1MmViMWM2OSJ9"
+        },
+        {
+          "resource": "repo://nixos/nginx.nix#L8-L14",
+          "version": "repo-lines-v1:sha256:77d6017442c8a869cf8832bea8d0839af2afa3a8fbfe5872c8fe7eaaaf8a9211:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGNjN2UxODhjNzM1NzQ2ZWY3ZDUxYjk2MTMwYjc3N2RkMWU5ZjFkM2VjMjM0MGE2ZjIwNzBhNzY0ZjIzYTc2NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTM5MDVlMWVkYmEyYTJkODczMDVhYzkxZTJlZmJiODA1ODhlZjVhMTUyMTFjZDI5NzdhNDg3Nzg0MDAxYjhmMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTI0ODMxZjM1OWZjNWZlYjBhZTM3NzhiOTU4MjgyMTk2NmM2YzEzZTQ2OWRmYmYxZmQ0MWYzOWVmOGJmYWUxNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzdmNTU5NzliYTIyOGU1ZTQ5NDgyMGM3ODAzZTJhYWZiNTBkMzI5ZWQ1ODBkYzNjZDM4MzIzOWQ3YzJmYmNkZiJ9"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L7-L10",
+          "version": "repo-lines-v1:sha256:8381b0255e7065b592b52b565eed97c0df7c2148e705bb747485555d656e4235:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzQyODJhYzMyMWRjMzdiYjM2OTQ0MjQ5MWQzYjhmZTdiNDA3NjI3Y2ExNGNjZmM0Njg2MDllMjUwZTA0ZjkzZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2U2NDBmODk5NWIwYjkxMGNhOWI2ODUyYjVmMWExNWIyMjhhZmYxMGJiMDk3ZTc2NDNmYmQ0ZTY5OGVlZThhMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjdjOTgwOWQzMTVkMmViOGU5YzU0MWQxNTA5MmVmNjJjYWQxOGM3MzQ3MjQ5N2IyZDA3NjhiYWM3ZGEwMDg5ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGNjNWM4YWMwNTBjMjdiZDlhMTkxMGU2ZDBjNzMxZjBlNThjMzEyYTRlYTk1ZjUzYTViNTVmNmVjNTllNDMyYSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_adeed25944184a56a23a5f1fed0f0381",
+      "statement": "New files must be tracked with `git add` before Nix evaluation can import them, so newly added modules or vhosts should be staged before flake checks or configuration evaluation.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L98-L113",
+          "version": "repo-lines-v1:sha256:3fdab19d5b9c54eaf2704c195d1e0be36efbcfb74c99bed32ae40f4ec78fec82:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1NjA4ZTM0ZTM0ZTVjZGRlYWYwZWNjMmIwYjhjMWU5NDY5MjI5NzE5NDgzNzZkZjRlZmY4MzllMGY4ZTYxZjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVmNTg1ZTU1YjYyNTFmNjYwOTE3YmExNmRkM2QxYTU5MjQzYTY5YzdlODk1NDIxN2U0Y2NlMWFhYzdkNTc5N2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE3ZmM0NTI4N2Y3MGJiNTVjZDUwNGY1MWFhNTgyMThlYTUwYzc5MGRlODZhYzRhM2ZhNzA5YTdkMzg4N2JmZmQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYxNzBlZDRlYWYzN2ZhZTg2YmNiMmI2YzZhODIzZjhjZDE5NGIwMmUxNzg2YWY0ZTIxN2E2MzJkOGQ0ODllYWIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_402672a5f5cf44469b6a76fa2eecdf21",
+      "statement": "The repository documents `nixos-vmware` as the NixOS rebuild selector and `tung@nixos-vmware` as the standalone Home Manager selector.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L162-L165",
+          "version": "repo-lines-v1:sha256:213499358fb3348027077b2ca5bd10d81515dd62c0ea4225d339191d2fde78a4:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTgwODFiOGUxYzk4MWM2MmYzMjA3MWQ0ZWU0ZDJiZTM0YzBmZjAxNzAyMWUwMWQyOTZmY2RkMTBhOGU4NTYwOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiODkzNWUzMzMzZGJmNDc4MzhjZDdiNzAwNzM2ZTBiY2MyYjk2NDI1NTIzZGYxNjc4OGY3OTUwYjNkNzUyMmNkZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTQ0OTYzNGJiZjQwODIyZWVjY2FhNDNiYTQzZDI0YzVjNTRmYzAxYWU2NjI5N2E1NWU0MjZhYWY5MjFlZDhiZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNmIxYTk5M2ZlZmI2YTlkOWFlMmFjNjJmYWQ5NDNmZGQ1OTg1M2U4M2VjOWU2MTc1OGZjMGIxNGU0ZDQyZjA5OSJ9"
+        },
+        {
+          "resource": "repo://flake.nix#L80-L82",
+          "version": "repo-lines-v1:sha256:d97c4595ae3cf5ece5c0d2c927a55d3cd4caf33f1df0f3879cbecb1d37b4808d:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzVlOGYwZjIwOGM0YjI2NGJiODJmNTJiNjNjY2E4MzhiNDUwYWRkMjBhODMwYmM1NTIxNGZkNzRjYTg5MDdmOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzgyNDVjNmI2ZDk2MGNiMzhkN2FlNGFlNzMxODUzYTk2OTU0ZWY2NWFlNjQ4MzEzODYzMWQ3OWE2YmMxN2RkMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjI5MTg2ZmMyNGI0MzZkM2IyMmVhYmNkNWYyMTcyNzQyZTRmYjliYWQyZDJjNmVjN2E3NjZmNTJjODY1MTlmOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODY5MTFlZTdiOWEwODllY2Q5MWM3NTkwNjdlYjBiMWQyZmMzNDgyZGU0NTQzNDU1ZDkyMzU1ZjAxYjE0YmYyNCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-27T10:42:10.030Z"
+  }
+}

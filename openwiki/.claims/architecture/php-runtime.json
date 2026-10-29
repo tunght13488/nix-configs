@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:ebb71df6542d855c9c96e7032f36a5fa02653f75d9639894ee83ea0f2dd7280f",
+  "claims": [
+    {
+      "id": "claim_c7e90917d01d4cd381d90517946fdf9e",
+      "statement": "The local development stack maps the vm.local DNS suffix to 127.0.0.1 with dnsmasq, configures systemd-resolved for the domain, opens ports 80 and 443, and generates a wildcard mkcert certificate before nginx starts.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/local-dev.nix#L11-L24",
+          "version": "repo-lines-v1:sha256:c4fdb73ced6c7f49813af77cb2d6f5a07c5a071b2ac313a550deb9e520c64f0d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4M2MzYzNjYTRjY2MwZmIzODI4YzBmMDI1NjdmYjhlN2ZlNWY5MTE5YWM5YzEyOTk5YTA5MzVkMDI0Y2UxY2QiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc5YjNkOGQ5MDdmZmZiOGY0MGZjYWVkYjMwODVkMmM4YzlhZWRhZDk1ODgwY2JhNzE4NmIzMjQ0ZWZjMDAyMWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjM5OTU0Nzk0MzM2ZGQyMWFhMzZmY2FlZjBlODkyZmEyYjgyMTAxYzY4NDM2MTExMTYzMjgxNjhlYTFjMzk3MDMifQ"
+        },
+        {
+          "resource": "repo://nixos/local-dev.nix#L31-L76",
+          "version": "repo-lines-v1:sha256:8929d276e38e86e80070ccea607f0d2449017d6972861a117854581c849861f6:eyJzZWxlY3RlZExpbmVDb3VudCI6NDYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjNjVmODI1NzkzOThhYmY4YzZlYWRiYjMyZTNkNmZlNGU0YjI0ZGIwMDA4YjgwMTAyZjdiNmFhNjE4NGE1OTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNiYjVjZDY3ZGY3YWQ0Mjk4ZDgxODMzYjgyZDAwYzZjMjE2MDA1OGY4NDUzYjg3NjVmMzlkNDZmNDhiYjEyNjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/nginx.nix#L69-L74",
+          "version": "repo-lines-v1:sha256:c176b15ff8436ede5bd4ad1e2594d023efb3f600e1d9f0a07046d219f68cfdd6:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTViYWNmYzQ2MzA3MjNkZTA3YjI4MTZlYThkZDM1NzA4ODUxZDcyMzVmMDZjZDZjMTM4MDZjMTkwNDc3NTgyOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjlhMDM1NTZmMDU1ODlhZDZiODhlZjg3NGFhMjU5MjQ5MTJlYzBlYmI4ODNhM2FlMDE3MDU4ODg2ZTViOGJkNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_7465fc880f0c4a4fbc0a5b2c75209c84",
+      "statement": "nginx constructs its virtual hosts from imported vhost files, applies shared TLS settings, and each PHP vhost routes PHP requests to the matching PHP-FPM pool socket while using the site root for SCRIPT_FILENAME.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/nginx.nix#L18-L59",
+          "version": "repo-lines-v1:sha256:5f35947beb1b0de890eab49b590b02e3e08bb34d323d377f43b8781a187ed5fb:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZGIzZTRiMTlmNzVkYmQwNTM4MTEzZmJlMDE3ZTBmNjE2YTQxYTM0YWQzNDkwMzQyOGNiNjJkOTQ3NzhiOTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc3ZjU1OTc5YmEyMjhlNWU0OTQ4MjBjNzgwM2UyYWFmYjUwZDMyOWVkNTgwZGMzY2QzODMyMzlkN2MyZmJjZGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk3ZjBhMjRlNTg4ODU3MTA4ODRlNDEwZTJmZGU4MDQwOWRmZjY5YWNhODA2OTIyNjU1MmE5MTA3MjYwNjU5YjUifQ"
+        },
+        {
+          "resource": "repo://nixos/vhosts/php81.vm.local.nix#L10-L27",
+          "version": "repo-lines-v1:sha256:23a3c2d94cdbfd75f34c8ff78c4b3902fb2919807c85ca6764298732e1e0f0e0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE1Mzc2Nzk1MmE0OWM3M2EyZDBhMTJiMGJkNmUxNzIwYWZlZjY0NjZmMTBlMWUzZTUyOWFmZjBmYWEzYWNmOTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ5ZDViYjgyZjljMGE3YmY3ODAzMDlmNDZmN2JiOTZkMGI1ZjY2NjIyZTc3ZjIxYmE0ZGYwMGQwMDE5ZWJhNDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVjMjdiMmVkYTQyZTE2ZTEzMzI4YmMyNWI2ZTRjNDNiMWVlMTUzMDEwMzZlMjZmZmRiYjliYTIyMzdjMWE5YTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNDQ2MmQwNzIyZmRmYzA2YmE3YmZlNWMyMTA5ZThhM2RlZDY0N2U3MGNjYTY4MTU1NzBhOWU4MzE1ZDBkM2IifQ"
+        },
+        {
+          "resource": "repo://nixos/vhosts/php83.vm.local.nix#L5-L22",
+          "version": "repo-lines-v1:sha256:deb8e32c043f139675a63adc809340163d464816e81dc25062a5b02e5e0256a8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMwYWY4OTdiMGZlMWM2Yzk4ZjZhZDAwZTdiODZmZGFjYmJiNTAyMmRkMzg4ZWQzMzkxYjUyZTY5ODQxMGIwM2EiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ5ZDViYjgyZjljMGE3YmY3ODAzMDlmNDZmN2JiOTZkMGI1ZjY2NjIyZTc3ZjIxYmE0ZGYwMGQwMDE5ZWJhNDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE3MmVhZjI5Yjg0YmVmYTMwZDIwYTE4MGViMTMwNDgxMjE3YWFmMDMyY2VjNzQ5OTNjZjgwYmZhNzg5ZTk3NjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNDQ2MmQwNzIyZmRmYzA2YmE3YmZlNWMyMTA5ZThhM2RlZDY0N2U3MGNjYTY4MTU1NzBhOWU4MzE1ZDBkM2IifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6a3ae64dd3664794807ec55c3b765864",
+      "statement": "The runtime maintains a one-to-one set of PHP 8.1, 8.2, and 8.3 FPM pools and example sites; each pool runs as tung with the matching PHP package and uses dynamic workers with a maximum of eight children.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/php.nix#L27-L32",
+          "version": "repo-lines-v1:sha256:883e39a2e08693618c8ba8ed0e7e443be85075520a8879973b7b7461d8533088:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTJkNWU2NTcwODRkOWEwMmM5OTk4Mzc4MTViMWYyMzk2NzMwMmE1ZDU1NWI2OTNkZjYyODRlMjA3NjA1NWM1YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjJhYzdjOWYwMzQ1NTczODUzMDA5M2I1MmI4ZDVmOWMzMmJjMjA3ZTFlYzEwYTczMGQ5ZmMwMmNlNTk0MzY2MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjljZWNhN2FhYzFlNDU5YzMzODc1MTFjNjUzZWI0NmVjNjkyN2ViM2E4ZjRmZjJjNjBhNGQ0YTgyODY3ZWFmMiJ9"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L15-L55",
+          "version": "repo-lines-v1:sha256:063a71ff368c6192ac682f8939b26f714e92db590e481009482f2cba540174ae:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZGIzZTRiMTlmNzVkYmQwNTM4MTEzZmJlMDE3ZTBmNjE2YTQxYTM0YWQzNDkwMzQyOGNiNjJkOTQ3NzhiOTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM4ZTQ4NmE4ODUxMTczMjZiNTI2MzM3NTI0NzllZmRmNTk4ODViYTEzNzkxMGJkYmU2ZDM5YWZlNWVhMmE5M2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwZWYwNzBkOTliODVlNjM0NzYyZDUzZTkxM2YzZWFlMWI0NTEyMjJkNmVmYjM1MTczN2MxMWE2NWMyYTliNGEifQ"
+        },
+        {
+          "resource": "repo://nixos/vhosts/php82.vm.local.nix#L5-L21",
+          "version": "repo-lines-v1:sha256:8458541e74ca88a3930f6538a89511dee1c2dbc3c12d94d107f8cc863a2f12eb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjViYWI3YjJjNjhjZjJhMDY2OGVmMjIyOTI4MDliODBkNjU3NmFhYTcyMGVhNTY4MzFjNzhhMTE5ODllOTFmMWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM2YTA2YjU4Y2RkZDhjMTNjY2ZjODYzMjFjZTY2MDIzMDdhY2JhZGJjN2VkYzY0MzEzNmI0MTA1NzA5YTMzOWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjdmYmUyODgxMzE5MzRjOTQzNWJiOTRjODJkYzkzZjA1OWUwNmZhNmZhNmQ2MGViZjBmM2ZkZmU3OWQzODlkYmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNjYjJhM2Y0NjQ2YjVlYTA4ODAwYzg4ZmMwYWZlNDE0OGE3ZjJiYjQ3YjExNzBkNzQwMTY5ZTIwN2Y3MjEyM2IifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_bdb916bebed3447c896e215cbfe7826a",
+      "statement": "FPM sockets are configured as nginx-owned Unix sockets with mode 0660, and nginx is added to the users group so the nginx process can cross the file and socket access boundary.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/php-fpm.nix#L21-L30",
+          "version": "repo-lines-v1:sha256:7bae3b275de8d8f1d2868ec93a327349a65a760ceb64de57eda97a50d2e209e9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE5NDQ3NjM0Y2RiMjM1OWM4ZWRlZmM4NTYwMGY4MzUyNWY5ZGI1MzVlYzNlNTA4YjA3ODRmMjJmNDVmMjgwNDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUwZTZkYjA0NTI2NTY3Y2JhZDk4NTRjZmExMGU4NDM4ZWZmMTk5MThhMTQ2NzJmOWVlYWY1NGFmNDk3OGIzODEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMyNjBkM2I0MTgwOGMwNmFlZmY3NWMyYTQ1MDNkNGM0ZTA0MWNkZjk3MmUwZmY0ZjJkMWY3MTVmNWY5ZDYzNGIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUwNWE0MTVjMzhlZTdhNjc2NmRlOWVkYzQ3ZTUzZWZiZmUzMTRjODYzZjc0YzRjOTg1OTc3NTgyNmFiYWY4ZTAifQ"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L58-L60",
+          "version": "repo-lines-v1:sha256:b38d241b82e0b54e0e91223682a06387bd9820199876717acbea227795c72e1d:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODUwZWQxNmZlMzQxOTUyMjNlZTYwNjgxZmY0OWM5ZWNlYjlmMWI5MzA1ODlmZDA0ZjJlNjRiZmExMDMwYjIzYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzQ2ZDk0NTFmNmE2ZDZjZDYzYjY2YzFkMWE1YTA0NWM1ZDgwMWU5YTlmODFhMWY4MDc4NTk4ZThlYjM5YWNhYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWRjYTQ0MDUxZTY1NGY5NTI4ZWIxOGRiNWI0NzI0MGEzZDAwNDk2YWQ4NzBhNWE1ZTM5ZThhMjFlYzk1OGM5ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNzllMDBjMWJlNGE1MjRmYTIzYTNlZDJhYjFiZmRlM2I3MzRjZDk3Y2RlZTE4NzI5ZTE3YTc2NWMzYzQzNmFmZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_fb3f52a362a44ffc8c38eea5ab8ed399",
+      "statement": "The nginx service changes ProtectHome from its default restrictive behavior to read-only, while all three PHP-FPM services force ProtectHome false, because nginx and FPM must access scripts under /home/tung/php-sites.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/nginx.nix#L61-L67",
+          "version": "repo-lines-v1:sha256:b1c5e1393634285d6137f77c039c5d8d147eb7852fdf683af5384f1d055fea50:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDkzNTllODNiZGNlNDlmZTBmOWU5MTVkMGExNDkxODE1MmQ0NzkzNmI0M2E0ODQ5YjBiZGJhZjFkNTEyYmYzNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjdkZDcxNWI4OTY1ZDNhYWM0YjY2YWZhOGVjM2NiYzI4NjIyYTk2NDMzZDJkNjNmNTMxYmMzNzcyMTdiYTI5ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTUyMDQwY2I0NTI4ZGZhNGQ2Yzk5YTI0NTUzMDRkM2E4NjAxNzg4ZTI5N2QxY2M3MWIyMGYyZmZlYTgzNDAzMSJ9"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L62-L81",
+          "version": "repo-lines-v1:sha256:87193a10c35b81c0fce9e0f3ecc610b3c47a5d29919748b5bc0b3e2ce0f868fb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MGY5MWY3OGU2NTBiMGZmNzU3NDYxNTcyMWFmYzU5MDIwNWVjNDg0OWNmMTY0YTc5NWMyMTFjMzQ1YzcxYjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ3NTAxNmNmMzNjMWQ0OTg1MDU4ZTViZDE0YjY3ODI3YTY2MWFhNjJkM2I5ZmEwZjJmZjY2MmMxYWJmYzhmZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNDQ2MmQwNzIyZmRmYzA2YmE3YmZlNWMyMTA5ZThhM2RlZDY0N2U3MGNjYTY4MTU1NzBhOWU4MzE1ZDBkM2IifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e6bc038ca72b413cad1215530467393d",
+      "statement": "Home-manager provisions versioned PHP test site index files and activates o+rx permissions on the site root and version directories; the files are Nix-store symlinks and do not require chmod themselves.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/php.nix#L27-L43",
+          "version": "repo-lines-v1:sha256:8df692d66d594e0d064af5e5fc661b1664faf6bc2e795cce0a0be90ba47a4707:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkyZDVlNjU3MDg0ZDlhMDJjOTk5ODM3ODE1YjFmMjM5NjczMDJhNWQ1NTViNjkzZGY2Mjg0ZTIwNzYwNTVjNWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5OWJmN2NlMWJlMjdjYzI4MmRmZjk5ZmIzMmUzNjdiZDk1NDdiNmMzZWM2NmY5NDBmN2IzOGY3ZjM2N2I4Y2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYyYWM3YzlmMDM0NTU3Mzg1MzAwOTNiNTJiOGQ1ZjljMzJiYzIwN2UxZWMxMGE3MzBkOWZjMDJjZTU5NDM2NjMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1122c211ffee43efb3df65956ae7d1b7",
+      "statement": "PHP FPM receives a process-level PHP_INI_SCAN_DIR computed from the PHP package extension directory and generated custom INI, with merge order common, FPM-wide, version-common, and version-FPM settings; CLI wrappers use a separate CLI scan directory.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/php-fpm.nix#L66-L81",
+          "version": "repo-lines-v1:sha256:eaa0176e4b8ea3350bdfd7a54121898ccf4980c17ba5763e47a862ebedc0299f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2NjdhNDIxMDZlYzhmMTlkMjg1YTQ3Y2JkN2Q0YzhlYjFmYmM3YjkzNjMwNmZlY2U2NjAxMjNlMjdkNTJjMDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI5Mzc5NDgxZGIzNmU4YThlNjJhMDlkNDllZDIyZDg5NTM3OGYxMWMwZDVhZmQyNzJiMzhiYTI5ZjBlMmRhYmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNDQ2MmQwNzIyZmRmYzA2YmE3YmZlNWMyMTA5ZThhM2RlZDY0N2U3MGNjYTY4MTU1NzBhOWU4MzE1ZDBkM2IifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L24-L56",
+          "version": "repo-lines-v1:sha256:b16abf3b678d506b1b0f50641925dbf68a6fca42a012cff2e47ba049175cd784:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3M2Y4Mjk3MWM0ZDNjYTM5ZDRhY2M5OGVhOGVlZTZmOTc0ZDAyYzQ4MmU3MWYzYzZkMzk4NGZmNDExNTEyMGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZTk0ZTg1Nzk1N2NlZDFlMTdhMGJlY2IxNmIyNGRiMmZiYjJmYzY4YzZkYjBkZTU2NjBiNDgxYzE5YmIwMDEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliOTYyYzllOTZhZDRmODUxZWE4NmVjYTE5MmQ2ZThiNjdkYzY4MmU3Nzc2ODc4NDVjMDIwNWU4MWVkZmFjNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU2M2I3MmZmY2QxMzI3MzUxOTgxMWY1NDVkZDA1ZGU1Y2NiN2JlOGMzNjZhYWJkMDM1NWY2YTU3YjhmZTQyZTQifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L58-L79",
+          "version": "repo-lines-v1:sha256:ede9a4006acc6d8135f3c0a75f4689c51bd867f94b08f5d04ce9c5a0fbca1585:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmNzAxMWIyMzg1NzY4YzllMGFmMTRjYzc2MDNhNjJjOWE1ZGM5ZTExNjU5ZmZkMGE5NTE2YjkyZmYzY2FkOWUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMyNGM5YTNmZGU3ZDNlZDgwMWQ5OWFkZjk2ZmE2OTk2YWMwMmEzZDk4MDE5N2ZhOWVlYzAwMGVmZmVhOTUxNzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNjNTk2ZTM4NjQ0ZGI0NDQ0NjJkYWI1ZDQ2MmRjM2ZhZGZhNDg0YzE3MzAyY2RkMTY3ZTZlNWEzNjI0M2QzZDYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc4MTM1YzRjOGQ5MTRiZmUyNWRhNDM4OGM2MTkzMjc3OTE1OWExMDgyZmRlYmVlNDE4MzM2ZWE2ZTg1NTdkMGUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_603e22b1762d428fa7afb88398c3ad6b",
+      "statement": "The PHP runtime uses nix-phps packages for PHP 8.1 through 8.3 and repository overlays compile zlib into PHP while enabling OpenSSL-backed libzip and removing the conflicting shared zlib and zip extensions.",
+      "evidence": [
+        {
+          "resource": "repo://overlays/default.nix#L109-L112",
+          "version": "repo-lines-v1:sha256:e1a1c7be2569d1eb8356291dc4f57d2fd32fee08e4970fc90c2533eea2d870e8:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWI4ZmM4MDc5NGEyMGY5OWU1NTY0NjBmNDgwMjE0NTdiYjU2ZmZiMTkyYjQ3N2FmMWMxYWUyMDQ1NDFiMWI5ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTY0OGQxODU4NzRlMTFmZTRmYmZhNWI3Y2VlNDE4YmU1ZmNmMTUwM2ViZjk2NWI1NzQwYTVjYzM3MzdhYzFiZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://overlays/default.nix#L20-L79",
+          "version": "repo-lines-v1:sha256:9b1ec15edbdaa368850c74967683d1d1ef5161115b869eae56e5f4d93893a033:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjNmFjNGVmMjAzZmJhNTU3Mzk4YTU0OWIzZjc3OTQ0ZmIxODcwMGM4ZTBiNTIzYWM5ODRmMjk1OTkwMjk1YjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIyZDExY2FmNDNlOTdlZjM2OWU2YmVlZDFhMjY4YmQwNTgzOGYyOWI5ZGQyNTRiZjY5YmE2NDg4NDE0NzIzNGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFkNzhmN2NhYzk1MDBkMGRiMzk3NzkwOGViZTE1OWQ0Y2Y5OWQxNGI2Yjc2ODQ4MGNjMDFkZmE1ZDEyNWUzNGMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjlmMDQ0ODcxYTQzOTNiYjM3MzMxMjU3NjAwZTU1NDhlZDJjZmEyODIwMDUzMjRkZDYxZWFjYTRlOTVhZmJjNjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_786dab9b6471407aacb5fb5a231a1e85",
+      "statement": "The local database service is explicitly MySQL 8.0, supplied through an overlay importing mysql80 from the pinned nixpkgs-2511 input because newer nixpkgs dropped that package.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L9-L13",
+          "version": "repo-lines-v1:sha256:044756f738d2a2f11dcb8782d932cb0db09695d76890ab9f5cc88f669e36ec82:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmU3MGIxNjE1MTljMDJiYWY0ZDhhNmIyNDVjOWQ1NTg5MzRhZGM5NmEwNWE4NWEwN2VmMTdmMGJkOTQ0MDcyYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTc2MjdkMzliNDY0MDE5NTVhMmEyMzkwNDY1NTZiYmQyOGExOGE5OGEyMjUzZGM0MmRlOWU1MzIzMGM0YTBkNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTg0NWRlNDI3MTNhNjU2Y2UwZDgwZWJjOTljZTVjYzMwMDI0MjM3NTNiODk1ZjVmZTY2Yjk5NDJmZTNkMjRkYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDFjYTljYmRhMzIxZGE4MDhiOGYyZTliYTNjMGU1YjA1NzZiM2ZkYWNmMDc3MDEzYmIzZjBkY2FiMGFlM2RmMiJ9"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L32-L40",
+          "version": "repo-lines-v1:sha256:b91e65fd7167b30efc0e7687e33bb51e1786554b12750325aa9527b13051bae6:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzg1ZmE2NjI1OWMyMzhmOWIwODFjMDc0NGQ2YTQ3MmZiZmI1M2NkYzZhMmJlY2NjMGVjZTNmNDJkMzNjNzNjMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTY4ZTc1OGFlYjgyZmMyMmU5OGE1ZGExZWJkNWU5NGM3ZTMyNzQ0YWExNWIxYWNhZmNlNDdiYzFiMDQ1ODU4ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZWVlNDNiOTI4OTZkM2I5OTM0Yzc5ZTNmNmMxOTk1ZmI0MjJkMTg2NzUwNjc0NjZiY2M1ODE1M2M1ZTMwOTRjYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTcxMzkzZjk3ODkxOThkNzVlNzNiOWFlNjFiOTBjMjNmNWEwNTIwODMwOWE2NDZkMTE1ZDM2MDEzNGNkNTE3NCJ9"
+        },
+        {
+          "resource": "repo://nixos/mysql.nix#L6-L9",
+          "version": "repo-lines-v1:sha256:351524a60743c660dba9402d37b61fb79d8d43192e6db470601e9f4b88cd6028:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzZmNWQ4NTlmYzFlNzE2MjY3ODc5MzJiMzliY2NlNjg3ODNjMDk0YTgzOTVjNjZjMTg5MGE5OGNkNDUzZTdmYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmE2ZWQ2OGI1ZTMzZjE3ZTcxNTcxMGU3MGFiOWZiZDJiYzUyNDJmZjJhYTAyZjFjODQ5MGIwMjQ5YmUzNWJmNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://overlays/default.nix#L102-L107",
+          "version": "repo-lines-v1:sha256:c66e088b33ff2f87337969f5f203238345c0f47c1033e7a856673080d63e89d1:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiM2FiYzM1N2E1NWE4OTg2ZTdhOGIxYWEwYWRhN2I1MTUxZTk0ZDRiZWM5Nzk2NzIyMDBjNGExMDQzZDg1MjNjOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWZjMTcxMDQ3YTZhYjhhMDI1Njk2NmQzMTA0YTYxZWE2Yjk0OThjNjUwMzJkOGY5ZjQ3ZGYyZTI3M2IzOGIxOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjE2Mzk3YmQ4MmJkOTIyOTM0OTkwZmE4ZTdkYWY5YTRjM2ZhNmU5NDRjYmQ0YmEzMzYwYzEwMWVlZmY1ZmFmNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3b14a4d958574cbdbbfe6e8f29678837",
+      "statement": "The mkcert service is a oneshot that runs after network-online.target and nginx both wants and starts after it, establishing the certificate-before-nginx startup ordering.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/local-dev.nix#L36-L45",
+          "version": "repo-lines-v1:sha256:d1e49da37c8a3546c734140b06b8ff113731ffe2e038479fc6f7767f7e677d79:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJjZjVmMTQ1MWUyM2IyYmE5MTQ1MTY4ZWZmYTI3ZjE2Y2Q1ZWJiZTkwODZmYmM4ZjVjZTVhNjRlOWYwYmM1ZDgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4ZGUxODM5ZWY4NDI2NWY4MzNjODk5MjBmZWUwMGQyYmM2YWM0ZjM4ODhhMzI3YzE5Yzk1MjEwYjFlYjNiNWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE0ODZiMWMzMzE1NjlhNjQ2ZDQ3YjgyODNlY2Y4MzhmOGU3ZTU1MTdkODQxMTcxMTc5M2NkNzQwNWI0NWQ4YWMifQ"
+        },
+        {
+          "resource": "repo://nixos/local-dev.nix#L73-L76",
+          "version": "repo-lines-v1:sha256:e658c166abaa07336ecd27326c93df9b61f97ee5b246a21b30d83e075598c213:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjI1ZjA1NzhiYWRhNjc2NjdjMjk3YjY5ODJiMTIxNzU5N2E5NWVjNjUzYjg4YTllY2U3ODc5ZjE2MGQwMzlhYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzcwNzg1MjA2NGQ4MWZjYjMwM2UxMmZmNWM1MGI2MDhkZGY5ODI2N2M4ZDYzNTY3YmY4ZWZjOTA3NmExMTBhMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-27T10:42:10.030Z"
+  }
+}

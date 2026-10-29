@@ -1,0 +1,5 @@
+# Files
+
+- [Flake Outputs and Entry Points](flake-and-entrypoints.md) - How this flake turns pinned inputs into packages, overlays, reusable modules, development shells, and the two machine and user configuration entrypoints. Use this page to choose the right output for building, developing, rebuilding NixOS, or applying Home Manager.
+- [System, User, and Reusable Module Boundaries](layered-configuration.md) - Defines how this repository separates NixOS host state, generated hardware facts, Home Manager user state, reusable modules, shared PHP configuration, and local development services. Use it to decide where a change belongs, how it enters evaluation, and which independent output must be validated and applied.
+- [Local PHP Web Runtime](php-runtime.md) - Traces a vm.local browser request through local DNS, mkcert, nginx virtual hosts, versioned PHP-FPM pools and Unix sockets, home-directory site files, and MySQL. Highlights the systemd sandbox and permissions that make the local stack work.

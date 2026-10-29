@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:0d871114edbccc517ecfbf42c944ff00ae518634a9b40f6e912f77feaa87ec39",
+  "claims": [
+    {
+      "id": "claim_ec7a5b7d16d143f8935b46076b4434ad",
+      "statement": "The shared php-config module exposes typed global common, FPM-only, CLI-only, and per-version common/fpm/cli options under phpConfig, with version identifiers matching package-style names such as php81, php82, and php83; it publishes computed results through read-only phpConfig._lib.",
+      "evidence": [
+        {
+          "resource": "repo://modules/shared/php-config.nix#L23-L44",
+          "version": "repo-lines-v1:sha256:95ab343e0233912e9a61149a0fd391ae57fa70a2c735737ac8df94734104d9ef:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhODYwOWM4M2VlMTA4Y2I5ZTQ0NTU1OTM4MGYxOTFjYzc5OTliYjZhMDZjNzc2MDUwMGMxNWE3NTllMjFlZmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZjOWJkMDNmZDJmMThlZTZiYWU3MDI1MGZiNWNlOGJhNTY1M2I3ZTY2MDkzMmZkNjNmZmFkODg3MDNmZGY2ZmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyZGJlYzExYmYxNjU2ZDdmZDgzZWU1ZjliN2FjM2EwMzc2ZDAxNmE4MzNlN2QzZmU3NDA0NjViYjBmMjQ2NWUifQ"
+        },
+        {
+          "resource": "repo://modules/shared/php-config.nix#L47-L106",
+          "version": "repo-lines-v1:sha256:9b7629225975838a22fab77f302c89e88bf515259bfa9b14d5b54243f92c9adc:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU1Y2YwZDQ4Yjg3YzgwYzVlY2E4MmZhZDliNzY1YTU3OGY3NzhhYTE3NjhiYzE3YzBmMTc2MGY4YWZkZDdiMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjZmI5YzU3MzFkOTE0YTJmMTdlY2U4ZmZiMjIxMDAyMWQxZjAyNjQ0MjQ1MzRhYWY5MzdlYzllMzEwZmE2MDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_dfcf549119434b5cbcaac50cbae22544",
+      "statement": "The default PHP configuration is defined in pkgs/php-config.nix and currently applies memory_limit = 128M to all FPM versions and memory_limit = 1G to all CLI versions, while common and version-specific layers are empty.",
+      "evidence": [
+        {
+          "resource": "repo://pkgs/php-config.nix#L3-L41",
+          "version": "repo-lines-v1:sha256:9de341be6f7b693d96c1eff26905ad69bfd505a581cb2d26defa0ed3514aac89:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBhOTk5ZjBjMWU2NTAwYTRkNzU4ZWRkMzM4MjQwNTE2NzljYjc4YjlkZTY2NjAwYzBlYTFhOTBhMzA2Zjc0NjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRjMzFiOTk2YWZjMDk3MDJkMDdkM2ZiMmE0NmZiMWNmYjc4MTY5NTg5MjRhZjFhODA3N2I2YjcxYWI1OWJmY2IiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_933bb0337f8a48359f106d87ea6a3f41",
+      "statement": "PHP INI composition uses common, global mode-specific, version-common, and version-mode-specific layers in that order; FPM selects fpm layers and CLI selects cli layers.",
+      "evidence": [
+        {
+          "resource": "repo://pkgs/php-lib.nix#L24-L47",
+          "version": "repo-lines-v1:sha256:6ec435cc3aa2c14222160facacb0917de538856761dc13fd17bde9f3d9169123:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3M2Y4Mjk3MWM0ZDNjYTM5ZDRhY2M5OGVhOGVlZTZmOTc0ZDAyYzQ4MmU3MWYzYzZkMzk4NGZmNDExNTEyMGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0ZTQyMDhjZDZmZmI4YzRhMzU0N2IyZjU0YWRhMTk5NzhjM2YzNjVlNzhmOTUwMmVmNTE0NWNkZDJhYTg1NDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliOTYyYzllOTZhZDRmODUxZWE4NmVjYTE5MmQ2ZThiNjdkYzY4MmU3Nzc2ODc4NDVjMDIwNWU4MWVkZmFjNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlNGZiMDU2ZTQ4OGYyZTY1ZWMwMzNlODQ2MDNiYTcwZjc0MTBhMDQyZGU2NGFkYWU0MGI4YWVlMDEzMDdjOGQifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L7-L8",
+          "version": "repo-lines-v1:sha256:f96ede2abea3ee675779c2b395fc1ea5ccb0517ab321e393a22912186a509c0f:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzRjMDFjYTExZDQxNDZmZGU4MDg5NDc5ZmE1ZjM3MjNlMjlhN2YyZWIwNDc5YzZmNGQ2Y2UyZjY1MTAwNjNlMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYTZmMjc3YTAyODliOTQ4OTI2ODIyNGFiMzQwMGY5YWUyY2E4YTliZmJlYWYzMzNiNzgxY2E4MWEwMTAwYmRlNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGM5YmI4YWZjMGQ4ODM2NWQ4Y2ZlZWU2MzhkNzE0ZDkxNjRmMzM3OGFmNWNhZWY4MmU2YmU0N2Y4MmU3N2Y2MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTRmMGNhODdhZTYyNTI4MDJhODkxNzg3OWVmMzFlMGI4ZjcxN2Y0NDBlZjc2MTMzMDBjODUzY2YxNzhiNjk5YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_85537c181cbb4125b192fcf216ffaea5",
+      "statement": "For each configured PHP version, php-lib writes merged INI content to a generated /custom.ini and constructs PHP_INI_SCAN_DIR from the PHP package's /lib directory followed by that generated directory.",
+      "evidence": [
+        {
+          "resource": "repo://pkgs/php-lib.nix#L15-L22",
+          "version": "repo-lines-v1:sha256:ac2ba37089c920220250ca8f5092093c85a0cb471c35a9ac15cbdac29fe11e8f:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjgxNjA0MTQxMTNkOTg3Yzg1YzJkNjVlNzEzMTNhZTA0YjQyMDUxNTQ5MTI4NmJlYTlkNTE3ZDk4ZTNkZmNkZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWQ5ZTEyNTQ2NDI1NTc2ZDNkZWFlOGM5YjlkYmYxMjhkNWQ2ZGRhZjVkN2ZlODU3OTM0OTI3ZGVmZmEzYjlkZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWVhMmRkMDQ5ZDBiNmQ3NTM4MDk1NjgwZGNkNmU1NTIyOTAyNzdhOGI5ODdkZWU3NmZkZDNmMmUzZTM3ZGI1ZSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTRhYTg3MTI4YzA2N2RkNGVmNGFkY2ZjNTkyNmViZTkyNTE0ZmNiYTczZDY1MDk5NGMyNWFkNGE0M2JkMDU5ZCJ9"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L49-L56",
+          "version": "repo-lines-v1:sha256:9a1365c6f1a8280f7accee0165e16417e50072f146eadd5b41cc8830c28cc58d:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOThiOTdkZjg5ZGM0ODQwYTM3YzQ3YjRiMGY0MzNkY2EyZTlkNjczY2M3MDUzZjdlNGExM2E0NDkyZGMyNjI0MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFlOTRlODU3OTU3Y2VkMWUxN2EwYmVjYjE2YjI0ZGIyZmJiMmZjNjhjNmRiMGRlNTY2MGI0ODFjMTliYjAwMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTVjMTEzODVhMzQxODlmNmIyMzM1NTdmYzYxNDUyZDJiNjZlZmJhYzZkNmRmMmE4NzZmNTA1ZjgxOTlmN2VlYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNTYzYjcyZmZjZDEzMjczNTE5ODExZjU0NWRkMDVkZTVjY2I3YmU4YzM2NmFhYmQwMzU1ZjZhNTdiOGZlNDJlNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_603bc6b07aa64ec785c5e959e7750772",
+      "statement": "The computed per-version helpers wrap php, php-fpm, php-cgi, phpdbg, phpize, and php-config; only the php-fpm executable uses the FPM scan directory, while the other executables use the CLI scan directory, and Composer wrappers use the CLI scan directory.",
+      "evidence": [
+        {
+          "resource": "repo://pkgs/php-lib.nix#L101-L130",
+          "version": "repo-lines-v1:sha256:03af1b722ceeaa1de82d7b79f7c9d991cd9afae3633b68ff098c66f74e52c85e:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU1ZDZjZDcxNzQwYWM3ZWMzODk1ZmIwNjE2MjE3NWM3OTNiOTBlNzE1NmFmODM2YmMzZDRhYTQzYmI3NTM5NTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0OTM4N2RlMmRjMjlhZjgxNTc4MjNmN2VhMmViYzE3ZGM0YjBlMDMzMGUzYTRjMDg3NGYxMDQ0MzYyN2NjMDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImZlNGJjMzNiMDZhODI3NjhlNTI3YWU2NWI5MGQyMDlkYmNmODFjOWZmNjI1ZmRhOTE4YmQ4NmUzYTg4ZmM3OTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNlNzMxYjI4ZGU5NzlmNTJhOTY2NzMzYzFjZTYzZjA1NTY0Y2I2OTdkZTM1YjUzZTZhMjAwYmE5MzRkMGRlMDgifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L81-L99",
+          "version": "repo-lines-v1:sha256:964f36c3fdcba116f5f394752e5f0e903119ebc17013780c342651056c048d9a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhMzIxZDg5NjcwOWU5MGVmNTM3NjQ0ZjBlM2U1ODBlYzZmMzdlZjQzMDBkMzZiNjljNTNhMGFlMjkxNThmODciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0OTM4N2RlMmRjMjlhZjgxNTc4MjNmN2VhMmViYzE3ZGM0YjBlMDMzMGUzYTRjMDg3NGYxMDQ0MzYyN2NjMDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI2ZTU1MzZiNmEyNTc5M2NkN2M0OWQxMDUzYmIzYjM3M2I5Y2E2MWE4YzNhZGJkZDE2NDQ4YjgyNWI0MGVkMDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZmNGNjM2JkMjY5MjVlNmQ3ZWI0ZmU3ZTk1OTQyMzYzODgzN2UwMjNiMDE5ZjA3NTFlODY0YTQ2ZmI4MzAzMGEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_be5e205dbfa74204882a4766e54d3a46",
+      "statement": "NixOS configures three PHP-FPM pools using php81, php82, and php83 packages and assigns each pool's process-level PHP_INI_SCAN_DIR to its computed FPM scan directory.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/php-fpm.nix#L15-L56",
+          "version": "repo-lines-v1:sha256:7d4e310c9e8e6585ed72bb4268e00b736cfcb86787fa5ddacd5dabc680405824:eyJzZWxlY3RlZExpbmVDb3VudCI6NDIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZGIzZTRiMTlmNzVkYmQwNTM4MTEzZmJlMDE3ZTBmNjE2YTQxYTM0YWQzNDkwMzQyOGNiNjJkOTQ3NzhiOTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM4ZTQ4NmE4ODUxMTczMjZiNTI2MzM3NTI0NzllZmRmNTk4ODViYTEzNzkxMGJkYmU2ZDM5YWZlNWVhMmE5M2QiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1N2MwOTYxZTU1MGNhNmMwZGI5MWYwZWQ0OTU4Y2YxNDI1NDBjNGJlNjZjNTJkY2VjYjcwNzQ3NjA5YmZhNmMifQ"
+        },
+        {
+          "resource": "repo://nixos/php-fpm.nix#L62-L81",
+          "version": "repo-lines-v1:sha256:87193a10c35b81c0fce9e0f3ecc610b3c47a5d29919748b5bc0b3e2ce0f868fb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MGY5MWY3OGU2NTBiMGZmNzU3NDYxNTcyMWFmYzU5MDIwNWVjNDg0OWNmMTY0YTc5NWMyMTFjMzQ1YzcxYjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ3NTAxNmNmMzNjMWQ0OTg1MDU4ZTViZDE0YjY3ODI3YTY2MWFhNjJkM2I5ZmEwZjJmZjY2MmMxYWJmYzhmZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiNDQ2MmQwNzIyZmRmYzA2YmE3YmZlNWMyMTA5ZThhM2RlZDY0N2U3MGNjYTY4MTU1NzBhOWU4MzE1ZDBkM2IifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3ce42f6e4ea24ef5b5ceb4f052ff8885",
+      "statement": "The NixOS system package set installs versioned PHP and Composer wrappers for php81, php82, and php83, while Home Manager's unversioned php and composer commands forward to the system php83 and composer83 wrappers.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/php.nix#L6-L25",
+          "version": "repo-lines-v1:sha256:cdc7220c68c0063933856f0bb9afeae1c81b0e130706c96c9fee4fc302bffb27:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMzNjI5YjZmN2ZiYTQwODVjMWMxMzRlN2MyNjE2NTc0MmY3YWQ5ZDJlODEwYWRiMGE4Y2JiY2RhOGFkMjIwYjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJhNmVkNjhiNWUzM2YxN2U3MTU3MTBlNzBhYjlmYmQyYmM1MjQyZmYyYWEwMmYxYzg0OTBiMDI0OWJlMzViZjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwZTZmNGNlNzFlNjMyZGFkMjM4OTViNTM2MWQ2ODA4YWVmOTk1MGE1MGE5ZDhkMzZkODg5MzkxNDQ2MWYxMzYifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L199-L221",
+          "version": "repo-lines-v1:sha256:3f4077b9bce38451d0e3c43d62781d51b65b78442454e4708c2fd565da19c924:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE1NGY2NzY1YjVhYzZiNzViZTdmOWI3MTZmZTRjZWI4YzQ4MzU5YjNkMDUxNDFiNWE4MzgzM2Q0ZjFmMmE2MGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MDE5MGEzMDU4ZDliMWU3NmIzYzU1MzdlNzI3YjViYzM2ZGIwNTU0Yjg3MWU1MGRiYjhkYzk1Yjg2OTgyNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBmMjBlZTJlZDg2NmU4ODI3ODUwNjAwN2JhMTM2OTAyMzU1YjkyMWIyNWJjYjZiOTNkMzA3MjVmN2QxMDFlNGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L9-L13",
+          "version": "repo-lines-v1:sha256:79f3679b4dbd70ea6ba9a82900227c8ac42bd04286ce69674831587b7c458e5e:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjVkYjNlNGIxOWY3NWRiZDA1MzgxMTNmYmUwMTdlMGY2MTZhNDFhMzRhZDM0OTAzNDI4Y2I2MmQ5NDc3OGI5OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2QzZjU1NGQyZTg4NDZmOWIwN2U5ZTBmOTVlODNmYmYxODEwMDljOTRiYTBlYWFiYTI4Y2ExYTBhYzQxYzJkNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzhlNDg2YTg4NTExNzMyNmI1MjYzMzc1MjQ3OWVmZGY1OTg4NWJhMTM3OTEwYmRiZTZkMzlhZmU1ZWEyYTkzZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDc3MzA3OWY1NTJjY2M2ZDcxMWU0MmFmNGRhMmUxOTRlMTI0ZWM5YzAxZTZmYjg5YjA1NDA0OGYzNDk5YjMzMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_8c90a1898eb6474a9507871928f0ffab",
+      "statement": "The flake's PHP development-shell helper creates project-local php and composer shims that execute the selected system versioned binaries and prepends those shims to PATH; the active prbot shell selects version 82.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L107-L140",
+          "version": "repo-lines-v1:sha256:1edfdd8a0d85d58a989156421a6a6f62eb62713eff714752d4291bb8a0cc34c7:eyJzZWxlY3RlZExpbmVDb3VudCI6MzQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4NDBjODczMGM0ZDExYmYyY2EzZmJmNWZlODdiYTcwMzM3YTA3NDRmZmNlNzhhZTNlOTI3NzI1ZmRjNGYwMjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0NzcxNWZhZjQwYTQ1MDI4MGQ4YTEyNGIxMGI2OGFhNmM1ODYyOGNkMjQ0YTFlMTc1Y2I4NjUzZWI3MjAxZjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc2NGRkMzk2ZTBlN2U0MGQ1MmZiNzhmN2M0NzQ1NThkMGY5NGVkMzI5MGJiYWNiOWJiZDI1YjU2NGViMDI0ODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIzNWQ0NDI1NDhhMWI4YzJmODMwYmRjZDMyMmU2MTI4N2FlODhkYzYwZmEzMzljZjdmMjNmMGFmNDJlZWQ1YjIifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L94-L105",
+          "version": "repo-lines-v1:sha256:3adb15523f727df4e804cae1e470d19a0a162d994aa9aa13ff44639687f70eda:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhkNGFiN2Q0ZTI2NTQyOTYzMWZkZjYxYWZhMzQyNTVkZDU5OThlZWU4MzJiZWE5MDg5ZTE0ZjQ5NzQ4MjVmMWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJkMzU3ODgxYjk3NmMyNjMyNzI0M2ZjYzkxZWY1OGNjYTZiNmFhMGI3MTdjOGE3ZDI1MTA5NDJhMWNjNmY1Y2EiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU4MDMxYTA2OWFiY2Y5MmUxM2I3MWJmNjFlYjZkMWNmNDExYzQxY2QyMDcxYzBmMDU4MDNkMzJjYWU4Zjc5YWEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFhNjc1NWZjNTdjM2E4YWFiODQ0OWI0YzcyMDUzMWY0MjNjNWE3YWM0OTcwZWNmNTZlZjViN2FkZjE0ZDQxZDEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6cbcfad3d3a1498c8a4403a6ea1391c1",
+      "statement": "php-lib is available as pkgs.phpLib for consumers outside the module system, while the shared module imports it with the current phpConfig values to compute the _lib helpers.",
+      "evidence": [
+        {
+          "resource": "repo://modules/shared/php-config.nix#L98-L106",
+          "version": "repo-lines-v1:sha256:3b0d53fbc2533b06cbf03c058ee687708b4c1b0b76880b3b50f23f1b5a509a07:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmMxMTU5NTk4MDZhM2Q2YmY0YjQ3YTlkY2U2MzVjNmQzZDA5NWNhYTEyZDVkN2U2M2ZmZmQ0ZDNlODU4MjAxZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNWRjYTQ0MDUxZTY1NGY5NTI4ZWIxOGRiNWI0NzI0MGEzZDAwNDk2YWQ4NzBhNWE1ZTM5ZThhMjFlYzk1OGM5ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        },
+        {
+          "resource": "repo://pkgs/default.nix#L15-L18",
+          "version": "repo-lines-v1:sha256:528e6e1e5807a67791b5a5b62ff36d18048f102422a962e05fe174d7bd4396cd:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjdjZThjODg2MjgzMjNhNTI2ZDEzYzA2MmY1ODFjNDdiOTE3MGY3YTE3YTY5MjEzZGFhY2ViNjg5MDc3NjVjMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYmQzYzQwMWI5MDkzODJlNmM1YjE1NTI0NGVkNDY1ZDMzNjc5NTI4YWY1ZjAwZmNmZjdkMzZlMzExZDk1ZjdlZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZjE5ZWQ2NThkY2MwNzgyM2QzMWUyNjY0MDFjMDEzYWY3YWM0MTRkOGZiNGE0MDM3NWE5MGM2MTE3YzNjYzFhNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjEsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-27T10:42:10.030Z"
+  }
+}

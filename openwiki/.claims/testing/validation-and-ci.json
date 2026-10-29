@@ -1,0 +1,126 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:c2805b1351e0259fd7566b013db31f21cdde75ada27eb476f4a26d12bc0ce56c",
+  "claims": [
+    {
+      "id": "claim_62d553e857404a3f97d23ed5878a8aa2",
+      "statement": "The repository distinguishes Nix evaluation/build validation, configuration activation, and application-level testing: its documented verification commands are `make home-build`, `make os-build`, and optionally `make os-test`, while activation commands such as `make home`, `make os`, `nh ... switch`, and `nixos-rebuild switch` are intentionally left to the operator.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L14-L39",
+          "version": "repo-lines-v1:sha256:753cfc6f8758a5dd70ac614f8c1c0daa7824b6ddb4397759167546629bc6f9fb:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI0YzVlZjcwZjA5N2UyZGZlZDk4Mzk3NjliMWUwMDllZGJmNjUxNjM1YmI3YTg3YTkxMmFjNGNiMWQ2YjZhMzQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5YTk5OTU5ZmExMTE5NjMxY2FkZmYxMGMzZjIyZTRmZGZjOTg1NmY4YWRlMzY0MTBhMWZiYjc3ZGQzNmIyNGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjExNjNlMmRhYTc4MTE0MWJjZjg2NWM2Zjk4Y2EyMDQ2ZTQ2NmNhZjI3YjUyYTVlY2FlM2Q3N2I4YTJkM2I1ZTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE3YTc1Nzk5NzNmYjA2ZGRhM2Y3MGMyMjM4YzQyMWExZTAwZGYxNjIxMGRlMzI2N2RiYWE4MmQ0YWU2ZjYyZGEifQ"
+        },
+        {
+          "resource": "repo://Makefile#L3-L17",
+          "version": "repo-lines-v1:sha256:22f2ced0415fa348c8eb597f147cb632cc9ea9b9a3757a1a46ed44e5ec68d30e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImIwOTZhMGRjZjE5MDc0MWQ0ZmE1MmVmZGNhMTRmN2UwMTE5YmU0YTJmNGQ2M2EzZjhjYTJjOTMwODAxODkzZmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MDJhMzVjMDk5NWQyZWUzNDk4Y2I2MGEyMzdiYjM3M2I2OTM2NjA3YzNhMWVkMWJjMzliZDI3NDUwODQ4NzciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFlMDk3ZDc1MGQ5YjZmMTg5NWI3YmZmYTRjOTYxZjE5ODYyOGZhMGNmOTVkNmUzZDdjYWNmNmU4NmRiNDBjMTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIwNGRiYjZiZDI2YzgzYzBlN2YzODJkNWYxMjM1MzA2YWVmZmNjODkwMDNhZDE4ZmMzYTRmOGU5MTNhNjU0ZmMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8a8a9e27501c49a988d497c505c73bef",
+      "statement": "`make home-build` builds the standalone `tung@nixos-vmware` Home Manager profile without switching it, while `make os-build` builds the `nixos-vmware` system output without switching the running host.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L5-L15",
+          "version": "repo-lines-v1:sha256:40e526e0449e51ac62669ee356bfd8618ecf5f59fd4260bb94bb1bbd70feb557:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU3MDNmZmNjMDllZmZjZTM0MDhkZmU2YTg4NmY1OTEzNzkyYWMwZDFhYjdhMDliZTA5OTE4ZDkyMGE0NWY1OGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY3YzlkYWMzZDM2MDQ4ZGYzOTlkYzljN2QzOGRiNTQyYTFiZTBmYzVmOTQ1MzNjZGQ2MjhjNDE1YmQ0YzU5Y2QiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ5OTk4N2JlMTBmYjgxNzVhNzJhY2ZkZjk1MjM5YjRhY2Y0MzcxYzY1ZmM3YWQ5MjllYjEwNDIxNTAzZmJmYTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI3NWE5YmMyYjY0ZWY2OGIxM2I1ZGY0ZTY4YTE2MjZiMGYzZTdkYzUzM2RiYzQxMWZkZGM2MjFhMDQzOTIzZGUifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L162-L185",
+          "version": "repo-lines-v1:sha256:cee54fa9246bf3ffd33b54d6d8106736e8acbc609f35d405ff7e82d900f62939:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MDgxYjhlMWM5ODFjNjJmMzIwNzFkNGVlNGQyYmUzNGMwZmYwMTcwMjFlMDFkMjk2ZmNkZDEwYThlODU2MDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1Y2RlZjgwODVhZTc0YWI2MzZkNjQ1OWY1YzZkNWZiZmIwZGIyNjRmMWIwZDc1YmFjNTE5YzliM2Y2NzE3YWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk0NDk2MzRiYmY0MDgyMmVlY2NhYTQzYmE0M2QyNGM1YzU0ZmMwMWFlNjYyOTdhNTVlNDI2YWFmOTIxZWQ4YmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5M2IwYWRkM2I4ZmY5NmI4YWI2MWFmYWRkODE0NTBjY2RmZjM4NzY2N2I1NDIxOWFhOGMyMmI5NGM1YThkYjUifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L80-L91",
+          "version": "repo-lines-v1:sha256:20f91bd42b6fe305adfc9000e7f5f8df83e74bbed7fcb5c3bbe93eae273a00f5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZThmMGYyMDhjNGIyNjRiYjgyZjUyYjYzY2NhODM4YjQ1MGFkZDIwYTgzMGJjNTUyMTRmZDc0Y2E4OTA3ZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1Y2RlZjgwODVhZTc0YWI2MzZkNjQ1OWY1YzZkNWZiZmIwZGIyNjRmMWIwZDc1YmFjNTE5YzliM2Y2NzE3YWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyOTE4NmZjMjRiNDM2ZDNiMjJlYWJjZDVmMjE3Mjc0MmU0ZmI5YmFkMmQyYzZlYzdhNzY2ZjUyYzg2NTE5ZjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmZjNiZjZjZDRmNTAwOWI4ZGY0MzgxZjNkOWIyYmYxNzQ1MDk0ZWVhZTQ1OGM2YzQzZTcxNjIxNzRjZThiYzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_98fa938d5659441ebbe01f6f680d0282",
+      "statement": "The flake exposes `nixpkgs-fmt` as its formatter, `nix flake show --no-write-lock-file` and `nix flake check --no-write-lock-file` as non-lock-writing inspection/check commands, and repository formatting commands can rewrite Nix files.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L25-L30",
+          "version": "repo-lines-v1:sha256:43a29ad05550f73da7c006b3db46f421c1cdde6821e045b787611096c665ae10:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjUzNThiOGEwODMwY2MwNmM4NDc5YzQ5ZDA0YjA3MzRiYjUwNjY2NTIxYTY5OGQ5N2ZjOTljYzY5YjQzYTg0YyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDNmMjk4OWY0ZDFkYjA5YzRiNWMwY2VkZTU5MzliMzgyMmRiNDc3MWVkNmMwNzU1Y2VmNjgwNjgxMDNkMTM3ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYzI3MjQwZDQxN2Y4MzkxZjY4ZDZiYjQ3OGY5NDkxOWU1NTBhOWQzZTczOWU2Mjg0NWFhNmM4ZDM2OGZlNDI1MyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODMwNjk5OTNkMzc3MjIxMDIzOTgwYzc5YWY4OGUyNThkMjAxZGJjZDVjZTM3NWZmOGEyZjQwYWIwYWM5OGY4ZSJ9"
+        },
+        {
+          "resource": "repo://Makefile#L3-L4",
+          "version": "repo-lines-v1:sha256:29b59ddf013744d1117669febe62f06f19f5052e17ed6ba96fa1b68599ebb927:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjA5NmEwZGNmMTkwNzQxZDRmYTUyZWZkY2ExNGY3ZTAxMTliZTRhMmY0ZDYzYTNmOGNhMmM5MzA4MDE4OTNmZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYjkwMGM4ZDVjMTcxZjFhNTllMTBmNjMxZjcwOWI5NWI5MWIwYmMxNWRjZDVhY2I2MTBkMWU3Mjg4ZTVjZmIzOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjIsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWUwOTdkNzUwZDliNmYxODk1YjdiZmZhNGM5NjFmMTk4NjI4ZmEwY2Y5NWQ2ZTNkN2NhY2Y2ZTg2ZGI0MGMxOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTdlZjQwYTc2NTlmNTQ5MDQyMTc2ODY5NGI4OTY0NjZiNWVkMWU2NWJmYzhkOGEzYTRjNGE5OGU3MWIwOTUzMSJ9"
+        },
+        {
+          "resource": "repo://flake.nix#L59-L67",
+          "version": "repo-lines-v1:sha256:a0c9e098982c01fe68328c06a035196f7df4934c2d03cf4efc69f6d01d003570:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjQ0ZDA4YWJhMzYwNjk2MmM3Y2M1ZjFjYmJiMDU5YTJkNzM1ODZkNjdkMzQ0NTVjZDE0NTUxNDdkM2VlODA2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTljYjdmNDk0NWRkMTU3OGU1NWUzZjM2Y2U3YWIwODRiOTc1ZTk3ZDBlYTlhZjY1ZGQyODI5YWVkN2Y1OThkMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDQwYjdhM2VjYzU4ZDQ4NzBjMmM4ZGE3MDkzMDVjM2ViYTdhZmY0ZDM4YjYzMGQzZTU2YjAxOTdjYjVkMWRkZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjU2NWUyNzg4ODc0ZDc5NDgwMzJkMjdiYzRmZGM3ODk5ZDgwNGZhNjdjNmQ2ZTdhZDA5MDdkODVhY2VkZmRlYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_171099a004c54ceebdc39f9f9f76a45c",
+      "statement": "`make os-test` invokes `nixos-rebuild test` and is a test-mode system activation rather than an application-level test suite; `make os` invokes `nh os switch` and performs ordinary live-system activation.",
+      "evidence": [
+        {
+          "resource": "repo://AGENTS.md#L33-L39",
+          "version": "repo-lines-v1:sha256:fce6ee8d0788ec6c2b3530ce19064ff80e01f3d539b76fedee9c77ba4dac1cb5:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTg5YjAwYzFmNTY5NGUxZGY0NTQxYWI3M2JkMjA5NGU2MGQzYWI3NzhhMDRhOGQ1NTdhNjk5ZjczMzZkNjk1ZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzlhOTk5NTlmYTExMTk2MzFjYWRmZjEwYzNmMjJlNGZkZmM5ODU2ZjhhZGUzNjQxMGExZmJiNzdkZDM2YjI0YSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjZhZTg3M2ZjNzgwOWU1MmY5NTI4OGY3Njk5MzM5Y2FhMTllNjU0MDYwMTFlYzU4MGRkOTU3ZTQ2YzRlODRjNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTdhNzU3OTk3M2ZiMDZkZGEzZjcwYzIyMzhjNDIxYTFlMDBkZjE2MjEwZGUzMjY3ZGJhYTgyZDRhZTZmNjJkYSJ9"
+        },
+        {
+          "resource": "repo://Makefile#L5-L13",
+          "version": "repo-lines-v1:sha256:3fb88d552d997c1f5e563f5cae08affd86466ba23a31e964fb9cd398e5fd2139:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTcwM2ZmY2MwOWVmZmNlMzQwOGRmZTZhODg2ZjU5MTM3OTJhYzBkMWFiN2EwOWJlMDk5MThkOTIwYTQ1ZjU4ZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNWEwNjVlYWE4NGZlMDllZjZjMjFjMGI3NDllOGY5ZGEyYjEzNzY3MTJhZWExY2RmYmZhYzQ2NDA1NGUzNjRmMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDk5OTg3YmUxMGZiODE3NWE3MmFjZmRmOTUyMzliNGFjZjQzNzFjNjVmYzdhZDkyOWViMTA0MjE1MDNmYmZhNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYzY3ODc2NzZhYWUyODk0YTdlY2U0NGQ4MTJhYWI5NWIyN2IxNDdkMjZlMjI0ODQ0OWIyNjkzNTFlYmM4ZWJjNCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9e0719885c9e4d849708f068b9c00239",
+      "statement": "`test.php` is a standalone PHP ZIP interoperability experiment: it creates an AES-256 encrypted archive, verifies password-based reads through `ZipArchive`, then checks that the system `unzip` reports PK compatibility failures; it is not a repository-wide application test suite.",
+      "evidence": [
+        {
+          "resource": "repo://test.php#L3-L29",
+          "version": "repo-lines-v1:sha256:380ab28f8750854850e9f9809cbe64a24a2b7ccf311746fd1bed01f6e680fd9e:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmOGEyYTg1MjMxN2RlY2Y5ZjU2MDZkMTBhODRhZTU3YzYwNGMyOWIwMDkyMDUwNDJiN2JjMDBkOWIyMzEyZWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU0YzYyMjVlZDdlYTZiNjU0Yzc5MzVlN2NlNDkxYTU2MzMzODY1MzI1MDg1ZTY0MWNlMWM1NTc0N2E4NTRhMGYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjoyLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc3NWZjMzNkZjA0ODE3MTMxNTkyMzZmMmM3MDZmN2JkZjFmMzdhMTljNWQ2NWRhZTk0MDY4YjcyM2E1ZmNhNDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU3YWM1MjliYmIzNjgxMTg2NmViNGY1OTMxMzVmMWM5MjI2ZDhlZDRkYzI5MGVlMDc2ODMyM2VmYmUxMzJmNDcifQ"
+        },
+        {
+          "resource": "repo://test.php#L31-L73",
+          "version": "repo-lines-v1:sha256:40f94f08727ea958af06e4be785aea8625868c8e74386a9e6bed58132fa1f8d6:eyJzZWxlY3RlZExpbmVDb3VudCI6NDMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM2ODFiMWRjMjk5OTFiZGMyNDA2MGQ3ZTdjNGQxMmRiYThiZjQzM2I2OWJjNGMxNzU3M2JkOGQ5MGEzYjFjODgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhmNGZlMWY1ZDIzMzEwNDg4NjU3YjQzODVkZWRmMGQzOTY3OTQ2N2YxZmU3YmUzODZlMzc2ZTM4ODhiY2I4NWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJlYzRlOTQ5NWU5MDBmY2NlZWIxNDViY2I2MTQzZDQ3NmM3NmM2OTNmZWI5ODZhNjRiOWUyZjdmNTlmNWRhZmIifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_38b92867923c4463981ec6e10dbec0ea",
+      "statement": "The OpenWiki update workflow runs daily at `0 8 * * *` or manually, checks out full git history, installs Node.js 22 plus pinned `openwiki@0.7.2`, `mermaid@11.16.0`, and `jsdom@29.1.1`, and runs `openwiki code --update --print`.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/openwiki-update.yml#L1-L36",
+          "version": "repo-lines-v1:sha256:f837b8d106b259811d3f57c2c549871f94c8a3ef24805dd792c8b9ae70ae3ecc:eyJzZWxlY3RlZExpbmVDb3VudCI6MzYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2MDI3ODdhZjZkY2MwODM0ZGUxMjFjYmIxY2I5NWY5NDU5YjcyMWVhYjAzNDlmMTA1MDFiOTk2YzFjNzdmZmYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk0MWM2MGQ4MzU5N2M3NmNjYTY5NmFhYzc0ZGZiN2FjNWRjMzM2MmZlNjUxZjhjYWI1YTMwNDk5NjMwMTdkNDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImIwZWIzNzNhZThiYzE4NzYxYjdlMjYxNDk3ZjUxODY3MDIyZmJjZTM4ODlmMzUwOTIyNjZiYWZiNzFlNDQ2ZjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_241b0a3d0088441cac0c66a784fc4538",
+      "statement": "After the OpenWiki command, the workflow removes transient `openwiki/.run.json`, stages the configured documentation paths, and creates or updates an `openwiki/update` pull request; it preserves partial progress on command failure and propagates that failure at the end.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/openwiki-update.yml#L33-L52",
+          "version": "repo-lines-v1:sha256:5388095d8da6b617a2ce3db3fbae85446398351422a971dc74d6c05ebf0535b1:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjcwZThmOWZhNDBlN2JkMDQ5OWQxYzBkODNmZDc1OGFhODViMzA4NDJkYmQ2MWYwZWE2YjdhZTEwZWZlYzc2ZDAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM4NmU4M2U3Zjk2MWI1YTdjYWQ4ZWVmZmQ2YTNmNDFmODU3M2YwYmVkYTg0MWRkMjNmMjk2YzU3OTRlYTRiYzYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhiNDRjZTgyMmYzMDY4MTljZmQ4Y2FmMjRmNWI5MDViZGFlNDU0YmFlYWRlMTFkZTM3ZDY3NGMzN2M3YzE5Y2YiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUyYTAxMGRhNzFlNjBmYTY0MmE1ZmM4ZDE2YThmNjA2YjE1Zjc1OWIyMzNmODg1NTA4N2VlNjg0NjI0ZmU1ZGYifQ"
+        },
+        {
+          "resource": "repo://.github/workflows/openwiki-update.yml#L54-L88",
+          "version": "repo-lines-v1:sha256:52f2d9ca256e670a034de13e0bb5a4b93d4040a70ac0f1dc129f8d47b662ffed:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0NTViYjdjMWRlN2UzZTA1MmVlYmI5MDkwOTYwZjk2YzAyZDI3ZTc5YzBlYTZhOTcyMzI5MWFlNGYyZmIxZWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM2NzE4ZjA2N2I1ZTVjMWYwOTkxYTZlNzQ3MjZmZTJhMjNkMjY0MzQ1ZTA4ZTRlYWQwNGZhZjczYzI3ZWQ0NDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVmZTVjYTdmYmJkMTk5YTZhZDgyZGU1MmY0ZWE2NDMxODVmNjM1MGE4MGJhNTJkNWFkN2VlYTMyNTY3NzUwYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_73154d76ae844100a025d528a361e509",
+      "statement": "The OpenWiki workflow grants `contents: write` and `pull-requests: write` permissions so it can commit documentation updates and open the update pull request.",
+      "evidence": [
+        {
+          "resource": "repo://.github/workflows/openwiki-update.yml#L64-L80",
+          "version": "repo-lines-v1:sha256:1df68d0a960fabb957120f6ac85430f081908c9b80ecedf0d156a1a29dbd7c3a:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxY2ZmNGFkMzNiYTkxYjE0OGUxYjFiODI5MGI4ZmZmMjdiMjAzZmFiZmVlNTg3MDI4MmRlMzY3MzgzYjFiZTIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMzNjE3ODE1YmY5YzBlZGQ4MjRhMWVmNDcwOGI4NTgyZmRjN2I3MTk5NWU5ZjlhOGJkYzg4ZmI0YmRjMTRkZDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBiZTFhZGFkYTE3YWUyZjRmM2Q4ZDQ3OTdkYjM2ZDUyNjc1OGJmNDlhOGM0YTc0OTg5ODY0YTQzY2NiMThlMTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcyN2Q5ZWE2MGMzZTBmMzUxMDdmYmE5YThhZjY1ODRiNWM3OTQ1NDEwYTRmZTgzOGM0M2ZlMzRjMWQ1MzBjYzcifQ"
+        },
+        {
+          "resource": "repo://.github/workflows/openwiki-update.yml#L8-L10",
+          "version": "repo-lines-v1:sha256:dcc4bb79f6ebc8555975f87c1bbfadb4481f70b03c1a7b0c9ccb4ee3dac77d61:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMzUyNjI0N2VkZTAwNmU5YmRhYjljNjg1MDcyODQyNWQxYjQxNjZjYWY1Y2FjNTBjZjA5NTVjNDRkMjRjMWE4ZCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTc0M2EyYTJmYjgyZWFlZDI0ODhlMjg2NGQ0MjNiZWI1MDA2MWRkNDIzZDgwYjg3MjFkM2JhZTVhNjQ3YTdmNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjg4ZGMwMjcwODY5OTQyYjg1ZTUyOTViYmE0NGM3YjI0MWZiYTcxN2RmNGRkZjcyMmU1ODNjZTZjNDEwZjIwZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2JhNWFmZmQ4MjMxYzBlODFiYmNkNDIxNTRhMWNjOTBlODZlZmY2NjM1NWMwNDhjZTU1YjMyMzdiZGFjM2ExZCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-27T10:42:10.030Z"
+  }
+}

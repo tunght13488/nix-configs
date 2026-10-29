@@ -1,0 +1,164 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:60cd9c69764ebf1eb2eeaf3e22bdbb68d24255ff56fae2cde219321c0c0e60ff",
+  "claims": [
+    {
+      "id": "claim_05f195f72e214755bc1b6a39feefdbbb",
+      "statement": "Home Manager installs the pi-box wrapper, substitutes the pinned Pi version 1.4.0, deploys the base Dockerfile at ~/.pi/sandbox/Dockerfile, and recursively deploys the repository template catalog under ~/.pi/sandbox/templates; the NixOS configuration separately enables rootless Docker.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L17-L25",
+          "version": "repo-lines-v1:sha256:af531c3e784cc0f374ebec4cfe1020d66e7d735430f93bb32f14ac265b23d0c0:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmRjYzIwNDBiZjJmYWMyYzU4NzM4NTczNTQ1OTg1ZGI1M2VjYTQxZDIwYTliZWZkNzdiOWUzYjg2ZDY0MTc1MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzkxNWIyN2RjYzRhMGFjZDE1NTM3NjFjNTcwNTc0ODY0Y2Q0MDRmYmRhMjYzNjcwYjc3MzBiZGU4YjcyMmNlZSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTE5ODRmMjg1ODg3OGMzNDAyMmNjNTQ0NDQ2NWM0ZjU2NzNhMTRkZWE0YTU3YTU2ZGJlN2Y5MDYzYTY4NDBjOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTBkNWMxNGFmMWZjYmEyMDM5NzA4NDZmYjVkMDYxMDY5MzgwZmEyY2Y5OWRkYjlhZGYyNGViNjMxYzg3NmY2OCJ9"
+        },
+        {
+          "resource": "repo://home-manager/pi-sandbox.nix#L16-L50",
+          "version": "repo-lines-v1:sha256:010b7de1a39829cb61f0af4d24d5818e70fac3747e24760d32a76c4c3c58f6e4:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1ZGIzZTRiMTlmNzVkYmQwNTM4MTEzZmJlMDE3ZTBmNjE2YTQxYTM0YWQzNDkwMzQyOGNiNjJkOTQ3NzhiOTgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI3Yzk2NDYyYjgwY2UwMTJlNzczMTM0YTUwN2QyZTBiZTZkYTE1MTFhMDVmY2ExMDI0N2E0YzYwYTcwMTU1YTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjRkODE2NzA1MDYxOTA0NDExMjgyMzQ5Nzc1ZWM4NjNkNDJjZDczMTM4MTljNDQxMDA4YTIxMzIwOTQwMGY2NjIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L130-L145",
+          "version": "repo-lines-v1:sha256:c0b9450ab9058ef94193916c0a8654101cbd0a849ea49a72868d49d9f79b7685:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxNWYyODJhMmE3MTkzY2Q2MGY4ZDRlN2U5MGY4ZjcyMmI3M2NlZWJiOTcyNDY4MGYwYzY3NTRmMWY3NmVlZDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImQ5MzRlMTU0ZTE1ODA1NDFhMDE4MTBkOGE4NzlkNDY3NzQ4Yzk4YTgzNjA0OWM5NWU2YWI4YjlmMDkzY2ZlNjEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA4OTRiZGQ4YjAzZDIwZGM1MWQ5YzFlMjUzZTY5ODNhOTM0NzZhZmQ0MTQwM2UxYjNjMjNlOGI3NjVkMDNiNjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e56a61fb9b464841adcb5abb1ff1632e",
+      "statement": "pi-box rebuilds the shared pi-sandbox base image on every run with the pinned PI_VERSION build argument, then builds a sanitized per-project image from Dockerfile.pi when present and otherwise runs the base image.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L167-L187",
+          "version": "repo-lines-v1:sha256:e8f7e1bd682a0a3807497711e89222571ddefb5892234651e77ef4e87e8d917b:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMzYWNlMDk3ZDQwZGI5Y2JlNjZhYjJlYzc5YzVkYmJiNDdjYzA1NDI2ZTc3ZTYzMjUwMTI3N2VkMzg5NDQwM2QiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM1ZmM5MGZmOGE0NDE0YzU0NDFkMGY2NzdjNWNiZmRhMzhiNDc0ZTUxYmZkNTU5YTU1NTlkZTBmODc3MDU1MjQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU1MmU2NTQ5OGQwNzgwYTllYjRhYjg4ODE1YzgwMmM4YWU5NjBjNzVhMTQwYjk3MDdmODc3YzU2OGFmNzQ4OGYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFhZmJjMTY3NTIwMTFiNzU1MzM5MmQwMzZmZjg5NTkxZjM1ZDQ2YjcxMzQ2YjQxOThjY2UzZTM4NDdmMTBkMzkifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box.sh#L83-L99",
+          "version": "repo-lines-v1:sha256:d3f12ffb9a19d56ae35b0df7844eca8cabba46887a34a84b539f8ae8587fbe55:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2ZmMxNjZiOTU2ODY4NGNhOWEyMTU5YWZmZWM5N2I2YzQ1YWVjZDE1ODEyMTlkOTdmNDI1YjkwZWZhNWQwYzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk3OGYyMWEzY2JkYjMwOTkxMjEwYmNmNDM3M2YyNzJiYzAyZGE4MDQxOGVjMDBjZGJjODAwNmJkMjZkNzg4MjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVkNDgzZjU3ODlhZjg1NWQ2ODYyYTE5NWM2ZjBlZWRjMjZlYTI0YmNlMGUxMTAzMDk1NjJiZGE0ZWY5MmE2MDkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ab5990d2107649cbbfb6597cecc6f627",
+      "statement": "The shared base image is built from node:24-slim, installs common development tools and Python 3, and installs the Pi agent in a final volatile layer after stable OS and Git configuration layers.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-sandbox.Dockerfile#L1-L11",
+          "version": "repo-lines-v1:sha256:eec995a225acf5ebabf72a15af851bf19eb25ab5f5315ebc964b10338f1e4df1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRmZTZlMjUxNmM5MjBmYzk1MGQyNDhlZGZmOTc3NDMxMDdiN2Y2NmI4YjYzZmEyMjVmMzhjYmZlMzc5ZWViYjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRlZGYwMjIyYmE0ZjgwOWU1OTc5YjE4YzFmODkyNDI5ODIzYzkzNDg4ZjJiNTE3MGY2OGE2MGQ5ZTM1ZWE5ODgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjJhZDJhODZiMThkMmVkZmY5YmExNzI3YmNiYWFjZGYyZGUzODFkMDIxMWQwNWU0YTBhNmZlYWFmNzFiMDA4MDcifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-sandbox.Dockerfile#L13-L31",
+          "version": "repo-lines-v1:sha256:60a701de12651b0dcbf4ceb413d67949a59b4b6842aa723a3692173018918cdc:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkYmZkNDU1MzFlOWZjNTQxNGVjMjMyYzdlMzk5NjViMmU0ZWFiMGFlZjdiYzM1NmUxZTA1OGQwOTMwZDY3MmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI0OTM4MmM4NDIzYmJjYWZmZmRmNDk1NjY5Y2NmZDE4ODNmOTliNmJhMzNhZjQ2MmZhYTQ2Y2RlYzNhNDYzYzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjNhMWViZTlhMTljMzE5OTEzNGQ5YjgyNTNjNGI4NDUzMmUyYzhiNDZlZGY4ZDRlNmNmMTVlNTA4Y2Q1YzJhMTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhlYjNiNDkzYWU4YzE2YzU5NTUwNGI2YzIwNTc3YTZlZDBjMTM2NzA5ZGE5MDFmZDc3MDg0MzhiMTBiYTI5YTAifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-sandbox.Dockerfile#L33-L71",
+          "version": "repo-lines-v1:sha256:38ccbed3f720ff7b8597aaa8dc91c4aa08d8af2c9dabf03c18a3c5cf59559996:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4NmIxZTZkMmQ4MWM4OTlhZDczNWIwNTMzYWY2NDFhZjBmMDUwOTA2MWYxZTZlOTYzNTgzNzg2NTNkZjYzNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZiN2NkYmFjMWE0OTg0OGVjNTRiMTI2NDdjODBkNjcxMWJlYWE5YzQ2NTA5ZDlhNjAwOTQ3ZmY2YWQ5MmYzMzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc4OGI2ODY3NmI4NjA0MTUzYjg4YzgxOWUyZTBlODg4OWZkMTE4Y2ZiYzUxZGJhZmNhNWMxZmMzMjY0NTVjZDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFiYzg5YzAzMDA1ZDc2MzFmYjQyYzJkZTcxNmM2NGVjZTc3N2ZkMmU4N2EwNjRkNDdkMDlmNmQwOGUyZGIwZjgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_810360deb939444c8f824d5da2735c0b",
+      "statement": "The default sandbox mounts the project and Pi agent state read-write, mounts Git and GitHub configuration read-only, and adds an external Git common directory read-write only when a file-form .git resolves to a common directory outside the workspace.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L115-L136",
+          "version": "repo-lines-v1:sha256:e94621231e75d7f3e7eb728ac0611878d7f25d7f24a86ebd06a305fa8d3d19f9:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgwYzljOTNiMTdmZjkyZWEzNGI0M2NhNTQ3ZjQwZjdiMTNiNmQ5MTA5OGU5OWEwYWI0ZWFiZDdmODMyNDZmNDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjZkNzJiZDkxNDQwMzA4ZTgzYjg1ZWE0MmRiMTEyYjNkNThkY2IyZjg1NGZhYTBjNDIwOGYyZDkwZWY5YjVmZGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU5ZDRlYTdjNmEwNDEyM2U2ZWEwYTI1NDkzNGJjODYxZGQ1ZjQ0NDJlYTA1M2QwOTJiZWYyY2MwZWI3YmFiNjAifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box.sh#L209-L225",
+          "version": "repo-lines-v1:sha256:cf035a9a86dfde6a5a58cdbae2646b8e65a430564ffba5b3965b52e402d5a07d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzZGU5YmVlNzBjYmJmYzc5Yjc0YjU4MWJjM2FlMWUwYzBlZjVkMDU2NjZhZmJmMmEyNWU1N2RiY2Y4ZmUxZjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM1ZmM5MGZmOGE0NDE0YzU0NDFkMGY2NzdjNWNiZmRhMzhiNDc0ZTUxYmZkNTU5YTU1NTlkZTBmODc3MDU1MjQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjQ5OGI4Y2E1YzZiMzcxYWRjMTExNTU5MTFjODE0OGY5YmIxOGNlNmZiMGY4NjQ1ZWYwZTBiYzRmNDg0MGI0OTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjcxZjgyM2I0MzlhNzU2MmY2MWM4NmJjM2RiZmI2ZTJhYWVjYmQ0NDkzZjIxYjM3YjJkMzVkYzZmYzkwMzNiYzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2866c0fce8024df8b3a1f125aeb7eb8b",
+      "statement": "The sandbox intentionally does not mount ~/.aws, ~/.ssh, the 1Password agent socket, or any other host path outside the defaults and manifest grants; project and Pi agent state are writable while Git and GitHub configuration are read-only.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box-templates/default/pi-box.toml#L1-L18",
+          "version": "repo-lines-v1:sha256:abdb0dc0b0c141492a7a62a077edba267e10165a73261140928a38c01ab6bfa3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkOTk3YzBlYjhmMjZkZjY3YWQ4YmE4MWYyZGNmZjJkZjJlYjNhYTY2MTRlZWM5MmExODM5ZjYxNGZjN2ZmZmUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjIzMTc1ZjgwODA2MThmYTdjNDFlNWEzNmU1MTk2YmY5N2Y0NjliMzAxYjhjNWE0ZDY2OWJmZTliZWJkMWM1MzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImE5NjAyNjkxZmM2ZmZmY2ZkMTQyNzhmYzIwMjAzYmMxYjM3MmZlODAxMmNmNTg3ZWU1ZTA0OGM3ZmQxYzA5ZWEifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box.sh#L4-L14",
+          "version": "repo-lines-v1:sha256:acd50ac7d6bdb5993cfc4f5cc8092a4a45fd538f1efc797630e4218f616987b3:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMzZjNlNzkzOTI4YjU1MWFkMDVkMTFmOTdjYjcxMTRiY2MwNTdkODYyODljMDVlOTY1ZjJmZDRlZmJkYTQ4NjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImJkYmRlYmY4NTBmNWI5MTYwZWQ5OGZhMjExYjgxMWYxODljMjk3NzkwMzg1NDNkMjE5YTYwNTk5YjZkNDhkYzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjU4YTljY2ExMWY5MGY3ZDNjYjRmNmIxZWY4NzIzYWNlMmNjNjhkNTJkYjNiOTdhYzg3MWIxOTJlYjM0NGExZjgifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box.sh#L53-L55",
+          "version": "repo-lines-v1:sha256:9c5c1705f937021107544f4364ed1d1a016f591352948c58b232aa5faab82249:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODE2MzAwNTcwMTBhYjhiOWYzOGYzODg0YmRhYmJjOTJlZGQwZTJiMjliMDUwNDMxNmU4NTI1OGJhMGY0YjBmOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYzE2ZjM5YWEyNDViMGQxYmM5MDE4ZGRkZWIwZjRlYTFmZjViOTQ1MTI4NzQ5ZDM1NzEzODMxMzc2ZWY2NmE1NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDViNjljMmU5MmQ0M2RkZGUwYTA5ODZiZDE2YWNlZWY5MTBhNGVhMGMwYjFiZWY4MDhhOTE1MTRkNGI5ZmFmYiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDE4MzBiNmRhMDU0MjcxM2VhMzEyYmUyN2I0MTE5ZTc4MDEyMTBjMzU1MTcyODllMTAzMDQ4OWRlZWE5N2E3OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6b8c13efe9724d6d96fd13faa014bac7",
+      "statement": "pi-box parses pi-box.toml as TOML with yq and supports ports, extra read-only mounts, named volumes, extra environment variables, and a gh flag that disables the default GitHub configuration mount.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L189-L239",
+          "version": "repo-lines-v1:sha256:ba2a7a62a98d87dc98953d538864c4e67fd445055fc0d245b10c57c6881f170f:eyJzZWxlY3RlZExpbmVDb3VudCI6NTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZiNDExY2NkMTlmYTMwOTQzMmUwMDVmMmFlYzlhZDg0ZjIxMDVmY2Q4ZjQ2MWQwODY0MzEwMjdjODE4OGJkNTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzNTdlZDFjYWVmNTFkZWVlZjBiYzBjNDEwYWNiM2I5Y2I1OWE0YzA5NmViNjJhZjAyNzUwNjJkNGUzYWU3ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRjYzZiYWUzNGFjNDM5NWExNGY0ZjdiOTkwYmE5ZTkzOWJmZTYzZmU0MjYxOGEyZjc1MGU1ODI3MTc5MWNlNDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImNiYzViODIxOTRhM2M3MTMyMzBiZmQyZTM4MjA2NGVkMDg2YTRjMWNiNTM5OTY5ZTc0ZDdmNGI2NDVjMGExMzEifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box.sh#L62-L80",
+          "version": "repo-lines-v1:sha256:0b8eea549285d45870ea4bdc6c8399d01d1063025ed6fe2547933199dc15723c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgyODZjNGM4YTQ4NThmZmUyNDViMzZlZWQyMjlhMzE1ODkyZWRkODAxMDhjOTNhZWY5MTAwYzBjY2RhM2JlOWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmOWIxZmM2ZjMyMTZhY2VlODczYjM1NzliNDk1YjY1Njk3OGFkMGFiNjUyNzg4ZWVhZTA4N2FlZTJmMzlmNjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhjYjlhOTkxNDk3ODc0MzE3MTQzNDBmZmU0MDQ4MTYyMzk4ZWVhOWRmZjVkNjU5MjYxYmY4MmNkODNmMjFjZDIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg1NDRmMzBiNTMwN2U2NmU5ZjM0NzhhY2I2ZDAyZTNhYmMyZWU2NzdkMWM2M2U3OGFiMzhmNjY0YWE3ODM2YTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3565d6c50cdc419697356a9739df829e",
+      "statement": "The wrapper maps host.docker.internal to the source address of the host's default route, falling back to host-gateway, because rootless Docker's host-gateway may resolve to an inner bridge address that cannot reach host-bound services.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L101-L113",
+          "version": "repo-lines-v1:sha256:9cbc6dc4d2939cd6f4e64fb28b4c12f12fca180c170660e7dc795c7609ad7a5b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkZDM2NDdhNjJiNDY2ZDNiZWJkNjhhNTdlMTRhZTlmZDdkYzE4YjU1ZWI1Y2RkM2FiMzQzOTVkYzY1ZmQ1ZTkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEyNzM0ZGQ3ODQ3NTBkOTk4YzcyZGUzYmJlMDAwNGQ3OTBlZDExMDY2NDAzOTg5YjFhMjlhMmE0MDYxMjZjNTMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjkzOWFhYTRiMmY4OWU0NjZiYTM4ZGEwMzhkMjE5YWZkMWQ0N2I0NGQ2MjExODg1MWRhYjUxNTAxNDQ3M2FiNjUifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box.sh#L209-L214",
+          "version": "repo-lines-v1:sha256:b28e8922a2f3a11242c90642baa884ec003e75b101779b77bc99b51fadf9fe87:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTNkZTliZWU3MGNiYmZjNzliNzRiNTgxYmMzYWUxZTBjMGVmNWQwNTY2NmFmYmYyYTI1ZTU3ZGJjZjhmZTFmNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2ViZmNlYzA2OTgxNmQ1ZDFhMTFhNzcyN2E2Nzk5ZGE3NzliOTY4MWI3YjgxZTg5YjE2NTJhZDQzMmQ5NjE1NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDk4YjhjYTVjNmIzNzFhZGMxMTE1NTkxMWM4MTQ4ZjliYjE4Y2U2ZmIwZjg2NDVlZjBlMGJjNGY0ODQwYjQ5NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmNiYzJlNjg5NTg4NjcwNDNjYTJiZjg0ZTBiOTQ0ZGQ0MTAxYjI5YzVlZTk0ZGU1Yjc0NTc4NDVkZmViNDgxNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_f22b59d05f2249d4999e24ab27e63b39",
+      "statement": "If ~/.pi/sandbox/gh-token exists, pi-box mounts it read-only and exports its contents as GH_TOKEN inside a shell immediately before executing pi; it warns when the file is not mode 600 or 400 and starts normally without the file.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L241-L259",
+          "version": "repo-lines-v1:sha256:a39778ff3968284800644acd85d80c6184ba0c0cde2121995db60da89ba64438:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiYzE4NWIzNDkzZTdlMTE3MGVlNzcwMzJkZTYzOTdhNmQ5NDY3ZDAyOWYyZjNlMDA1MzdkMzMyZTcwMWE1OWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI0MzMxMzMyMjRkOTdmYjAzYThjNmQyOTI5OGQ3ZWFhZGQ1Yjg1Njc0NzM2MjJkYzMwNjdhMTY4NDExYmNkODMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUwMTg4NDk2NmMyZWI1MjNmMmQ4YmRjNWY4YmE0MmYxYzYzYmY3YWVmNDg1YzUwMGQyN2Q4YTk5Y2FmMDNiNzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQxYmM1Y2ZmM2I5NzgxYTgyZGVjOGI3ZjY3MjU0OGMxYzA5YWU1MzI2YTQ0YzYyYjgwNjNkYjU2NjY0MDZkMzMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7aab2b3149d04279ba7f00fdeeb5afb5",
+      "statement": "pi-box init selects the default or named deployed template, copies Dockerfile.pi and pi-box.toml, and protects existing files by requiring interactive confirmation or --force; overwrites back up existing files with a shared timestamp, while noninteractive runs leave them untouched unless forced.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box.sh#L262-L353",
+          "version": "repo-lines-v1:sha256:301dc8b6286b08363b7c0dfa9377cc3187638dae8b8dbd5bea969f56af93e530:eyJzZWxlY3RlZExpbmVDb3VudCI6OTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjYxOTkwNWNjZDZiMzMwOThmZGJmNTUwOWM3ZmUyMGVmYWU0NDc1MzY1OWVhN2FhNTAxZmI5MDAwOWFiOGNlMDIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzNTdlZDFjYWVmNTFkZWVlZjBiYzBjNDEwYWNiM2I5Y2I1OWE0YzA5NmViNjJhZjAyNzUwNjJkNGUzYWU3ZTAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjI4MzdhYjdjMWY3OGFhNTE1OGM5ZjM2MDc0YTY3NGMzY2ExZjU2MTNmOWMxZjNhYzNmZTNhZmI1OWFjMDhiNTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE4MzFhNWU3NTM0NTQ5OGEyZmQ5YTQwYzE0Yzg2NzI3YTgzYzBiNzgzZjFiYTk3NDE4NWVmYmFhNDM4MTA3ZGYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_95cce1c30200464693880374f5ed67ac",
+      "statement": "The base image configures container-safe Git behavior by clearing host-only credential helpers and tools, using gh auth git-credential for GitHub HTTPS, and rewriting GitHub SCP-style SSH remotes to HTTPS without changing the configured remote.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-sandbox.Dockerfile#L33-L65",
+          "version": "repo-lines-v1:sha256:5a81a817f24e0bae89caef48960303beeeb15480041863cb9abc7d900d0777c4:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4NmIxZTZkMmQ4MWM4OTlhZDczNWIwNTMzYWY2NDFhZjBmMDUwOTA2MWYxZTZlOTYzNTgzNzg2NTNkZjYzNTEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI4NDdlNGU3NTYyMmUwMGQ0MjNhZDY1ODUyMmMyMmEzMDE5MGQ3N2FhOTZhZjM0MjU5ZDEzNzNhY2ZiNjBlNDkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc4OGI2ODY3NmI4NjA0MTUzYjg4YzgxOWUyZTBlODg4OWZkMTE4Y2ZiYzUxZGJhZmNhNWMxZmMzMjY0NTVjZDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjY3YTczNTZiNjZkNWJlOTRhOTQyMThmMjY4MjI1MjVkZjdiOTc3Y2FhYmM4MDBhNGEyY2JlNjhlODczZDdlYzYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2c2a58f7466e4ae890fcd948167326e1",
+      "statement": "The Java 8 template persists Maven's local repository in a named Docker volume, while the PHP 8.3 template extends pi-sandbox with PHP 8.3 and Composer tooling.",
+      "evidence": [
+        {
+          "resource": "repo://home-manager/pi-box-templates/java8/pi-box.toml#L7-L20",
+          "version": "repo-lines-v1:sha256:cb2115727a5a15270bfb15c3c4ecaf91aaded324e7cef53fde94861956245d24:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBkN2MzMjg0MTRhYTVjYzFiOTBjYTNhYzFjOTliOGE1ZjI1Mzk3NDhhNmM5MTMwMGE2N2E2MzJhMzg0NWY0ZmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVlMTI2MjY2ZTIzYjBjMmY4NDM4ZTE5ZDE0ODdlNmQ0YzhiNGM3OTM3YzMwODlmNzkzZGIxOTdjNzZlOGE0ZjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjZlNjAwZDY2YjhhOTE2ZWM4NGU4ZjY1ZGRhZDcwMTBjN2VkNjUxMzc1OGQ3M2EyYzRhNmYzYzA3MDU2NmI4ZDgifQ"
+        },
+        {
+          "resource": "repo://home-manager/pi-box-templates/php83/Dockerfile.pi#L1-L28",
+          "version": "repo-lines-v1:sha256:bbfaa61d93923d3799a09d9bcea6dd9eb87d60e8183abf22837b8eba13b36357:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBhMjYzOTBlODhmNjE5Y2UwZWI0NTM3MTM4MGIzYzEwN2FlMjFiMGQyZWIzMWU5YjRhY2Y2MTQ5NjkwMTQwYTYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhOTg5ZWQyNTMzNmFmNGU4MmY1MWZjY2I2ZTA2OWI3OWMzOGIwYjU5MzgwYzRmM2MxODhjNWQ3NjQyMjQ4MjEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRiOWRkODhhMzVhNTJiMjllOThiODkyYmY2OTA5YzM2ZTVkYmUyMWQyMDM0N2QzYWMxYTM2NDUzNzc5NzliYjkifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-27T10:42:10.030Z"
+  }
+}

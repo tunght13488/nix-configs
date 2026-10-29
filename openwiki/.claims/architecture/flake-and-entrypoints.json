@@ -1,0 +1,204 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:5f721c26c0dfbad36740ce0a5df93212bef2dfc25af236189c46717e362baed5",
+  "claims": [
+    {
+      "id": "claim_e06e28b3f88c46e286326880cf56cc79",
+      "statement": "The flake generates packages, formatter, and development shells for four systems through a shared systems list and forAllSystems helper, while its NixOS and standalone Home Manager configurations are separately defined outputs.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L107-L119",
+          "version": "repo-lines-v1:sha256:9286b4eebf806ed8c98867f40fab69d5daeb706b5bf5b70a0bb519db70bc024b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4NDBjODczMGM0ZDExYmYyY2EzZmJmNWZlODdiYTcwMzM3YTA3NDRmZmNlNzhhZTNlOTI3NzI1ZmRjNGYwMjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyOTQwYThiOGM0ZDFhNWY1NTY5YmNjOWFkOGZmYWFjODkxNTZjZTE2MWM3YTBlNTY2NWRhNDIyYzVkMjY4MDQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc2NGRkMzk2ZTBlN2U0MGQ1MmZiNzhmN2M0NzQ1NThkMGY5NGVkMzI5MGJiYWNiOWJiZDI1YjU2NGViMDI0ODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdlZDY5NWFjNjkxNzYzZjhiNDRhNWU2OWUwZmE5MTU5MTczZDdmMGU2YjdjNzA3YmE3OTU3YWJjYzAzZjk2ZmIifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L162-L185",
+          "version": "repo-lines-v1:sha256:cee54fa9246bf3ffd33b54d6d8106736e8acbc609f35d405ff7e82d900f62939:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MDgxYjhlMWM5ODFjNjJmMzIwNzFkNGVlNGQyYmUzNGMwZmYwMTcwMjFlMDFkMjk2ZmNkZDEwYThlODU2MDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1Y2RlZjgwODVhZTc0YWI2MzZkNjQ1OWY1YzZkNWZiZmIwZGIyNjRmMWIwZDc1YmFjNTE5YzliM2Y2NzE3YWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk0NDk2MzRiYmY0MDgyMmVlY2NhYTQzYmE0M2QyNGM1YzU0ZmMwMWFlNjYyOTdhNTVlNDI2YWFmOTIxZWQ4YmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5M2IwYWRkM2I4ZmY5NmI4YWI2MWFmYWRkODE0NTBjY2RmZjM4NzY2N2I1NDIxOWFhOGMyMmI5NGM1YThkYjUifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L47-L56",
+          "version": "repo-lines-v1:sha256:6e3e1ae0cae46b86ce479641c14e2082017400d5dcc9ae236cc95f47ae2fc227:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5YjYyNTc5YWZiOGQ5MmI5ZmQxNDVkMjNiOGI5MDhlZTZkYTZmYjY2ZWZlMTViZjMwMGU5NjFlMjVmOWQzYTAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM1YjM1NTgzNjYyMjlhMTRiM2I1NjhlZmNjYjlmYWEyMzZkYjMyZWRhM2VmZTUyNjg2NDFlNDJlN2NkYjMzY2UiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNkMTgyN2MwNDk5MDYzNGMxOGY4YjNlODZkN2Y5MzRhNzc4ODgzNDcxYWZhMjA3NDExODYwNmE2MDUzZDgwNTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRiYWE2YTA3ZWUxNmU3OTY0ODU4ZjJlYTQwMTM1MGRhMzU2OWMzYWQxZDMwYTkzZjdjY2MxMTE4MTMyYzY3ODIifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L62-L67",
+          "version": "repo-lines-v1:sha256:d12d1887042db700ec70fe26368d92f80680b49b0d6d67ccafcb8ede08417bcd:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNWNmMTcxNTI0ODUxNzNjNjZlMzM4YzRiOGIyOTE1ZDc3OGYyY2EzZDA5Yzk3YmUwMzY5YTM4ZDA5OGIxNDczYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTljYjdmNDk0NWRkMTU3OGU1NWUzZjM2Y2U3YWIwODRiOTc1ZTk3ZDBlYTlhZjY1ZGQyODI5YWVkN2Y1OThkMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDQzM2ZkZGNlMzFmNzcwYzllOTA2MzAxNTNmNTE2ZGZhYWFhYTAwZDlhNWYwYmM0NzEyMmMzOWUxOWQ1MzFjNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjU2NWUyNzg4ODc0ZDc5NDgwMzJkMjdiYzRmZGM3ODk5ZDgwNGZhNjdjNmQ2ZTdhZDA5MDdkODVhY2VkZmRlYyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a94ec789f9054fbea7dddcd0116ab9c6",
+      "statement": "The flake exports custom packages from pkgs/default.nix as packages and removes phpLib from the public package output because phpLib is a configuration-dependent function rather than a standalone package.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L59-L64",
+          "version": "repo-lines-v1:sha256:f1540565113f39a9c7be14733164d05a1144354ad2d1104234a3abadbfcd4088:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMjQ0ZDA4YWJhMzYwNjk2MmM3Y2M1ZjFjYmJiMDU5YTJkNzM1ODZkNjdkMzQ0NTVjZDE0NTUxNDdkM2VlODA2NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmVmNjkwMDdhN2U3NWNjZGIyYzE5ZWZhOWQ5NWM0M2JmNzg3ZjMzYTJiOWM4MjY1YzRhNWNlNjQyZmU2ZGJlYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDQwYjdhM2VjYzU4ZDQ4NzBjMmM4ZGE3MDkzMDVjM2ViYTdhZmY0ZDM4YjYzMGQzZTU2YjAxOTdjYjVkMWRkZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjVlOGFkMWQ5N2M4NWUzY2Y0MmY5MzhhMDdjZWQxZDQzYjBjZWE5ZjBiNDcyYzM2ZGU4NGVkOGFkMDAyY2IwMCJ9"
+        },
+        {
+          "resource": "repo://pkgs/default.nix#L1-L18",
+          "version": "repo-lines-v1:sha256:2911020929193e8aa6cef019099ebfa33279bca0974c71f09f61b30a4e8415b9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZhYWE1ZDA5NTcxNzUwYzU0YWRkN2QwZmY1NGExMmUwZmE2NDJhZTQ2ZGRkYTRlZTg2M2Q4ZDEwMjQ0NTdlMzAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJkM2M0MDFiOTA5MzgyZTZjNWIxNTUyNDRlZDQ2NWQzMzY3OTUyOGFmNWYwMGZjZmY3ZDM2ZTMxMWQ5NWY3ZWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b187f6c7a4204a06830f4feb95179330",
+      "statement": "The repository overlay set provides custom package additions, package modifications, an unstable package namespace, a mysql80 package imported from nixpkgs-2511, and PHP versions from the nix-phps overlay.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L10-L14",
+          "version": "repo-lines-v1:sha256:3ad6629579f2e2167a037bcec7fdc37832b0adbede3cc5ab269415e45cca9290:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDc0ZTBlYThhZjg2MzllY2NjMWZjMjYyNjY2MzJmYzE4MjY1NmIzYjgwOTYyZjBjZDViNjc0NTc1OWJmNDFkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWI5MDY3YmU0MzRmMDU5NWNhZTYyZjc4NDVkOGVlYjM4NTBlZjM4YWYxMTZhYTBhMThhZTViNWM5YjJkZTYxNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzNmMjVlYmVlOGRjMDZkNTg2YmIyYjY2ZTRmZDQ5MWFmMGRjNmIzNDNhM2JjYTg5NjUwMTRjNTU1YjI0Y2U2YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYTJlYjYwOTY1ZjI4MDhhZmNlOTVlZmRkZDBmMTFiMTQ2Njc0NDRhN2E1ODc5NjhhZDUzN2VhMmRiY2Y1MWUxYiJ9"
+        },
+        {
+          "resource": "repo://overlays/default.nix#L1-L9",
+          "version": "repo-lines-v1:sha256:57e2bf925d7ec3b2d59f7ff74692afc0d70ecb5de94b1fd24857003e5f6c4df0:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYjI4YjVmNTQ0MWJlZDg4YTIzMDZhYzA4NDM5Y2NmZjgxN2RjMTQ0MmJhYzIwYmNkNzFiZjc3ZjQ5YmNhZWNjMSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDJhMmNiMjVhMTIyYjQ0MjIxYTYyMzRlYzY2MGE3YjVmYjdmOWJkZTdiM2I5ZTJiM2M1NTlhMGQ5NmZhYzczOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmM2NTRjZmQzZTVkMDcyMTAxNjYyNWUwNTQyNGNkZmVjNzk0NzkxYTk1ZmQ5NzE3NTU0MDgyZGUyMGEyM2FiMCJ9"
+        },
+        {
+          "resource": "repo://overlays/default.nix#L14-L80",
+          "version": "repo-lines-v1:sha256:ca684299cae75d01653e67ccf0820a9402f0a9d84ff7db9ce1e8ac4c8e4f666d:eyJzZWxlY3RlZExpbmVDb3VudCI6NjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiNmUyYTYxZjU4ZGU1NmMxMjU3NWEzNzMwZGNiMjg4MTQ1ZDY3YjkwMTEyOTJmNzBiYmUwMzAwYmQ4MWYyYTMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI4NzAxMjZhZDlkZTkwNTY5MzJkNGM5YTZlMmI3ZjE4ZjZiZDc1YzUxY2ExN2Y2OTcwNjMzMmU0MTNmNDMxNzYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImRhNmJkYzY2ZjA1Y2Y1MGM3ZmQ2MzY0MmYwZTQ3OTkzNDgwNzk3MWE5ODA4ODdkMzk0ZTVlN2RiMTEwYjQ2ODcifQ"
+        },
+        {
+          "resource": "repo://overlays/default.nix#L82-L111",
+          "version": "repo-lines-v1:sha256:6690b4b2e6f802ca081b012da7a6ce2274c5043cf6182dd3259fda1ff79f8204:eyJzZWxlY3RlZExpbmVDb3VudCI6MzAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNjZDZlZDM2YTQyZTQzYTIxODMzNDIyOGJkNjgzNzAwMGYwNTc4ZDE4ZWExMTQ4NmNkY2YzOTczZjI1NzA2ZWQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFiZWU2MDE4MDgzZTU5MjU4NDgyZTJiNzE2MjcxZDRjOTkyNWYyMWM4MmM4MGNlMDlhYTUwM2RhNWUzNjVhZDIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFmYzE3MTA0N2E2YWI4YTAyNTY5NjZkMzEwNGE2MWVhNmI5NDk4YzY1MDMyZDhmOWY0N2RmMmUyNzNiMzhiMTkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0446d418f7254c78ba037259391af8e3",
+      "statement": "Overlay visibility is output-specific: the NixOS configuration applies additions, modifications, unstable-packages, phps, and mysql80-packages; devShells apply the first four; and Home Manager applies those four plus Herdr's external overlay.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L107-L119",
+          "version": "repo-lines-v1:sha256:9286b4eebf806ed8c98867f40fab69d5daeb706b5bf5b70a0bb519db70bc024b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ4NDBjODczMGM0ZDExYmYyY2EzZmJmNWZlODdiYTcwMzM3YTA3NDRmZmNlNzhhZTNlOTI3NzI1ZmRjNGYwMjEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyOTQwYThiOGM0ZDFhNWY1NTY5YmNjOWFkOGZmYWFjODkxNTZjZTE2MWM3YTBlNTY2NWRhNDIyYzVkMjY4MDQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijc2NGRkMzk2ZTBlN2U0MGQ1MmZiNzhmN2M0NzQ1NThkMGY5NGVkMzI5MGJiYWNiOWJiZDI1YjU2NGViMDI0ODciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdlZDY5NWFjNjkxNzYzZjhiNDRhNWU2OWUwZmE5MTU5MTczZDdmMGU2YjdjNzA3YmE3OTU3YWJjYzAzZjk2ZmIifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L164-L175",
+          "version": "repo-lines-v1:sha256:76c5a46ccafd2c0f44c582abbf0bb2a2bc16d2a39a7b337b262260221e50c63e:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmMGMzYTY3MjNkMDg0MTcyMGQ0ZTZhZTljMGQ5NWFkM2I0Mjg1OGQwOTkxMjE4OWRjYjRkMTFkNjc3ZGE0YmEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjhlYzg3MDlmN2I3NjA1ZTE0ZWEzMTM2YWUyYzMzOTU3MTY3ZGY2ZjEyNTI0ZTU5YWRkZjMyMTdiOWZjMDQwZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRmNmI2ZTgxNGNkNzI2ZjYxOWE2ZGE1ZjZiZWJiNTA0MTY2MjY5MjdlNzZmNzg1OGMwYzhmM2NhOTEzMTNjZTYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA2YzQzZjhlMjNjNjIyY2I1ZGIzMDJiMzZlNDgyYTlmNzU4NzhiNjk5YjNkNDliMzVmNmRhZWQ5ZGMwZjFjOWEifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L32-L55",
+          "version": "repo-lines-v1:sha256:d889585fa2c99e89816e62a8280efa0bdc90d044a2160cf7f90b4b1a86e60a7f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM4NWZhNjYyNTljMjM4ZjliMDgxYzA3NDRkNmE0NzJmYmZiNTNjZGM2YTJiZWNjYzBlY2UzZjQyZDMzYzczYzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2OGEyYzRhYWM3NTQ2ODIzNjgxMGNhMDk1MjEzZmRjODk0ZmEzODFjMTc3ZDhkMThlMzBkZWU3OTg5NTA5Y2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVlZTQzYjkyODk2ZDNiOTkzNGM3OWUzZjZjMTk5NWZiNDIyZDE4Njc1MDY3NDY2YmNjNTgxNTNjNWUzMDk0Y2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVkY2E0NDA1MWU2NTRmOTUyOGViMThkYjViNDcyNDBhM2QwMDQ5NmFkODcwYTVhNWUzOWU4YTIxZWM5NThjOWYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_35f18780fad4496396dcea46cdbc6c19",
+      "statement": "The exported php-config modules share typed PHP configuration options across NixOS and Home Manager, and compute read-only per-version helpers through pkgs/php-lib.nix.",
+      "evidence": [
+        {
+          "resource": "repo://modules/home-manager/default.nix#L1-L7",
+          "version": "repo-lines-v1:sha256:9404d20447756a90050908c19d3a62f19cb7d1a070217d557a077e05796def66:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDcyOGNmYTMyMDkzNTRkOWNiNTUwMWQxZjYwYzFmNDVmN2U5NGE3ODIyOGY3ODgwYzEyOTRjYmYzYzkwZjdkNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://modules/nixos/default.nix#L1-L7",
+          "version": "repo-lines-v1:sha256:e0bbcd5beb6fc97a31a09372ef1732a883a48a8dc5ce74f96464229f80d502fe:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTJjZmNhZWQ4NjIyMjE4ZTJmYzM4NTg3NmZlMjM1MDE4NTQ5NTU4MTRhY2RmOTUyNmFhNDcwYTcwMjU2ZDQyOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://modules/shared/php-config.nix#L47-L106",
+          "version": "repo-lines-v1:sha256:9b7629225975838a22fab77f302c89e88bf515259bfa9b14d5b54243f92c9adc:eyJzZWxlY3RlZExpbmVDb3VudCI6NjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU1Y2YwZDQ4Yjg3YzgwYzVlY2E4MmZhZDliNzY1YTU3OGY3NzhhYTE3NjhiYzE3YzBmMTc2MGY4YWZkZDdiMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyYTJjYjI1YTEyMmI0NDIyMWE2MjM0ZWM2NjBhN2I1ZmI3ZjliZGU3YjNiOWUyYjNjNTU5YTBkOTZmYWM3MzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjJjZmI5YzU3MzFkOTE0YTJmMTdlY2U4ZmZiMjIxMDAyMWQxZjAyNjQ0MjQ1MzRhYWY5MzdlYzllMzEwZmE2MDkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L1-L13",
+          "version": "repo-lines-v1:sha256:1419938b293a54d3f9d95a3585118104932b20603bcddcf9833a21dc001723f7:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEyMGQyOGE1YTQ0OTZlYjE1Mzg2ZjJmOTY4ZmI4NzBhMzNlOWQ5ZDI2MDg5NzAzYzVjOTcwZTAzZTY4NjVlZjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI0MDY5NGU4YTM4N2NkYzg4MDM4OGI1ODhkMjhhYTZjOWM1MzdjYWZkMzUwYmI3NjJkMTZlM2MyODY1ZWRiNGIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJlNjAxNjJiMGFiMTc5MzhjNTc2NTRlNmI4YTM3ZDczNmQ0NzVjMTc2YzU4YTJjNmYwMzIyYTMwOGYwYTlmZDQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_028f733efce24b8791b322a40cf76956",
+      "statement": "The shared PHP library merges FPM settings as common, global FPM, version common, and version FPM, merges CLI settings as common, global CLI, version common, and version CLI, and uses those results for PHP and Composer wrapper environments.",
+      "evidence": [
+        {
+          "resource": "repo://pkgs/php-lib.nix#L24-L47",
+          "version": "repo-lines-v1:sha256:6ec435cc3aa2c14222160facacb0917de538856761dc13fd17bde9f3d9169123:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ3M2Y4Mjk3MWM0ZDNjYTM5ZDRhY2M5OGVhOGVlZTZmOTc0ZDAyYzQ4MmU3MWYzYzZkMzk4NGZmNDExNTEyMGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg0ZTQyMDhjZDZmZmI4YzRhMzU0N2IyZjU0YWRhMTk5NzhjM2YzNjVlNzhmOTUwMmVmNTE0NWNkZDJhYTg1NDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjliOTYyYzllOTZhZDRmODUxZWE4NmVjYTE5MmQ2ZThiNjdkYzY4MmU3Nzc2ODc4NDVjMDIwNWU4MWVkZmFjNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlNGZiMDU2ZTQ4OGYyZTY1ZWMwMzNlODQ2MDNiYTcwZjc0MTBhMDQyZGU2NGFkYWU0MGI4YWVlMDEzMDdjOGQifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L49-L70",
+          "version": "repo-lines-v1:sha256:42fe29235f02678c24518b278c7363749df1cbba486baf8b8d69890aea767ab2:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4Yjk3ZGY4OWRjNDg0MGEzN2M0N2I0YjBmNDMzZGNhMmU5ZDY3M2NjNzA1M2Y3ZTRhMTNhNDQ5MmRjMjYyNDEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImUyMWU0ZTkzOGI4NzNhOWQ3YjM5YTI5ZTAwOTg5NzI1OGFhNTU0ZDkyYmUzMDAxMzUxZTg4NjU2NWFjNzc0NDAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImU1YzExMzg1YTM0MTg5ZjZiMjMzNTU3ZmM2MTQ1MmQyYjY2ZWZiYWM2ZDZkZjJhODc2ZjUwNWY4MTk5ZjdlZWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlYjgwNDk5YmJkZWQwYjYwNzAxOWUyNDk4NzU0MjYzYjVlNTdlMjk3ZjQxOWE1MTQzMjkyNjFkMjhkY2YwZjAifQ"
+        },
+        {
+          "resource": "repo://pkgs/php-lib.nix#L81-L130",
+          "version": "repo-lines-v1:sha256:18734db897642eb7c6b5a74da7a42b6f49bb05162865c4e222ac085c8e931c33:eyJzZWxlY3RlZExpbmVDb3VudCI6NTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhMzIxZDg5NjcwOWU5MGVmNTM3NjQ0ZjBlM2U1ODBlYzZmMzdlZjQzMDBkMzZiNjljNTNhMGFlMjkxNThmODciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ0OTM4N2RlMmRjMjlhZjgxNTc4MjNmN2VhMmViYzE3ZGM0YjBlMDMzMGUzYTRjMDg3NGYxMDQ0MzYyN2NjMDMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI2ZTU1MzZiNmEyNTc5M2NkN2M0OWQxMDUzYmIzYjM3M2I5Y2E2MWE4YzNhZGJkZDE2NDQ4YjgyNWI0MGVkMDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNlNzMxYjI4ZGU5NzlmNTJhOTY2NzMzYzFjZTYzZjA1NTY0Y2I2OTdkZTM1YjUzZTZhMjAwYmE5MzRkMGRlMDgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_07bdb76fd3f94afcb72b3ff628d84158",
+      "statement": "The nixos-vmware output constructs a NixOS system with flake inputs passed as specialArgs and imports the repository configuration plus nix-index-database's NixOS module.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L80-L91",
+          "version": "repo-lines-v1:sha256:20f91bd42b6fe305adfc9000e7f5f8df83e74bbed7fcb5c3bbe93eae273a00f5:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1ZThmMGYyMDhjNGIyNjRiYjgyZjUyYjYzY2NhODM4YjQ1MGFkZDIwYTgzMGJjNTUyMTRmZDc0Y2E4OTA3ZjgiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1Y2RlZjgwODVhZTc0YWI2MzZkNjQ1OWY1YzZkNWZiZmIwZGIyNjRmMWIwZDc1YmFjNTE5YzliM2Y2NzE3YWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImIyOTE4NmZjMjRiNDM2ZDNiMjJlYWJjZDVmMjE3Mjc0MmU0ZmI5YmFkMmQyYzZlYzdhNzY2ZjUyYzg2NTE5ZjkiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmZjNiZjZjZDRmNTAwOWI4ZGY0MzgxZjNkOWIyYmYxNzQ1MDk0ZWVhZTQ1OGM2YzQzZTcxNjIxNzRjZThiYzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_92169958ff9045329e5472e95d183673",
+      "statement": "The nixos-vmware configuration imports the exported PHP module, applies repository overlays, and consumes computed PHP 8.1, 8.2, and 8.3 packages in the system package list.",
+      "evidence": [
+        {
+          "resource": "repo://nixos/configuration.nix#L15-L30",
+          "version": "repo-lines-v1:sha256:c1f13d27d72ffd96d7cbb880e3d285d9001732ee557f57c687337f8969eb1c2f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE2ZmIwOGZkYTFhY2I5NTdiNjExNmJkMzc4MTFhMWZlNDFhMDE2MTFjMDYzMWVkYmY3ODZkNjg4OWEyN2E1NWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MDE5MGEzMDU4ZDliMWU3NmIzYzU1MzdlNzI3YjViYzM2ZGIwNTU0Yjg3MWU1MGRiYjhkYzk1Yjg2OTgyNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijg5YjkwODBmYjZmYTQxYWZkMzU1ZTA0MjllMTkzYzI0MjUwOWMzNzVlM2E4M2Q1YmExMjE2NjI0YTA3N2ZiNzUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmOWYzNmQ4OTI4YzVhZDhhODlhOTYzNjA0NzBjNmMyOWU3ZmMxNTgzZWRjOWJhNjFjMDIzYzY4OGNjNGZkYWQifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L199-L221",
+          "version": "repo-lines-v1:sha256:3f4077b9bce38451d0e3c43d62781d51b65b78442454e4708c2fd565da19c924:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE1NGY2NzY1YjVhYzZiNzViZTdmOWI3MTZmZTRjZWI4YzQ4MzU5YjNkMDUxNDFiNWE4MzgzM2Q0ZjFmMmE2MGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MDE5MGEzMDU4ZDliMWU3NmIzYzU1MzdlNzI3YjViYzM2ZGIwNTU0Yjg3MWU1MGRiYjhkYzk1Yjg2OTgyNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBmMjBlZTJlZDg2NmU4ODI3ODUwNjAwN2JhMTM2OTAyMzU1YjkyMWIyNWJjYjZiOTNkMzA3MjVmN2QxMDFlNGQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoxLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L32-L55",
+          "version": "repo-lines-v1:sha256:d889585fa2c99e89816e62a8280efa0bdc90d044a2160cf7f90b4b1a86e60a7f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM4NWZhNjYyNTljMjM4ZjliMDgxYzA3NDRkNmE0NzJmYmZiNTNjZGM2YTJiZWNjYzBlY2UzZjQyZDMzYzczYzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2OGEyYzRhYWM3NTQ2ODIzNjgxMGNhMDk1MjEzZmRjODk0ZmEzODFjMTc3ZDhkMThlMzBkZWU3OTg5NTA5Y2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVlZTQzYjkyODk2ZDNiOTkzNGM3OWUzZjZjMTk5NWZiNDIyZDE4Njc1MDY3NDY2YmNjNTgxNTNjNWUzMDk0Y2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVkY2E0NDA1MWU2NTRmOTUyOGViMThkYjViNDcyNDBhM2QwMDQ5NmFkODcwYTVhNWUzOWU4YTIxZWM5NThjOWYifQ"
+        },
+        {
+          "resource": "repo://nixos/configuration.nix#L9-L13",
+          "version": "repo-lines-v1:sha256:79f3679b4dbd70ea6ba9a82900227c8ac42bd04286ce69674831587b7c458e5e:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjVkYjNlNGIxOWY3NWRiZDA1MzgxMTNmYmUwMTdlMGY2MTZhNDFhMzRhZDM0OTAzNDI4Y2I2MmQ5NDc3OGI5OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2QzZjU1NGQyZTg4NDZmOWIwN2U5ZTBmOTVlODNmYmYxODEwMDljOTRiYTBlYWFiYTI4Y2ExYTBhYzQxYzJkNyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzhlNDg2YTg4NTExNzMyNmI1MjYzMzc1MjQ3OWVmZGY1OTg4NWJhMTM3OTEwYmRiZTZkMzlhZmU1ZWEyYTkzZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDc3MzA3OWY1NTJjY2M2ZDcxMWU0MmFmNGRhMmUxOTRlMTI0ZWM5YzAxZTZmYjg5YjA1NDA0OGYzNDk5YjMzMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6781ce164f944041909a2ddcc68ecd63",
+      "statement": "The tung@nixos-vmware Home Manager output uses an x86_64-linux package set, passes flake inputs as extraSpecialArgs, applies repository and Herdr overlays, and imports nix-index-database, the user configuration, and Agenix's Home Manager module.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L162-L185",
+          "version": "repo-lines-v1:sha256:cee54fa9246bf3ffd33b54d6d8106736e8acbc609f35d405ff7e82d900f62939:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImE4MDgxYjhlMWM5ODFjNjJmMzIwNzFkNGVlNGQyYmUzNGMwZmYwMTcwMjFlMDFkMjk2ZmNkZDEwYThlODU2MDkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM1Y2RlZjgwODVhZTc0YWI2MzZkNjQ1OWY1YzZkNWZiZmIwZGIyNjRmMWIwZDc1YmFjNTE5YzliM2Y2NzE3YWMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6Ijk0NDk2MzRiYmY0MDgyMmVlY2NhYTQzYmE0M2QyNGM1YzU0ZmMwMWFlNjYyOTdhNTVlNDI2YWFmOTIxZWQ4YmUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5M2IwYWRkM2I4ZmY5NmI4YWI2MWFmYWRkODE0NTBjY2RmZjM4NzY2N2I1NDIxOWFhOGMyMmI5NGM1YThkYjUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_293cc94abcca4f7fad5e704c511282b8",
+      "statement": "The devShells output currently defines prbot, fc-es-starter-pack, and fc-omx; prbot creates project-local PHP 8.2 and Composer 8.2 launchers and prepends them to PATH, while the other shells provide their declared Java, Maven, Node, Yarn, and jq toolchains.",
+      "evidence": [
+        {
+          "resource": "repo://flake.nix#L121-L159",
+          "version": "repo-lines-v1:sha256:d9f5edcc390898a820d01a3ebbd1e7bfbabab65bc02f2de1d4f9ea63117494e7:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdmNGYxMzA0Zjc2ODBkYjlkOTU3YjUyMWM4YTljNTZiMmQzZjFmY2I3NjRmM2ZiY2RjYTY4MTRlNjg3NmI5NWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU2YjA0NDkxNDY5NzIyZTgzNjNhOTRlNDA0NDUzOGUwMTNhMmEyMTdlMzZiMWU1NjhiYTYwYWNiN2I0YzhmMmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAxNzU1NTc5MGE3OTYyNWY5MTA3ZDY2ZjNjOGU1YmI0NzgzNDdjMzUzNGUyY2I2ODIzOTQwYTQ5YThlNDQ4NDQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhiOTAwZmFjNTU3Nzg0M2Q2YWU4YmQzODAxOGE2NmJlMjNlNGFkN2VkMDQwNzhlOGJmMGEyNWViOGZkZjNlYTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2fd6f63d0bc34a66a8246cac5607d76c",
+      "statement": "The lock file records resolved revisions and hashes for flake inputs, including nixpkgs, nixpkgs-2511, nixpkgs-unstable, Home Manager, and nix-index-database, while input follow relationships are declared in flake.nix.",
+      "evidence": [
+        {
+          "resource": "repo://flake.lock#L103-L163",
+          "version": "repo-lines-v1:sha256:220887dd765d8664584e9f54ad16c01717e643f51baa9b32698d59b807c5b787:eyJzZWxlY3RlZExpbmVDb3VudCI6NjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY2MThkYjRjNDBlYjI1NzhlNGFkNWFkM2I4YTExNzFlMzY1MTFhMTE2NjgyYzIzZTg1Mzk5MWQyMmU3MmM2YTUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliNjJmNjBkODU5MGE1NzljZjQ2ZjhkNjczNzhjNGM1NzJiOTYyY2VjY2RiOTBjN2E1ZjdiNDJiOTYwNzgyYTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5YTFjMDZjOGI5M2QyNWI4N2VjMjU4ODU1NjA4NDU0ODRlZTQzMDg4N2M0NjRhNjhhYTk1YjQ1YjliYzZmZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImMzY2Q3Mzc3MzMyODhiOWJjOGE4NDhkNjhiNzA5ODlmZjMwMGZlOGM2MDkyNDRhOTFmNDExYWM4YzVmMWYwYWIifQ"
+        },
+        {
+          "resource": "repo://flake.lock#L165-L211",
+          "version": "repo-lines-v1:sha256:33cf28a8178dc7162260751519cdefbb9ecd349c4731347a75e424e921e43a40:eyJzZWxlY3RlZExpbmVDb3VudCI6NDcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVmMTk1MzZmOTc1OTNiYmMzYmI3YWExOTc3YWNhNzMxMmYxMjFlN2QzY2RiMWM1MzI3MWUyNzU1NWNmNjQ2OWEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjliNjJmNjBkODU5MGE1NzljZjQ2ZjhkNjczNzhjNGM1NzJiOTYyY2VjY2RiOTBjN2E1ZjdiNDJiOTYwNzgyYTQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjA5YTFjMDZjOGI5M2QyNWI4N2VjMjU4ODU1NjA4NDU0ODRlZTQzMDg4N2M0NjRhNjhhYTk1YjQ1YjliYzZmZWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5ZTRmNzI4MWNkYTA3MTQ3NWFhZjNlMGFiMzg3Zjc4NWFkYjUzN2RjNGFhYmY1MGViZTZjNmQyYzZmYTM2MTQifQ"
+        },
+        {
+          "resource": "repo://flake.nix#L17-L18",
+          "version": "repo-lines-v1:sha256:786e600c9536b5efd8e72045b0081d8c0808038ba6db0cf1749ce9b780870277:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ4YTc3MWQ2ZDcxMDFiZGNhZmUyOTMxOWZiYmMwMWUzMWE5MmJmODMxZWQ2ZDU0MDgwNWExMWJmMjlkMjczNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiM2YyZWMxNTVhODM0ZjZhNTk4OGQwZTM1ODI1YzM0Zjk3MzM2MGQyZjNhMmE0YjcwODNmOTk2ODIyMmQ1MmM3OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDFjYTljYmRhMzIxZGE4MDhiOGYyZTliYTNjMGU1YjA1NzZiM2ZkYWNmMDc3MDEzYmIzZjBkY2FiMGFlM2RmMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMGE3MGYyY2E5ZmZjM2VmMGNhZmQzOWZhMjllNjQ5NDlmMzgwZWI3OWEzYjk3YjhiZGQ0ZjNjN2FmMzA5MTJiNyJ9"
+        },
+        {
+          "resource": "repo://flake.nix#L24-L25",
+          "version": "repo-lines-v1:sha256:d5dd6fea4cc00e556fcf0241856796ff59255cf00e57a1bd04a38a32747c0540:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjZhMTY0ZmNkOTZlNDI0MjcyZWY0OTBlNWJjZjUxOWU0NzJjY2QyNWM5MWMzY2M5YjIwZGY4NmM4MDk0ZWIxNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzUyYTQ5ZTdmMWJkZTVlZTljZWNiMmRiNmY0NjBjOTNlNjQxNjQzMGE1MzE4YmU5Mzg5MjZjNjViYjE4ODFhNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOGM4MTYyYjEzOGRmZmVlNTRhM2YwYmU5ZTQwNGI0NGQ0Zjk4OGE3ZDBiZDk0YjJhNDk4ZDRhNTEyMWY3NGM4YyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWM5MTlkMTdlODYxMTRhMjkzNzE1MjllZDcxNzBlMGVhNjUzMmQyYTEyNmYzMTA4OTc3ZDhlMzljZTBiOTA1ZCJ9"
+        },
+        {
+          "resource": "repo://flake.nix#L31-L32",
+          "version": "repo-lines-v1:sha256:452a2d66ca4873ec660f71513879bde1b49a5c256d74c7c8e57e5bc9fd8717e0:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDZhMzg4MjI4OWUyZjc5NmJlOWMyYmMxZjdlMDM0ZDQzOWFhNDhmZjYwOWY1MDlkNGJmODk5YzgwMTcxYjhkYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNTI0YmJhOGRhZWJhMWVhYjQxMGNjMmQyZjJmZGE1MDE4NzA2ZGVjZmVhM2M5N2I3ZjFhMzNjMjJmOWU5NDUwMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNGEyOWZiZjA3MTc4OWI1NDMwZjRhNjVkZTFkNzVhZTMzODZjMGVlYmE1ZWQ4YWM4ZWU2OGEwNWMwYmI1NzZjYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiOTBkZmFlOWE4ZTEyY2Y5NWY2YjRhZDk3OTc1MmMyNjgwNTI0Zjc2ZmQ5ZDQ1OWJkZGRkMjM5Nzc2MWU0MGQwMCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.2",
+    "at": "2026-10-27T10:42:10.030Z"
+  }
+}
