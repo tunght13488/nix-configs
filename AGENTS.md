@@ -27,7 +27,8 @@ make format    # format all .nix files with nixpkgs-fmt
 nix flake show --no-write-lock-file   # validate without touching flake.lock
 nix flake check --no-write-lock-file  # deeper evaluation check
 nix fmt                                 # format via flake formatter
-nixpkgs-fmt <file>                      # format single file (installed system-wide)
+nixpkgs-fmt <file.nix>                  # format a single .nix file (installed system-wide)
+                                        # never pass a non-.nix file: it rewrites it as Nix
 ```
 
 For AI agents: the runnable Makefile targets are `make format`, `make home-build`, `make os-build`, and `make update`. `make os`, `make os-boot`, `make home`, `make clean`, and `make os-test` are reserved for humans — never run them. This is a policy, not an enforced gate; the Makefile has no guards.
@@ -114,7 +115,7 @@ Local test sites are served by system nginx: `http://php81.local`, `http://php82
 
 ## Nix Code Style
 
-- **Formatting**: Use `nixpkgs-fmt` (enforced by `make format`). Run it after editing any `.nix` file.
+- **Formatting**: Use `nixpkgs-fmt` only on files ending in `.nix` (enforced by `make format`). Run it after editing any `.nix` file; prefer `make format`, which selects only `.nix` files. Never point it at a Dockerfile, shell script, Markdown, TOML or any other non-Nix file: it treats the input as Nix and rewrites it into broken syntax without erroring.
 - **Function arguments**: Use destructuring with `,` and line breaks: `{ config, lib, pkgs, ... }:`
 - **Let/in**: Place `let` on its own line, indent bindings 2 spaces, place `in` at the same level as `let`.
 - **Attrsets**: Prefer trailing commas in multi-line attrsets and lists. Use `inherit` for passing through variables.
@@ -230,10 +231,12 @@ deployed by home-manager to `~/.pi/sandbox/templates/`, one directory each:
 | `php82` | same extension list on PHP 8.2 (sury) | `DB_HOST=host.docker.internal` |
 | `java8` | Temurin 8 JDK + Maven 3.6.3 | named volume for `/root/.m2` |
 | `node22` | Node 22 + yarn classic 1.22 | generic |
+| `knowledge-assistant` | `mmdlint` (pinned npm package) for headless Mermaid validation of Markdown | generic |
 | `nix-configs` | private Nix (flakes) + make + `nh` + `nixos-rebuild` + `nixpkgs-fmt` + openspec | `privileged = true`, named volume for `/nix` |
 
 Use `php83` for Laravel 11/12 projects, `php82` for older Laravel (9/10) and any project that
-pins PHP 8.2, `java8` for the Fluent Commerce backend, `node22` for the frontend, and
+pins PHP 8.2, `java8` for the Fluent Commerce backend, `node22` for the frontend,
+`knowledge-assistant` for workspaces that validate Mermaid blocks in Markdown, and
 `nix-configs` for this repository, whose Makefile targets are meant to run inside the sandbox.
 
 ```bash

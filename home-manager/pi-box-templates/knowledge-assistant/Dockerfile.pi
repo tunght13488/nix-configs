@@ -1,0 +1,12 @@
+# Per-project pi-box image for the knowledge-assistant workspace.
+# The shared base (git, gh, rg, fd, node, python3, pi) is ~/.pi/sandbox/Dockerfile.
+FROM pi-sandbox
+
+# mmdlint validates Mermaid blocks inside Markdown headlessly (Mermaid's own
+# parser over jsdom, no Chromium), which the workspace's docs workflow needs.
+# Pinned, and the base's Node 24 satisfies its Node >= 20 engine requirement.
+USER root
+RUN npm install -g --ignore-scripts "@sysid/mmdlint@0.1.1" \
+    && npm cache clean --force
+
+WORKDIR /workspace
