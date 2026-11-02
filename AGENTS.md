@@ -68,8 +68,8 @@ Plus `inputs.self.homeManagerModules.ngrok`, `inputs.self.homeManagerModules.php
 
 | Shell | Stack |
 |-------|-------|
-| `middleware` | PHP 8.1 + Composer (EOL, phps overlay) |
-| `prbot` | PHP 8.1 + Composer |
+| `middleware` | PHP 8.3 + Composer |
+| `prbot` | PHP 8.2 + Composer |
 | `v3` | PHP 8.3 + Composer |
 | `fc-es-starter-pack` | JDK 8 + Maven 3.6.3 + Node.js |
 | `fc-omx` | Node 22 + Yarn |
@@ -78,7 +78,7 @@ To add a project: add a shell in `flake.nix`, then in the project root: `use fla
 
 ## PHP Versioned Binaries
 
-`home-manager/php.nix` installs `php81`, `php82`, `php83` versioned binaries (e.g. `php81`, `php81-fpm`, `php81ize`). Default `php`/`php-fpm`/`composer` point to 8.3 via `lib.hiPrio`. To change the default, update the `hiPrio` block in `home-manager/php.nix`.
+`home-manager/php.nix` installs `php82`, `php83` versioned binaries (e.g. `php82`, `php82-fpm`, `php82ize`). Default `php`/`php-fpm`/`composer` point to 8.3 via `lib.hiPrio`. To change the default, update the `hiPrio` block in `home-manager/php.nix`.
 
 PHP INI settings and wrapper helpers live in `pkgs/php-lib.nix` and are exposed as `pkgs.phpLib` via the `additions` overlay (see `overlays/default.nix`). Edit `pkgs/php-config.nix` to change INI settings across all consumers (NixOS php-fpm, home-manager CLI wrappers, devShells).
 
@@ -92,7 +92,7 @@ Centralized PHP configuration uses `phpConfig.*` options defined in `modules/sha
 
 Computed derivations are available via `config.phpConfig._lib.versions.<ver>.*` (in modules) or `pkgs.phpLib <config>` (in devShells).
 
-Local test sites are served by system nginx: `http://php81.local`, `http://php82.local`, `http://php83.local` (hosts entries in `nixos/configuration.nix`).
+Local test sites are served by system nginx: `http://php82.local`, `http://php83.local` (hosts entries in `nixos/configuration.nix`).
 
 ## Conventions
 

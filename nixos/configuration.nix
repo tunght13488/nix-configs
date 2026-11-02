@@ -8,7 +8,6 @@
 }:
 let
   php = config.phpConfig._lib;
-  v81 = php.versions.php81;
   v82 = php.versions.php82;
   v83 = php.versions.php83;
 in
@@ -215,8 +214,6 @@ in
     stow
     tree
     home-manager
-    v81.versionedPkg
-    v81.composerVersionedPkg
     v82.versionedPkg
     v82.composerVersionedPkg
     v83.versionedPkg

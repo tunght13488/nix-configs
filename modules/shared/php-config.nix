@@ -8,7 +8,7 @@
 # Default values come from pkgs/php-config.nix (also used by devShells directly).
 #
 # Usage example (in any consumer that imports this module):
-#   config.phpConfig._lib.versions.php81.fpmIniScanDir
+#   config.phpConfig._lib.versions.php82.fpmIniScanDir
 #   config.phpConfig._lib.versions.php83.cliIniScanDir
 #   config.phpConfig._lib.versions.php83.versionedPkg
 { config
@@ -71,10 +71,10 @@ in
       default = defaults.versions;
       description = ''
         Per-version PHP configuration.  Keys are version identifiers matching
-        nixpkgs package names (e.g. "php81", "php82", "php83").
+        nixpkgs package names (e.g. "php82", "php83").
       '';
       example = {
-        php81 = {
+        php82 = {
           common = "";
           fpm = "";
           cli = "";

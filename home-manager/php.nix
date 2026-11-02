@@ -26,7 +26,6 @@
 
     # PHP test sites — served by system nginx (nixos/nginx.nix).
     # Each directory is made world-readable (o+rx) so the nginx user can read files.
-    "php-sites/php81/index.php".text = "<?php phpinfo(); phpinfo(INFO_MODULES);";
     "php-sites/php82/index.php".text = "<?php phpinfo(); phpinfo(INFO_MODULES);";
     "php-sites/php83/index.php".text = "<?php phpinfo(); phpinfo(INFO_MODULES);";
   };
@@ -37,7 +36,6 @@
     # world-readable (store files are 444), so no chmod on those is needed.
     chmod o+rx \
       "$HOME/php-sites" \
-      "$HOME/php-sites/php81" \
       "$HOME/php-sites/php82" \
       "$HOME/php-sites/php83"
   '';

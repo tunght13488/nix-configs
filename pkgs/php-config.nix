@@ -23,11 +23,6 @@
   # Per-version settings.  Keys match nixpkgs PHP package attribute names.
   # Each version has: common (both FPM+CLI), fpm (FPM only), cli (CLI only).
   versions = {
-    php81 = {
-      common = "";
-      fpm = "";
-      cli = "";
-    };
     php82 = {
       common = "";
       fpm = "";

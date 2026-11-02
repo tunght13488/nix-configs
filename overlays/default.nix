@@ -107,23 +107,6 @@
           origArgs.extensions { inherit all enabled; }
         );
     });
-    php81 = prev.php81.override (origArgs: {
-      phpAttrsOverrides = attrs: {
-        configureFlags = attrs.configureFlags ++ [
-          "--with-zlib=${final.zlib.dev}"
-          "--with-zip"
-        ];
-        buildInputs = attrs.buildInputs ++ [
-          final.zlib
-          final.libzip
-        ];
-      };
-      extensions =
-        { all, enabled, ... }:
-        builtins.filter (ext: ext != all.zlib && ext != all.zip) (
-          origArgs.extensions { inherit all enabled; }
-        );
-    });
   };
 
   # When applied, the unstable nixpkgs set (declared in the flake inputs) will
@@ -159,6 +142,6 @@
   };
 
   # PHP versions from https://github.com/fossar/nix-phps
-  # Provides pkgs.php81, pkgs.php82, pkgs.php83, etc.
+  # Provides pkgs.php82, pkgs.php83, etc.
   phps = inputs.phps.overlays.default;
 }
