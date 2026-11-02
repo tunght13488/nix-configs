@@ -135,7 +135,7 @@
         {
           # netsuite-middleware — PHP 8.3
           # middleware = mkSystemPhpShell "83";
-          # prbot — PHP 8.1 (EOL, via phps overlay)
+          # prbot — PHP 8.2 (via phps overlay)
           prbot = mkSystemPhpShell "82";
           # admin_ci3 (v3) — PHP 8.3
           # v3 = mkSystemPhpShell "83";

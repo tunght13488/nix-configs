@@ -6,7 +6,7 @@
 # The site index.php files are provisioned by home-manager/home.nix via home.file.
 #
 # ── How to add a new virtual host ──────────────────────────────────────────────
-# 1. Copy nixos/vhosts/php81.vm.local.nix → nixos/vhosts/<yoursite>.vm.local.nix
+# 1. Copy nixos/vhosts/php82.vm.local.nix → nixos/vhosts/<yoursite>.vm.local.nix
 #    and update serverName, root, and fastcgi_pass (pool socket).
 # 2. Add a matching pool in nixos/php-fpm.nix.
 # 3. Add the new file to the `vhosts` list below.
@@ -29,7 +29,6 @@ let
   # List every vhost file here.  Each file receives { config, lib, pkgs, ... }
   # and must return an attrset that is valid as a services.nginx.virtualHosts value.
   vhostFiles = [
-    ./vhosts/php81.vm.local.nix
     ./vhosts/php82.vm.local.nix
     ./vhosts/php83.vm.local.nix
     ./vhosts/middleware.vm.local.nix

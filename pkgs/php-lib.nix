@@ -56,11 +56,11 @@ let
     "${php}/lib:${iniDir}";
 
   # Per-version computed helpers.
-  # `name` is the nixpkgs attribute (e.g. "php81"), `versionCfg` has common/fpm/cli.
+  # `name` is the nixpkgs attribute (e.g. "php82"), `versionCfg` has common/fpm/cli.
   mkVersionHelpers =
     name: versionCfg:
     let
-      # "php81" → "81"
+      # "php82" → "82"
       ver = builtins.replaceStrings [ "php" ] [ "" ] name;
       phpPkg = pkgs.${name};
       fpmIni = mergeFpmIni versionCfg;
@@ -78,7 +78,7 @@ let
         cliIniScanDir
         ;
 
-      # Versioned wrapper scripts (php81, php81-fpm, php81ize, …).
+      # Versioned wrapper scripts (php82, php82-fpm, php82ize, …).
       versionedPkg = pkgs.runCommand "php${ver}-versioned" { } ''
         mkdir -p $out/bin
         for src in ${phpPkg}/bin/php ${phpPkg}/bin/php-fpm ${phpPkg}/bin/php-cgi ${phpPkg}/bin/phpdbg ${phpPkg}/bin/phpize ${phpPkg}/bin/php-config; do

@@ -34,7 +34,7 @@ let
     ## PHP projects
 
     - There are multiple PHP projects with different supported PHP versions. Always check the `composer.json` file for the required PHP version before running any commands.
-    - Do not rely on the default `php` & `composer` binary for project commands. Use versioned binaries instead: `php81`, `php82`, `php83`, `composer81`, `composer82`, `composer83`
+    - Do not rely on the default `php` & `composer` binary for project commands. Use versioned binaries instead: `php82`, `php83`, `composer82`, `composer83`
     - Tests may rely on a test database. In such case, do not run tests in parallel
 
     ## Pull request

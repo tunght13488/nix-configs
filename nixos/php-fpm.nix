@@ -14,7 +14,6 @@
 }:
 let
   php = config.phpConfig._lib;
-  v81 = php.versions.php81;
   v82 = php.versions.php82;
   v83 = php.versions.php83;
 
@@ -33,13 +32,6 @@ let
 in
 {
   services.phpfpm.pools = {
-    php81 = {
-      user = "tung";
-      group = "users";
-      phpPackage = v81.phpPkg;
-      settings = defaultPoolSettings;
-    };
-
     php82 = {
       user = "tung";
       group = "users";
@@ -61,16 +53,12 @@ in
 
   # The NixOS phpfpm module sets ProtectHome=true on each pool's systemd service,
   # which would prevent FPM workers from opening scripts in ~/php-sites/.
-  # Override that for all three pools.
+  # Override that for both pools.
   #
   # PHP_INI_SCAN_DIR must be a process-level env var (not an FPM pool env[...])
   # so that php-fpm reads the custom .ini files at startup, before pool config
   # is processed.  This gives FPM workers the FPM-specific INI settings.
   systemd.services = {
-    phpfpm-php81 = {
-      serviceConfig.ProtectHome = lib.mkForce false;
-      environment.PHP_INI_SCAN_DIR = v81.fpmIniScanDir;
-    };
     phpfpm-php82 = {
       serviceConfig.ProtectHome = lib.mkForce false;
       environment.PHP_INI_SCAN_DIR = v82.fpmIniScanDir;
