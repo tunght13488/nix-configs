@@ -1,3 +1,11 @@
+# nix-language-servers Specification
+
+## Purpose
+
+Provides the `nil` and `nixd` Nix language server executables in the user environment for editor integrations.
+
+## Requirements
+
 ### Requirement: User environment provides nil
 The user environment SHALL make the `nil` Nix language server executable available in the PATH.
 
