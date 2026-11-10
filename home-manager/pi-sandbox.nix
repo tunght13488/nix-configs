@@ -15,7 +15,7 @@
 
 let
   # Pinned to the host Pi release; rebuild the base image after upgrading Pi.
-  piVersion = "1.5.0";
+  piVersion = "1.5.1";
 
   piBox = pkgs.writeShellApplication {
     name = "pi-box";
