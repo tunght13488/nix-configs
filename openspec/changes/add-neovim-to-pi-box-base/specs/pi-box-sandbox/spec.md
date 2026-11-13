@@ -38,15 +38,27 @@ By default the sandbox SHALL receive exactly these host resources: the project w
 
 ### Requirement: Neovim in the shared base image
 
-The shared `pi-sandbox` image SHALL provide the `nvim` executable, and project images derived from it SHALL inherit Neovim without project-specific installation.
+The shared `pi-sandbox` image SHALL provide the official Neovim v0.12.6 release (the latest stable release at this plan update), and project images derived from it SHALL inherit that version without project-specific installation.
 
-#### Scenario: Neovim runs in the base image
+#### Scenario: Base image provides the pinned release
 - **WHEN** `nvim --version` runs in a sandbox using the base image
-- **THEN** it succeeds and reports a Neovim version
+- **THEN** it reports Neovim v0.12.6
 
 #### Scenario: Project images inherit Neovim
 - **WHEN** `nvim --version` runs in a project image derived from `pi-sandbox`
-- **THEN** it succeeds without a project-specific Neovim installation
+- **THEN** it reports Neovim v0.12.6 without project-specific installation
+
+### Requirement: Nixvim plugins are available in the shared image
+
+The shared image SHALL provide the plugin runtime required by the mounted host Nixvim configuration, including TokyoNight, without requiring host Nix-store plugin/runtime mounts.
+
+#### Scenario: Host Nixvim configuration loads
+- **WHEN** Neovim starts with the mounted host configuration in a default sandbox
+- **THEN** the configured plugins, including TokyoNight, resolve and initialization reports no missing plugin-module errors
+
+#### Scenario: Plugin runtime does not add host grants
+- **WHEN** the default sandbox mounts are inspected
+- **THEN** plugin runtime files are provided by the image and no host Nix-store plugin/runtime path is mounted
 
 ### Requirement: Neovim is Pi's default external editor
 
