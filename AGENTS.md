@@ -177,9 +177,11 @@ all of them outside herdr panes. Limitation: this relies on the pane shell being
 
 Default grants: the project directory (read-write, at its host absolute path),
 `~/.pi/agent` (read-write — provider credentials, settings, sessions, skills and trust are
-shared with host Pi, so no login step is needed in the sandbox), `~/.config/git`
-(read-only), `~/.config/gh` (read-only). Never granted: `~/.aws`, `~/.ssh`, the 1Password
-agent socket, and every other host path.
+shared with host Pi, so no login step is needed in the sandbox), `~/.config/git` and
+`~/.config/gh` (read-only), and `~/.config/nvim` (read-only when present). Never
+granted: `~/.aws`, `~/.ssh`, the 1Password agent socket, and every other host path.
+Pi's Ctrl+G editor uses `nvim` via `EDITOR=nvim` unless the shared Pi settings
+specify an explicit `externalEditor`.
 
 Worktree projects also get their git directory: when `git rev-parse --git-common-dir` for the
 workspace resolves outside it (the bare+worktree layout used here), `pi-box` mounts that
@@ -215,8 +217,9 @@ and remotes on any other SSH host are not rewritten and still fail in the sandbo
 the rewritten HTTPS URL while `git config --get remote.origin.url` shows the stored SSH value.
 
 The base image (`pi-sandbox`) holds the common toolchain — git, gh, ripgrep, fd, node,
-python3, and a pinned Pi. Per-project images are `FROM pi-sandbox`, so common layers are stored once
-and shared across projects and worktrees. Pi itself is pinned to the host version in
+python3, Neovim (`nvim`), and a pinned Pi. Per-project images are `FROM pi-sandbox`,
+so common layers are stored once and shared across projects and worktrees. Pi itself is
+pinned to the host version in
 `home-manager/pi-sandbox.nix` (`piVersion`).
 
 ### Templates

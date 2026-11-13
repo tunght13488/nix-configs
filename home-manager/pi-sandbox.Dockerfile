@@ -20,6 +20,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
       git \
       jq \
       less \
+      neovim \
       python3 \
       ripgrep \
       unzip \
@@ -29,6 +30,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # Debian installs the binary as `fdfind`; pi probes for `fd` or `fdfind`,
     # this symlink is for humans at the shell.
     && ln -sf "$(command -v fdfind)" /usr/local/bin/fd
+
+ENV EDITOR=nvim
 
 # --- stable layer: container-safe git overrides ----------------------------
 # pi-box mounts the host's ~/.config/git read-only at /root/.config/git. Git

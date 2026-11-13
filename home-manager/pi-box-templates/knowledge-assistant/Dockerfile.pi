@@ -1,5 +1,5 @@
 # Per-project pi-box image for the knowledge-assistant workspace.
-# The shared base (git, gh, rg, fd, node, python3, pi) is ~/.pi/sandbox/Dockerfile.
+# The shared base (git, gh, rg, fd, node, python3, nvim, pi) is ~/.pi/sandbox/Dockerfile.
 FROM pi-sandbox
 
 # mmdlint validates Mermaid blocks inside Markdown headlessly (Mermaid's own
