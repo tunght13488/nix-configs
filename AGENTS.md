@@ -217,7 +217,10 @@ and remotes on any other SSH host are not rewritten and still fail in the sandbo
 the rewritten HTTPS URL while `git config --get remote.origin.url` shows the stored SSH value.
 
 The base image (`pi-sandbox`) holds the common toolchain — git, gh, ripgrep, fd, node,
-python3, Neovim (`nvim`), and a pinned Pi. Per-project images are `FROM pi-sandbox`,
+python3, Neovim (`nvim`), and a pinned Pi. Neovim is the official v0.12.6 release tarball
+(Debian's 0.7.x is too old for the Nixvim config), and the image also ships the plugin pack
+that config loads — TokyoNight, the other enabled plugins, and compiled Treesitter parsers —
+from revisions pinned in the Dockerfile. Per-project images are `FROM pi-sandbox`,
 so common layers are stored once and shared across projects and worktrees. Pi itself is
 pinned to the host version in
 `home-manager/pi-sandbox.nix` (`piVersion`).

@@ -6,6 +6,8 @@ The shared `pi-sandbox` image is based on `node:24-slim`. The current implementa
 
 At this plan update the official latest stable release is Neovim v0.12.6. The official Linux x86_64 tarball is `nvim-linux-x86_64.tar.gz` with SHA-256 `474430d53e6264f6d6dd18db42d6dc9df3a1b56ca9e88a325bbf860e1a811d87` ([release](https://github.com/neovim/neovim/releases/tag/v0.12.6)). TokyoNight's current README requires Neovim >=0.8.0 ([requirements](https://github.com/folke/tokyonight.nvim#requirements)).
 
+Implementation finding: plugin sources and Treesitter parsers taken from nixpkgs cannot be used as-is. The parsers are linked against nixpkgs' glibc and fail to load on this base with `GLIBC_2.38 not found` (base is Debian bookworm, glibc 2.36). The pinned *sources* are still the right pin, but native artifacts must be compiled with the image's own Debian toolchain.
+
 `home-manager/pi-box.sh` already uses `append_config_mounts` for read-only host configuration, including resolved targets for symlinked config files, and skips absent directories. The shared image's Git config intentionally keeps `core.editor=vi`.
 
 ## Goals / Non-Goals
@@ -24,16 +26,18 @@ At this plan update the official latest stable release is Neovim v0.12.6. The of
 ## Decisions
 
 - Replace Debian's Neovim package with the official v0.12.6 Linux x86_64 tarball. Pin both release version and SHA-256 in the stable base-image layer, install its bundled runtime under `/opt`, and expose `nvim` on `PATH`. Use the tarball rather than the AppImage to avoid a FUSE runtime dependency. Keep `vim-tiny`, set `EDITOR=nvim`, and leave the Git `core.editor=vi` override intact. Refresh the version and checksum together when intentionally upgrading to a newer stable release.
-- Package the plugins enabled by `home-manager/nixvim.nix`, their transitive plugin dependencies, and its configured Tree-sitter grammars in the image's standard Neovim site runtime path. Pin plugin/grammar revisions to the versions selected by the repository's locked Nixvim/nixpkgs inputs; include build outputs for native components such as Telescope's fzf extension. This gives the mounted generated config its required modules without mounting plugin paths from the host store or installing anything at runtime.
+- Package the plugins enabled by `home-manager/nixvim.nix`, their transitive plugin dependencies, and its configured Tree-sitter grammars in the image's standard Neovim site runtime path. Download the pinned sources in a builder stage and compile the native parts there with the Debian toolchain (Treesitter parsers, telescope's fzf sorter), then copy only the assembled `site` tree into the final image. Pins are the revisions the repository's locked nixpkgs input resolves, so the mounted config sees matching plugin versions; queries come from the nvim-treesitter plugin itself, so only compiled parsers need building. Compiling here, rather than reusing nixpkgs' built outputs, avoids the glibc mismatch above and keeps build tooling out of the runtime image.
 - Keep using `append_config_mounts` for `~/.config/nvim` to `/root/.config/nvim`. The existing read-only mount of a symlinked config file's resolved target remains part of the requested config mount; do not add mounts for plugin closures or the full Nix store.
 - Keep the existing wrapper grant text and repository/template documentation changes. Do not hand-edit generated `openwiki/` pages.
 
 ## Risks / Trade-offs
 
-- [Plugin set can drift from `nixvim.nix`] → Pin the image's plugin and grammar revisions, and verify headless startup using the mounted config after changes to the configured plugin set.
-- [Native plugin/parser builds can fail or be platform-specific] → Build them for the image's Linux x86_64 environment and smoke-test the base plus a derived project image.
+- [Plugin set can drift from `nixvim.nix`] → Pins live in two tables in `home-manager/pi-sandbox.Dockerfile`; refresh them with the configured plugin set, and verify headless startup using the mounted config.
+- [Native plugin/parser builds can fail or be platform-specific] → Build them in the Debian builder stage of the image (not with Nix, whose binaries need a newer glibc) and smoke-test the base plus a derived project image.
+- [Plugin pack inflates the shared base image] → Only the assembled site tree is copied into the final stage; build tooling stays in the discarded builder stage. Accepted cost of making the mounted config work without host Nix-store access.
 - [A later Neovim release may supersede v0.12.6] → Keep a reproducible version/checksum pair; refresh both when updating the pinned stable release rather than using an unverified floating URL.
 - [Read-only config may still refer to files outside the config directory] → Keep the host grant limited to the requested config (including its resolved config-file symlinks); plugin/runtime dependencies must come from the image, and the integration check must confirm no plugin-store mount is added.
+- [Config still points at host-only tool paths] → The generated config sets `copilot_node_command`, `python3_host_prog`, and `ruby_host_prog` to host store paths that do not exist in the sandbox, so Copilot and the Python/Ruby providers stay inactive there; the providers are unneeded for editing, and Copilot would need a container-local Node path if it is wanted later.
 
 ## Migration Plan
 
