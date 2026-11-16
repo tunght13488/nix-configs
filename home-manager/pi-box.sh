@@ -6,9 +6,9 @@
 # it via an untracked Dockerfile.pi in the project directory.
 #
 # Default grants: the project directory (read-write, at its host absolute path),
-# ~/.pi/agent (read-write, shared Pi identity and state), ~/.config/git
-# (read-only), ~/.config/gh (read-only). Never granted: ~/.aws, ~/.ssh, the
-# 1Password agent socket, or any other host path.
+# ~/.pi/agent (read-write, shared Pi identity and state), ~/.config/git (read-only),
+# ~/.config/gh (read-only), and ~/.config/nvim (read-only, when present). Never
+# granted: ~/.aws, ~/.ssh, the 1Password agent socket, or any other host path.
 #
 # Extra grants come only from an untracked pi-box.toml in the project directory.
 #
@@ -29,6 +29,7 @@ PI_STATE_DIR="$HOME/.pi/agent"
 CONTAINER_PI_STATE_DIR="/root/.pi/agent"
 GIT_CONFIG_DIR="$HOME/.config/git"
 GH_CONFIG_DIR="$HOME/.config/gh"
+NVIM_CONFIG_DIR="$HOME/.config/nvim"
 RELAY_SCRIPT="$SANDBOX_DIR/pi-herdr-relay.py"
 CONTAINER_RELAY_SOCKET="/run/pi-box/herdr-relay.sock"
 
@@ -57,8 +58,9 @@ confirm the prompt or pass --force, and the previous versions are kept as
 <file>.<YYYYmmdd-HHMMSS>.bak, all backups of one run sharing one timestamp.
 
 Default grants: the project directory (read-write), ~/.pi/agent (read-write),
-~/.config/git (read-only), ~/.config/gh (read-only). ~/.aws, ~/.ssh and the
-1Password socket are never mounted. Add grants with pi-box.toml, including
+~/.config/git and ~/.config/gh (read-only), plus ~/.config/nvim (read-only when
+present). ~/.aws, ~/.ssh and the 1Password socket are never mounted. Add grants
+with pi-box.toml, including
 `privileged = true` for workloads that need nested namespaces (Nix builds).
 
 The base image is rebuilt on every run; Docker layer caching makes that a no-op
@@ -249,6 +251,7 @@ cmd_run() {
   # symlink's resolved target over the symlink's own container path.
   append_config_mounts "$PI_STATE_DIR" "/root/.pi/agent" "AGENTS.md"
   append_config_mounts "$GIT_CONFIG_DIR" "/root/.config/git"
+  append_config_mounts "$NVIM_CONFIG_DIR" "/root/.config/nvim"
   if [ "$gh_enabled" -eq 1 ]; then
     append_config_mounts "$GH_CONFIG_DIR" "/root/.config/gh"
   fi

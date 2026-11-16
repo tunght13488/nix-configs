@@ -1,9 +1,9 @@
 # syntax=docker/dockerfile:1.7
 # Per-project pi-box image for this Nix configuration repository.
 #
-# The shared base (~/.pi/sandbox/Dockerfile) has git, gh, node and pi but no
-# Nix. This template adds a private, single-user Nix with flakes so the
-# Makefile's agent-runnable targets (format, home-build, os-build, update) work
+# The shared base (~/.pi/sandbox/Dockerfile) has git, gh, rg, fd, node, python3,
+# nvim and pi but no Nix. This template adds a private, single-user Nix with
+# flakes so the Makefile's agent-runnable targets (format, home-build, os-build, update) work
 # inside the sandbox. The host /nix store and the host Nix daemon are never
 # mounted; /nix here is the named volume declared in pi-box.toml.
 FROM nixos/nix:2.35.4 AS nix
