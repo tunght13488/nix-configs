@@ -24,6 +24,11 @@ let
     - Keep solutions simple and direct.
     - User instructions always override this file.
 
+    ## Shell Commands
+
+    - Always pass an explicit short `timeout` to bash tool calls: default 60 seconds.
+    - Pass a larger `timeout` only for known-long operations (builds, downloads) and state the expected duration.
+
     ## Shell Environment
 
     - Default shell is **zsh** with Prezto, not bash
