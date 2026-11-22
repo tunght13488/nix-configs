@@ -2,64 +2,68 @@
 
 ## Purpose
 
-Runs the Pi coding agent per project inside a rootless-Docker container with least-privilege host access: an explicit default grant set, per-project opt-in grants, shared Pi identity and state, and never-granted host secrets such as AWS and SSH credentials.
+Runs the Pi coding agent per project inside a nono capability sandbox with least-privilege host access: a deployed shared base profile, per-project opt-in grants that extend it, shared Pi identity and state, default-deny network with an allowlist, brokered GitHub credentials, and never-granted host secrets such as AWS, SSH and the 1Password socket.
 
 ## Requirements
 
 ### Requirement: Per-project sandboxed Pi session
 
-Running `pi-box` in a project directory SHALL start an interactive Pi session in a container with that directory mounted read-write at its host absolute path as the working directory. The container SHALL run under the existing rootless Docker daemon.
+Running `pi-box` in a project directory SHALL start an interactive Pi session under a nono capability sandbox with that directory granted read-write as the working directory. The session SHALL run as a host process under the invoking user.
 
 #### Scenario: Launch from project root
 - **WHEN** `pi-box` is run inside a project directory
-- **THEN** Pi's TUI starts in a container whose working directory is the project, mounted at the same absolute path as on the host
+- **THEN** Pi's TUI starts in the project directory under the sandbox, running as the invoking host user
 
 #### Scenario: Workspace writes reach the host
 - **WHEN** sandboxed Pi creates or edits a file in the workspace
 - **THEN** the change is immediately visible at the same path on the host
 
 #### Scenario: Container files owned by the host user
-- **WHEN** a process inside the container creates a file in the workspace
-- **THEN** the file is owned by the invoking host user, not a foreign uid
+- **WHEN** a process inside the sandbox creates a file in the workspace
+- **THEN** the file is owned by the invoking host user
 
 ### Requirement: Least-privilege default grant set
 
-By default the sandbox SHALL receive exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write). The sandbox SHALL NOT receive `~/.aws`, `~/.ssh`, the 1Password agent socket, or any other host path.
+By default the sandbox SHALL grant exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), a private scratch directory `~/.pi/sandbox/tmp` (read-write, exported as `TMPDIR`), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write, Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write, the nvim Copilot client's auth store), `/nix` (read-only), the sandbox runtime directory `~/.pi/sandbox/runtime` (read-only, holding the generated launcher and profile), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write) and the repository root's `AGENTS.md` (read-only). The sandbox SHALL NOT grant `~/.aws`, `~/.ssh`, the 1Password agent socket, `~/.cache`, `/tmp`, or any other host path.
 
 #### Scenario: AWS credentials inaccessible
-- **WHEN** a process in the sandbox reads `~/.aws` (including the SSO token cache)
-- **THEN** the path does not exist inside the sandbox
+- **WHEN** a process in the sandbox opens a file under `~/.aws` (including the SSO token cache)
+- **THEN** the open fails
 
 #### Scenario: SSH identities inaccessible
-- **WHEN** a process in the sandbox reads `~/.ssh` or the 1Password agent socket
-- **THEN** the paths do not exist inside the sandbox
+- **WHEN** a process in the sandbox opens a file under `~/.ssh` or the 1Password agent socket
+- **THEN** the open fails
 
 #### Scenario: Only granted paths are mounted
-- **WHEN** the container's mounts are inspected on a default run
-- **THEN** the host-backed mounts are exactly the workspace, `~/.pi/agent`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, plus the project's git directory when it lives outside the workspace
+- **WHEN** the session's effective grants are inspected on a default run
+- **THEN** the granted host paths are exactly the workspace, `~/.pi/agent`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.pi/sandbox/tmp`, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
 
 #### Scenario: Neovim configuration is available read-only
 - **WHEN** the host's `~/.config/nvim` exists and a default sandbox run starts
-- **THEN** its configuration is available at `/root/.config/nvim` and writes through the mount are denied
+- **THEN** its configuration is readable and write attempts to it are denied
 
 #### Scenario: Missing Neovim configuration does not prevent launch
 - **WHEN** the host's `~/.config/nvim` does not exist
-- **THEN** the sandbox still starts without that mount
+- **THEN** the sandbox still starts without that grant
 
 #### Scenario: Git metadata outside the workspace is usable
 - **WHEN** the project is a worktree in a bare-repository layout and `git status`, `git log`, or a commit runs inside the sandbox
 - **THEN** the command succeeds against the same repository as on the host
 
+#### Scenario: Repository root instructions readable
+- **WHEN** the project is a worktree in a bare-repository layout and Pi reads the repository root `AGENTS.md`
+- **THEN** the file content is accessible read-only
+
 #### Scenario: Plain project adds no extra mount
 - **WHEN** the project's `.git` is a directory inside the workspace
-- **THEN** no git directory is mounted beyond the workspace
+- **THEN** no git directory is granted beyond the workspace
 
 ### Requirement: Shared Pi identity, state, and instructions
 
-The sandbox SHALL use the host's `~/.pi/agent` read-write as its Pi state: provider credentials from `auth.json`, settings, sessions, skills, and trust decisions are shared with host Pi. No provider credential SHALL be passed to the container through environment variables. The global `~/.pi/agent/AGENTS.md` (a symlink into the Nix store on the host) SHALL be readable inside the sandbox.
+The sandbox SHALL use the host's `~/.pi/agent` read-write as its Pi state: provider credentials from `auth.json`, settings, sessions, skills, and trust decisions are shared with host Pi. No provider credential SHALL be passed to the sandboxed process through environment variables. The global `~/.pi/agent/AGENTS.md` SHALL be readable inside the sandbox.
 
 #### Scenario: No credential environment variables
-- **WHEN** the container environment is inspected
+- **WHEN** the sandboxed process environment is inspected
 - **THEN** it contains no provider API key or OAuth token variables
 
 #### Scenario: Model access without per-sandbox login
@@ -72,11 +76,11 @@ The sandbox SHALL use the host's `~/.pi/agent` read-write as its Pi state: provi
 
 #### Scenario: Global instructions readable
 - **WHEN** sandboxed Pi reads its global `AGENTS.md`
-- **THEN** the content matches the host's global Pi instructions, despite the host-side symlink pointing into the Nix store
+- **THEN** the content matches the host's global Pi instructions
 
 ### Requirement: Git and GitHub identity in the sandbox
 
-The sandbox SHALL carry the host's git and GitHub configuration via read-only mounts of `~/.config/git` and `~/.config/gh`, and SHALL neutralize or redirect host-only references inside that configuration (the `/nix/store` credential helper path, host editor, askpass, and diff/merge tools) to in-container equivalents.
+The sandbox SHALL carry the host's git and GitHub configuration via read-only grants of `~/.config/git` and `~/.config/gh`, used as-is by the host-native session.
 
 #### Scenario: Commits carry host identity
 - **WHEN** a commit is created inside the sandbox
@@ -84,63 +88,67 @@ The sandbox SHALL carry the host's git and GitHub configuration via read-only mo
 
 #### Scenario: Git over HTTPS uses the in-container credential helper
 - **WHEN** git authenticates against `https://github.com` inside the sandbox
-- **THEN** it uses the in-container `gh auth git-credential` helper rather than the host's `/nix/store` helper path
+- **THEN** it uses the host credential helper and authenticates successfully
 
 #### Scenario: Host-only tools are not invoked
 - **WHEN** git requires an editor or credential prompt inside the sandbox
-- **THEN** it uses container-safe fallbacks instead of `nvim`, `vscode`, or `git-gui--askpass`
+- **THEN** the host-configured editor runs
 
 ### Requirement: GitHub authentication in the sandbox
 
-Because the host's `gh` keeps its credential in the OS keyring, which does not cross the sandbox boundary, the sandbox SHALL authenticate `gh` through a read-only mounted token file. The token SHALL NOT be passed through the container environment or appear in `docker inspect`.
+GitHub authentication SHALL use nono credential injection: the GitHub token is held by the broker outside the sandbox and injected only into allowed GitHub API requests. The token SHALL NOT appear in the sandboxed process environment or in the profile file.
 
 #### Scenario: gh can read pull requests
-- **WHEN** `gh pr view` runs inside the sandbox with a token file present
-- **THEN** it authenticates with that token and returns the pull request details
+- **WHEN** `gh pr view` runs inside the sandbox with a configured token
+- **THEN** it authenticates with the injected credential and returns the pull request details
 
 #### Scenario: Token stays out of the container environment
-- **WHEN** the container environment and configuration are inspected
-- **THEN** the GitHub token appears only in the read-only mounted file, not in environment variables
+- **WHEN** the sandboxed process environment and the profile are inspected
+- **THEN** the GitHub token appears in neither
 
 #### Scenario: Missing token file leaves gh unauthenticated
-- **WHEN** no token file exists
+- **WHEN** no token is configured
 - **THEN** the sandbox still starts and `gh` reports an authentication failure instead of failing the run
 
 ### Requirement: Per-project opt-in grants via manifest
 
-A per-project manifest (`pi-box.toml`) SHALL be the only mechanism for granting resources beyond the default set. Supported grants SHALL be: published ports, extra environment variables, extra read-only mounts, named Docker volumes, disabling the `~/.config/gh` mount, and privileged container mode. Grants not declared in the manifest SHALL NOT be present.
+A per-project nono profile (`pi-box.profile.json`) SHALL be the only mechanism for granting resources beyond the default set. The profile SHALL extend the deployed pi-box base profile by name, and nono SHALL merge every field of its profile schema; fields outside the schema SHALL fail the run with a validation error. Grants not declared in the profile or the base SHALL NOT be present.
 
 #### Scenario: Host database access
-- **WHEN** the manifest sets `DB_HOST=host.docker.internal` and the sandbox runs the project's feature tests
-- **THEN** the tests connect to the host's MySQL and no database credentials are duplicated in the manifest
+- **WHEN** the profile sets `network.connect_port` to the MySQL port and the sandbox runs the project's feature tests
+- **THEN** the tests connect to the host's MySQL without database credentials duplicated in the profile
 
 #### Scenario: Dropping the GitHub identity
-- **WHEN** the manifest disables the gh mount
-- **THEN** `~/.config/gh` is not present inside the sandbox
-
-#### Scenario: Named volume persists across runs
-- **WHEN** the manifest declares `volumes = ["pi-m2-example:/root/.m2"]` and a sandbox run writes files under `/root/.m2`
-- **THEN** a later sandbox run of the same project finds those files through the same volume
-
-#### Scenario: Privileged mode is opt-in
-- **WHEN** the manifest sets `privileged = true`
-- **THEN** the sandbox container starts in privileged mode and can create nested namespaces
+- **WHEN** the sandbox has no GitHub token file
+- **THEN** `gh` commands are unauthenticated and the read-only `~/.config/gh` grant carries no credentials
 
 #### Scenario: Undeclared grants are absent
-- **WHEN** the manifest declares no ports, env vars, volumes, extra mounts, or privileged mode
-- **THEN** the container publishes no ports, mounts no volumes, runs without privileged mode, and carries no extra grants
+- **WHEN** the profile declares no ports, env vars, or extra paths
+- **THEN** the sandbox grants no ports, carries no extra environment variables, and exposes no extra paths
+
+#### Scenario: Extra read-write path persists across runs
+- **WHEN** the profile grants a read-write path such as `~/.m2` via `filesystem.allow` and a run writes files there
+- **THEN** a later run of the same project finds those files
+
+#### Scenario: Named volume persists across runs
+- **WHEN** the profile sets a field outside the nono profile schema, such as `volumes`
+- **THEN** the run fails with a profile validation error instead of silently ignoring the field
+
+#### Scenario: Privileged mode is opt-in
+- **WHEN** the profile requests namespace isolation via `linux.isolate` on a host that cannot create the namespaces
+- **THEN** nono fails at startup rather than running with a degraded boundary
 
 ### Requirement: Project scaffold creation
 
-`pi-box init [--force] [template]` SHALL create `Dockerfile.pi` and `pi-box.toml` in the current project directory from the named template, or from the default template when no name is given. Existing files SHALL be backed up with a shared timestamp before being overwritten, and only when the user confirms interactively or `--force` is passed; otherwise they SHALL be left untouched. Both files SHALL be ignored by the user's global gitignore so they remain untracked in every repository.
+`pi-box init [--force] [template]` SHALL create the per-project profile (`pi-box.profile.json`) in the current project directory from the named template, or from the default template when no name is given. Existing files SHALL be backed up with a shared timestamp before being overwritten, and only when the user confirms interactively or `--force` is passed; otherwise they SHALL be left untouched. The profile SHALL be ignored by the user's global gitignore so it remains untracked in every repository.
 
 #### Scenario: Scaffold a new worktree
 - **WHEN** `pi-box init` runs in a project without the scaffold files
-- **THEN** both `Dockerfile.pi` and `pi-box.toml` are created from the default template
+- **THEN** `pi-box.profile.json` is created from the default template
 
 #### Scenario: Scaffold with a named template
 - **WHEN** `pi-box init php83` runs in a project without the scaffold files
-- **THEN** `Dockerfile.pi` matches the php83 template and `pi-box.toml` matches the template's manifest
+- **THEN** `pi-box.profile.json` matches the php83 template
 
 #### Scenario: Templates are listable
 - **WHEN** `pi-box init --list` runs
@@ -151,48 +159,32 @@ A per-project manifest (`pi-box.toml`) SHALL be the only mechanism for granting 
 - **THEN** init exits non-zero without writing anything and prints the available template names
 
 #### Scenario: Interactive overwrite backs up first
-- **WHEN** `pi-box init` runs in a project with existing scaffold files and the user answers yes to the single prompt
-- **THEN** each existing file is copied to `<file>.<YYYYmmdd-HHMMSS>.bak`, all backups from that run sharing the same timestamp, and the new files are written
+- **WHEN** `pi-box init` runs in a project with an existing scaffold file and the user answers yes to the single prompt
+- **THEN** the existing file is copied to `pi-box.profile.json.<YYYYmmdd-HHMMSS>.bak` and the new file is written
 
 #### Scenario: Idempotent scaffold
-- **WHEN** `pi-box init` runs in a project that already has the scaffold files and the user answers no
-- **THEN** the existing files are not modified
+- **WHEN** `pi-box init` runs in a project that already has the scaffold file and the user answers no
+- **THEN** the existing file is not modified
 
 #### Scenario: Non-interactive init never overwrites
-- **WHEN** `pi-box init` runs without a terminal in a project with existing scaffold files
-- **THEN** the existing files are not modified
+- **WHEN** `pi-box init` runs without a terminal in a project with an existing scaffold file
+- **THEN** the existing file is not modified
 
 #### Scenario: Force overwrites without prompting
-- **WHEN** `pi-box init --force php83` runs in a project with existing scaffold files
-- **THEN** the existing files are backed up with a shared timestamp and the template files are written without any prompt
+- **WHEN** `pi-box init --force php83` runs in a project with an existing scaffold file
+- **THEN** the existing file is backed up with a timestamp and the template file is written without any prompt
 
 #### Scenario: Scaffolds stay untracked
-- **WHEN** `git status` runs in any repository containing `Dockerfile.pi` or `pi-box.toml`
-- **THEN** neither file appears as untracked
-
-### Requirement: Automatic image build with shared common layers
-
-`pi-box` SHALL automatically build the required images before starting the sandbox, using Docker layer caching: a base image holding the common toolchain (built once and shared) and a thin per-project image built from the project's `Dockerfile.pi`. The base image SHALL order its layers stable-first so a Pi version bump does not invalidate the common layers. An unchanged `Dockerfile.pi` SHALL produce a near-instant cached rebuild; a changed one SHALL rebuild only the project layers.
-
-#### Scenario: First run builds images
-- **WHEN** `pi-box` runs and the base or project image does not exist
-- **THEN** the missing images are built automatically before the container starts
-
-#### Scenario: Identical scaffold across worktrees reuses layers
-- **WHEN** a second worktree builds a project image with `Dockerfile.pi` content identical to another worktree's
-- **THEN** the build completes with reused cached layers and stores no duplicate common layers
-
-#### Scenario: Dockerfile change rebuilds only project layers
-- **WHEN** the project's `Dockerfile.pi` is edited
-- **THEN** the next `pi-box` run rebuilds the project image while reusing the base image layers
+- **WHEN** `git status` runs in any repository containing `pi-box.profile.json`
+- **THEN** the file does not appear as untracked
 
 ### Requirement: GitHub SCP-style SSH remotes work without SSH credentials
 
-Git operations in the sandbox that target GitHub using SCP-style SSH URLs SHALL transparently use HTTPS and the existing in-container GitHub credential helper. This SHALL NOT require mounting SSH identities or changing the repository's configured remote URL.
+Git operations in the sandbox that target GitHub using SCP-style SSH URLs SHALL transparently use HTTPS and the host GitHub credential helper. This SHALL NOT require granting SSH identities or changing the repository's configured remote URL.
 
 #### Scenario: Fetch through a GitHub SSH-form remote
-- **WHEN** `git fetch`, `git ls-remote`, or a clone targets `git@github.com:ORG/REPO.git` and the sandbox has a valid GitHub token
-- **THEN** the operation succeeds over HTTPS using the in-container credential helper without an SSH agent
+- **WHEN** `git fetch`, `git ls-remote`, or a clone targets `git@github.com:ORG/REPO.git` and the sandbox has a valid GitHub credential
+- **THEN** the operation succeeds over HTTPS using the host credential helper without an SSH agent
 
 #### Scenario: Existing remote configuration remains unchanged
 - **WHEN** a Git operation uses an SSH-form GitHub remote in the sandbox
@@ -202,49 +194,9 @@ Git operations in the sandbox that target GitHub using SCP-style SSH URLs SHALL 
 - **WHEN** a Git operation targets an SSH URL for a host other than `github.com`
 - **THEN** the sandbox does not rewrite that URL as a GitHub HTTPS URL
 
-### Requirement: Python 3 interpreter in the shared base image
-The shared `pi-sandbox` image SHALL provide a Python 3 interpreter available as `python3` in both the base image and project images derived from it.
-
-#### Scenario: Python runs in the base image
-- **WHEN** `python3 --version` runs in a sandbox using the base image
-- **THEN** it succeeds and reports a Python 3 version
-
-#### Scenario: Python is inherited by project images
-- **WHEN** `python3 --version` runs in a sandbox using a project image derived from `pi-sandbox`
-- **THEN** it succeeds and reports a Python 3 version without project-specific Python installation
-
-### Requirement: Herdr agent state reporting through a filtered relay
-
-When `pi-box` runs inside a herdr pane, the sandbox SHALL report Pi's working, blocked, and idle states to herdr through a filtered host-side relay. The sandbox SHALL NOT receive the herdr API socket, and the relay SHALL forward only the two agent state report methods, with the pane id forced to the host pane's.
-
-#### Scenario: Sandboxed pane reports real agent states
-
-- **WHEN** `pi-box` is started in a herdr pane and the sandboxed Pi session begins, works, and blocks on user input
-- **THEN** the herdr agent sidebar shows working, blocked, and idle at the matching moments, as it does for a host Pi pane
-
-#### Scenario: Relay forwards only report methods
-
-- **WHEN** a process inside the sandbox connects to the socket path published to it and sends a method other than `pane.report_agent` or `pane.report_agent_session`
-- **THEN** the method is not forwarded to herdr and reaches no herdr API
-
-#### Scenario: Herdr API socket is not mounted
-
-- **WHEN** the container's mounts are inspected on a run inside a herdr pane
-- **THEN** the herdr API socket path is not present; only the relay socket is available
-
-#### Scenario: Reported session paths are host-valid
-
-- **WHEN** the sandboxed Pi reports its session and the reported path is under `/root/.pi/agent`
-- **THEN** herdr records the session path under the host Pi state directory instead
-
-#### Scenario: Outside a herdr pane nothing changes
-
-- **WHEN** `pi-box` runs without the herdr pane environment variables
-- **THEN** no relay is started, no herdr environment variables are forwarded, and the sandbox behaves as before this change
-
 ### Requirement: Herdr restart resume stays inside the sandbox
 
-When herdr restarts and types the Pi resume command into a restored pane shell that was running `pi-box`, the session SHALL resume inside the sandbox container, not in a host process.
+When herdr restarts and types the Pi resume command into a restored pane shell that was running `pi-box`, the session SHALL resume inside the sandbox, not in an unsandboxed host process.
 
 #### Scenario: Restart resume routes through pi-box
 
@@ -253,57 +205,109 @@ When herdr restarts and types the Pi resume command into a restored pane shell t
 
 #### Scenario: Session path is mapped into the container
 
-- **WHEN** the resumed `pi` invocation inside the container receives the host session path argument
-- **THEN** the argument points at the corresponding path under `/root/.pi/agent`, where the shared session file is mounted
+- **WHEN** the resumed sandboxed Pi receives the host session path argument
+- **THEN** the argument points at the host Pi state directory and the session resumes
 
 #### Scenario: Host pi usage is unchanged outside herdr panes
 
 - **WHEN** a user runs `pi` with any arguments in a shell that is not a herdr pane
 - **THEN** the real host `pi` binary runs, exactly as before this change
 
-### Requirement: Sandboxed Pi uses release 1.5.1
-The shared `pi-sandbox` base image SHALL install Pi coding-agent release `1.5.2`. Project images that do not replace the Pi executable SHALL inherit that release from the shared base image.
-
-#### Scenario: Base image provides Pi 1.5.1
-- **WHEN** `pi-box` rebuilds the shared base image after the Home Manager version pin is updated
-- **THEN** the `pi --version` command in the image reports `1.5.2`
-
-#### Scenario: Project image inherits Pi 1.5.1
-- **WHEN** a project image is built from the updated shared base image without replacing Pi
-- **THEN** the project's `pi --version` command reports `1.5.2`
-
-### Requirement: Neovim in the shared base image
-
-The shared `pi-sandbox` image SHALL provide the official Neovim v0.12.6 release (the latest stable release at this plan update), and project images derived from it SHALL inherit that version without project-specific installation.
-
-#### Scenario: Base image provides the pinned release
-- **WHEN** `nvim --version` runs in a sandbox using the base image
-- **THEN** it reports Neovim v0.12.6
-
-#### Scenario: Project images inherit Neovim
-- **WHEN** `nvim --version` runs in a project image derived from `pi-sandbox`
-- **THEN** it reports Neovim v0.12.6 without project-specific installation
-
-### Requirement: Nixvim plugins are available in the shared image
-
-The shared image SHALL provide the plugin runtime required by the mounted host Nixvim configuration, including TokyoNight, without requiring host Nix-store plugin/runtime mounts.
-
-#### Scenario: Host Nixvim configuration loads
-- **WHEN** Neovim starts with the mounted host configuration in a default sandbox
-- **THEN** the configured plugins, including TokyoNight, resolve and initialization reports no missing plugin-module errors
-
-#### Scenario: Plugin runtime does not add host grants
-- **WHEN** the default sandbox mounts are inspected
-- **THEN** plugin runtime files are provided by the image and no host Nix-store plugin/runtime path is mounted
-
 ### Requirement: Neovim is Pi's default external editor
 
-The shared `pi-sandbox` image SHALL configure `nvim` as Pi's external-editor fallback so Ctrl+G launches Neovim when no explicit Pi `externalEditor` setting is configured.
+The sandbox SHALL configure `nvim` as Pi's external-editor fallback so Ctrl+G launches Neovim when no explicit Pi `externalEditor` setting is configured.
 
 #### Scenario: Ctrl+G opens Neovim by default
 - **WHEN** Pi runs in a sandbox without an explicit `externalEditor` setting and the user invokes Ctrl+G
-- **THEN** the prompt opens in Neovim and returns to Pi after the editor exits successfully
+- **THEN** the prompt opens in the host Neovim and returns to Pi after the editor exits successfully
 
 #### Scenario: Explicit editor setting is preserved
 - **WHEN** Pi has an explicit `externalEditor` setting
 - **THEN** Pi uses that configured command instead of the `EDITOR` fallback
+
+### Requirement: Default-deny network with domain allowlist
+The sandbox SHALL deny all outbound network access except connections to allowlisted domains: LLM API providers, GitHub and git hosting, and package registries. Connections to unlisted destinations SHALL fail closed.
+
+#### Scenario: Provider requests succeed
+- **WHEN** sandboxed Pi makes a provider request to an allowlisted LLM API domain
+- **THEN** the request completes
+
+#### Scenario: Unknown domain is blocked
+- **WHEN** a process in the sandbox connects to a domain outside the allowlist
+- **THEN** the connection is refused and the sandbox keeps running
+
+#### Scenario: Localhost services require an opt-in port grant
+- **WHEN** the sandboxed process connects to a host localhost port that the profile did not grant
+- **THEN** the connection is refused
+
+### Requirement: Endpoint-restricted GitHub API access
+GitHub API traffic from the sandbox SHALL be limited to allowlisted method and path patterns. Read access to issues and pull requests and pull-request creation on the configured work organizations SHALL be allowed; destructive endpoints SHALL be denied.
+
+#### Scenario: Reading pull requests is allowed
+- **WHEN** `gh pr view` runs inside the sandbox against a repository the profile allows
+- **THEN** the request succeeds and returns the pull request details
+
+#### Scenario: Destructive endpoints are denied
+- **WHEN** a process in the sandbox calls a destructive GitHub API endpoint such as repository deletion
+- **THEN** the request is refused and recorded in the audit log
+
+### Requirement: Sandbox operations are audited
+Blocked network requests and denied operations SHALL be recorded in a tamper-evident audit log that remains readable on the host after the session ends.
+
+#### Scenario: Blocked request is recorded
+- **WHEN** a sandboxed process attempts a blocked outbound connection
+- **THEN** the attempt appears in the session's audit record
+
+#### Scenario: Audit record survives the session
+- **WHEN** the sandbox session has ended
+- **THEN** the audit record is readable on the host
+
+### Requirement: Privilege escalation and destructive commands are blocked
+The sandbox SHALL refuse privilege-escalation and destructive commands, including indirect invocation through shell chains, before they execute.
+
+#### Scenario: Privilege escalation is refused
+- **WHEN** a process in the sandbox attempts to run `sudo`
+- **THEN** the command is refused and the sandbox keeps running
+
+#### Scenario: Blocking survives shell chains
+- **WHEN** a sandboxed shell runs a chained command such as `false && sudo id`
+- **THEN** the privileged command is still refused
+
+### Requirement: Herdr agent state reporting
+
+When `pi-box` runs inside a herdr pane, the sandbox SHALL report Pi's working, blocked, and idle states to herdr directly through the herdr socket, as host Pi does. No relay process SHALL be started.
+
+#### Scenario: Sandboxed pane reports real agent states
+
+- **WHEN** `pi-box` is started in a herdr pane and the sandboxed Pi session begins, works, and blocks on user input
+- **THEN** the herdr agent sidebar shows working, blocked, and idle at the matching moments, as it does for a host Pi pane
+
+#### Scenario: No relay process runs
+
+- **WHEN** a sandbox run inside a herdr pane is inspected
+- **THEN** no relay process exists; the sandboxed session connects to the herdr socket directly
+
+#### Scenario: Outside a herdr pane nothing changes
+
+- **WHEN** `pi-box` runs without the herdr pane environment variables
+- **THEN** no herdr connection is attempted and the sandbox behaves as a plain run
+
+### Requirement: Sandboxed Pi uses the home-manager Pi release
+
+The sandbox SHALL run the Pi release installed by home-manager (currently 1.5.2), with no separately pinned image copy.
+
+#### Scenario: Sandbox runs the home-manager release
+- **WHEN** `pi --version` runs in a sandbox after the home-manager Pi package is updated
+- **THEN** the sandbox reports the same version as host Pi
+
+### Requirement: Deployed shared base profile
+
+Home Manager SHALL deploy a shared base profile to `~/.config/nono/profiles/pi-box.json` containing the default grants, the network allowlist, and the environment deny-list. Project profiles and the wrapper's per-run overlay SHALL compose with it through nono's own profile inheritance.
+
+#### Scenario: Base profile is deployed and valid
+- **WHEN** home-manager has been applied
+- **THEN** `~/.config/nono/profiles/pi-box.json` exists and passes `nono profile validate`
+
+#### Scenario: Overlay composes with the base
+- **WHEN** `pi-box` runs and the effective grants are inspected
+- **THEN** the base grants, the project profile's grants, and the overlay grants are all present
