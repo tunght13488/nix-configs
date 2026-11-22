@@ -2,9 +2,9 @@
 
 ## 1. NixOS configuration
 
-- [ ] 1.1 Create `nixos/tailscale.nix` with `services.tailscale.enable = true` and `openFirewall = true`, plus a header comment documenting the one-time `sudo tailscale up --ssh` bootstrap; verify `make os-build` evaluates successfully
-- [ ] 1.2 Import `./tailscale.nix` from `nixos/configuration.nix`; verify `make os-build` still evaluates
-- [ ] 1.3 `git add nixos/tailscale.nix`; verify `git status` shows the new file staged (flake evaluation requires the file to be tracked)
+- [x] 1.1 Create `nixos/tailscale.nix` with `services.tailscale.enable = true` and `openFirewall = true`, plus a header comment documenting the one-time `sudo tailscale up --ssh` bootstrap; verify `make os-build` evaluates successfully
+- [x] 1.2 Import `./tailscale.nix` from `nixos/configuration.nix`; verify `make os-build` still evaluates
+- [x] 1.3 `git add nixos/tailscale.nix`; verify `git status` shows the new file staged (flake evaluation requires the file to be tracked)
 
 ## 2. Bootstrap (human, on the machine)
 

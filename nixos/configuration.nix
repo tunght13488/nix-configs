@@ -29,6 +29,7 @@ in
     ./agenix.nix
     ./postgres.nix
     ./litellm.nix
+    ./tailscale.nix
   ];
 
   nixpkgs = {
