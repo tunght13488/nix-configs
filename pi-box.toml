@@ -1,0 +1,30 @@
+# pi-box manifest for this Nix configuration repository.
+#
+# Default grants (no manifest needed): the project directory (read-write),
+# ~/.pi/agent (read-write), ~/.config/git (read-only), ~/.config/gh
+# (read-only). ~/.aws, ~/.ssh and the 1Password socket are never mounted.
+#
+# The named volume keeps the sandbox's private Nix store (/nix) across runs, so
+# nixpkgs, flake inputs and built paths are downloaded once instead of on every
+# run. It is not a host path: the host /nix store and Nix daemon stay outside the
+# sandbox. Worktrees of this repository share the volume deliberately - Nix
+# store paths are content addressed, so a shared store only saves downloads.
+# Remove it with `docker volume rm pi-nix-configs-nix` once the sandbox is gone.
+#
+# `privileged = true` is required by Nix's build sandbox: it creates nested
+# user/mount/PID namespaces, which rootless Docker only permits in privileged
+# mode (capabilities alone are not enough). The Dockerfile pairs this with
+# `sandbox-fallback = false`, so builds fail loudly instead of silently running
+# unsandboxed. Drop this line only if you accept unsandboxed builds.
+
+gh = true
+
+privileged = true
+
+ports = []
+
+mounts = []
+
+volumes = ["pi-nix-configs-nix:/nix"]
+
+[env]
