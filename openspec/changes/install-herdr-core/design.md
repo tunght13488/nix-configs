@@ -6,14 +6,14 @@
 - The herdr-core upstream repo has **no flake.nix**. It is a Rust workspace (edition 2024) with `crates/herdr-core` (binary `herdr-core`, upstream installs it with an `hc` symlink) and `crates/ghostty-vt`, whose `build.rs` runs `zig build -Demit-lib-vt -Doptimize=ReleaseFast -Dcpu=baseline` inside the `vendor/ghostty` git submodule and requires Zig 0.16 (`ZIG` env var).
 - Verified empirically: flake `github:` inputs do **not** fetch git submodules — fetching `github:herdrdev/herdr-core/v0.1.21` as a `flake = false` input leaves `vendor/ghostty` empty. `fetchFromGitHub { fetchSubmodules = true; }` is required.
 - nixpkgs 26.05 provides `zig_0_16` (0.16.0) and `zig_0_16.fetchDeps` (`pkgs/development/compilers/zig/fetcher.nix`), which runs `zig build --fetch` in a given source and captures the Zig package-manager global cache (`p/`) as a store path.
-- The herdr input is pinned to v0.9.5, the latest stable release at planning time, but the locked rev is stale against the tag's current commit, so `nix flake update herdr` is a real change.
+- The herdr input is pinned to v0.9.5, the latest stable release (verified at implementation time: no newer tag, and the locked rev `2ecf19a` is the tag's commit, so `nix flake update herdr` is a no-op).
 
 ## Goals / Non-Goals
 
 **Goals:**
 
 - Build `herdr-core` hermetically on x86_64-linux from the pinned upstream source, with `hc` on PATH.
-- Refresh the herdr input to the latest stable release tag.
+- Confirm the herdr input is at the latest stable release tag.
 
 **Non-Goals:**
 
@@ -50,7 +50,7 @@ Add `herdr-core` to `home.packages` in `home-manager/home.nix` next to the exist
 
 ### 5. Herdr update via `nix flake update herdr`
 
-Run `nix flake update herdr` to refresh the lock to the v0.9.5 tag's current commit, and check the GitHub latest release at implementation time; if a stable release newer than v0.9.5 exists, bump `inputs.herdr.url` to it and re-run the update.
+Run `nix flake update herdr` and check the GitHub latest release at implementation time; if a stable release newer than v0.9.5 exists, bump `inputs.herdr.url` to it and re-run the update. Implemented as a verification: v0.9.5 was still latest and the lock already held its commit, so the update reported no change.
 
 ## Risks / Trade-offs
 

@@ -27,6 +27,10 @@ pkgs: {
     litellmSchema = "${pkgs.unstable.python313Packages.litellm.src}/litellm/proxy/schema.prisma";
   };
 
+  # herdr-core (`hc`): headless terminals that outlive the client.
+  # Consumers: home-manager/home.nix (`home.packages`).
+  herdr-core = pkgs.callPackage ./herdr-core.nix { };
+
   # Official upstream AppImage, pinned.  See pkgs/obsidian.nix for update steps.
   obsidian = pkgs.callPackage ./obsidian.nix { };
 

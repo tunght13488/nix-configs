@@ -76,6 +76,7 @@
     unstable.jetbrains-toolbox
     mycli
     unstable.postman
+    herdr-core
     nodejs
     nil
     nixd

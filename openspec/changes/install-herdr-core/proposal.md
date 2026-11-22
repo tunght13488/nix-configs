@@ -8,7 +8,7 @@ Herdr split off `herdr-core` (`hc`), a headless core that keeps terminals and co
 
 - Add a Nix package derivation `pkgs/herdr-core.nix` that builds the `hc` binary from `github:herdrdev/herdr-core` pinned at tag `v0.1.21` (fetched with its Ghostty vendor submodule), exposed through the `additions` overlay and as `nix build .#herdr-core`.
 - Install `herdr-core` into the managed user environment via `home.packages` in `home-manager/home.nix`, alongside the herdr TUI.
-- Refresh the herdr input with `nix flake update herdr`; if a stable release newer than the current pin (v0.9.5, the latest at planning time) exists at implementation time, bump the pin to it.
+- Confirm the herdr input tracks the latest stable release with `nix flake update herdr`; if a stable release newer than the current pin (v0.9.5, the latest at implementation time) exists, bump the pin to it.
 - Keep the herdr TUI installed and its config bootstrapping and skill linking unchanged; `hc` is additive, not a replacement.
 
 ## Capabilities
