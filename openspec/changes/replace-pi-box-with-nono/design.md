@@ -21,9 +21,18 @@ pi-box is currently a rootless-Docker sandbox: a `pi-box` shell wrapper (481 lin
 
 ## Decisions
 
-### 1. Generated per-run profile, not a checked-in profile
+### 1. Named base profile plus a per-run overlay
 
-`pi-box` composes the session profile at launch: defaults (shared grants, network groups, gh credential rules) + template fragment (when the template ships one) + `pi-box.toml` overrides, written to `~/.pi/sandbox/runtime/` and passed with `nono run --profile <path> -- pi ...`. Alternatives: a static per-project profile file would duplicate the default block in every project and could not compute dynamic grants (worktree git common dir, `~/.config/nvim` existence); nono packs would require publishing and distributing local machine policy.
+Home Manager deploys the static policy as the named profile
+`~/.config/nono/profiles/pi-box.json` (default grants, network allowlist, environment
+denies). A project's `pi-box.profile.json` extends it by name, and the wrapper generates only
+the parts that cannot be static - the workspace grant, a worktree's git common dir, the
+repository root `AGENTS.md`, the herdr socket, and the gh token route - as the named overlay
+`pi-box-overlay-<project>` in the same directory. The run is
+`nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`, and nono unions
+filesystem grants across the chain (verified against 0.82: lists concatenate). Alternatives:
+a single wrapper-generated profile duplicated the base in every run and re-implemented merge
+semantics that nono already has; packs are for sharing policy, not per-machine grants.
 
 ### 2. Filesystem grants mirror the current mount set
 
@@ -35,7 +44,7 @@ The existing `~/.pi/sandbox/gh-token` file (mode 600, check kept in the wrapper)
 
 ### 4. Network allowlist from nono preset groups
 
-The profile uses the `llm_apis`, `github`, `package_registries`, `sigstore`, and `documentation` groups, plus per-manifest `allow_domain` additions; everything else is denied. The `DB_HOST=host.docker.internal` workaround disappears: `php83`/`php82` set `DB_HOST=127.0.0.1` and declare the MySQL port as an open-port grant so localhost outbound is explicit.
+The profile uses the `llm_apis`, `github`, `package_registries`, `sigstore`, and `documentation` groups, plus per-profile `allow_domain` additions; everything else is denied. The `DB_HOST=host.docker.internal` workaround disappears: `php83`/`php82` set `DB_HOST=127.0.0.1` and declare the MySQL port as a connect-port grant so localhost outbound is explicit.
 
 ### 5. GitHub SSH-remote rewrite moves into the wrapper
 
@@ -47,15 +56,21 @@ The sandboxed process is host-native, so it connects to the herdr socket directl
 
 ### 7. Templates become manifests plus optional fragments
 
-Each template directory ships `pi-box.toml` (the per-project manifest, same `init` UX and gitignore treatment) and may ship a `profile.json` fragment merged into the generated profile. Toolchain templates stop provisioning toolchains: the host home-manager toolchains and project devShells supply PHP 8.2/8.3, JDK 8, Node 22, and the Nix toolchain. `java8` grants `~/.m2` (host cache persists natively, no volume). `nix-configs` drops the private store: `nix build` runs as a client against the host daemon (which sandboxes builds in its own daemon-side sandbox, unaffected by the client's Landlock profile); the profile grants `/nix/store` read and the daemon socket. `knowledge-assistant` pins `mmdlint` via `npx` (npm registry is in `package_registries`).
+Each template directory ships `pi-box.profile.json` (a standard nono profile, same `init` UX and gitignore treatment); the wrapper merges its supported fields into the generated profile. Toolchain templates stop provisioning toolchains: the host home-manager toolchains and project devShells supply PHP 8.2/8.3, JDK 8, Node 22, and the Nix toolchain. `java8` grants `~/.m2` (host cache persists natively, no volume). `nix-configs` drops the private store: `nix build` runs as a client against the host daemon (which sandboxes builds in its own daemon-side sandbox, unaffected by the client's Landlock profile); the profile grants `/nix/store` read and the daemon socket. `knowledge-assistant` pins `mmdlint` via `npx` (npm registry is in `package_registries`).
 
-### 8. Module shape
+### 8. Module shape and nono pin
 
-`home-manager/pi-sandbox.nix` installs `pkgs.nono` and the rewritten `pi-box` wrapper, deploys the template directory and a shared `defaults` profile fragment, and keeps the gh-token documentation. The `piVersion` image pin is removed; the home-manager Pi package is the single source of the sandboxed Pi version.
+`home-manager/pi-sandbox.nix` installs the pinned nono and the `pi-box` wrapper on PATH,
+deploys the base profile to `~/.config/nono/profiles/pi-box.json` (with absolute paths
+substituted from `config.home.homeDirectory`), and deploys the template directory. Nono is
+pinned to the upstream release binary via `pkgs/nono.nix` (0.82.0; 26.05's 0.61.1 predates
+the custom credential routes the design depends on), wrapped with socat and bubblewrap on
+PATH. The `piVersion` image pin is removed; the home-manager Pi package is the single source
+of the sandboxed Pi version.
 
 ## Risks / Trade-offs
 
-- [nono is pre-1.0 with fast version churn and schema drift] → Pin the version in home-manager; keep all profile generation in one function so a schema change is a single edit; bump deliberately with a test run.
+- [nono is pre-1.0 with fast version churn and schema drift] → Pin the version in `pkgs/nono.nix`; the wrapper generates only a small overlay, and the base profile is a plain nono file, so a schema change is a single edit; bump deliberately with a test run.
 - [TUI behavior under the sandbox (TTY, SIGWINCH, Ctrl+G editor spawn)] → Spike early in implementation; if the TUI breaks, investigate nono's pty handling before proceeding.
 - [Landlock or seccomp restrictions on this host] → Spike first (`nono run --block-net --allow-cwd -- <command>`); fail with a clear error if unsupported, never degrade silently.
 - [gh OS-keyring auth inside the sandbox (D-Bus reachability)] → The injected-token path is the primary mechanism and does not need the keyring; if the host `gh` still tries the keyring first, wrapper config pins `gh` to the injected credential path.

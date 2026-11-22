@@ -1,0 +1,10 @@
+{
+  "extends": "pi-box",
+  "meta": {
+    "name": "pi-box knowledge-assistant",
+    "description": "Mermaid validation: npx cache for the pinned mmdlint package."
+  },
+  "filesystem": {
+    "allow": ["~/.npm"]
+  }
+}

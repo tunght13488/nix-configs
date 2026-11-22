@@ -77,6 +77,18 @@ The sandbox SHALL run the Pi release installed by home-manager (currently 1.5.2)
 - **WHEN** `pi --version` runs in a sandbox after the home-manager Pi package is updated
 - **THEN** the sandbox reports the same version as host Pi
 
+### Requirement: Deployed shared base profile
+
+Home Manager SHALL deploy a shared base profile to `~/.config/nono/profiles/pi-box.json` containing the default grants, the network allowlist, and the environment deny-list. Project profiles and the wrapper's per-run overlay SHALL compose with it through nono's own profile inheritance.
+
+#### Scenario: Base profile is deployed and valid
+- **WHEN** home-manager has been applied
+- **THEN** `~/.config/nono/profiles/pi-box.json` exists and passes `nono profile validate`
+
+#### Scenario: Overlay composes with the base
+- **WHEN** `pi-box` runs and the effective grants are inspected
+- **THEN** the base grants, the project profile's grants, and the overlay grants are all present
+
 ## MODIFIED Requirements
 
 ### Requirement: Per-project sandboxed Pi session
@@ -97,7 +109,7 @@ Running `pi-box` in a project directory SHALL start an interactive Pi session un
 
 ### Requirement: Least-privilege default grant set
 
-By default the sandbox SHALL grant exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), `/tmp` and the user cache directory (read-write), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write). The sandbox SHALL NOT grant `~/.aws`, `~/.ssh`, the 1Password agent socket, or any other host path.
+By default the sandbox SHALL grant exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), a private scratch directory `~/.pi/sandbox/tmp` (read-write, exported as `TMPDIR`), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write, Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write, the nvim Copilot client's auth store), `/nix` (read-only), the sandbox runtime directory `~/.pi/sandbox/runtime` (read-only, holding the generated launcher and profile), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write) and the repository root's `AGENTS.md` (read-only). The sandbox SHALL NOT grant `~/.aws`, `~/.ssh`, the 1Password agent socket, `~/.cache`, `/tmp`, or any other host path.
 
 #### Scenario: AWS credentials inaccessible
 - **WHEN** a process in the sandbox opens a file under `~/.aws` (including the SSO token cache)
@@ -109,7 +121,7 @@ By default the sandbox SHALL grant exactly these host resources: the project wor
 
 #### Scenario: Only granted paths are mounted
 - **WHEN** the session's effective grants are inspected on a default run
-- **THEN** the granted host paths are exactly the workspace, `~/.pi/agent`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `/tmp`, the user cache directory, plus the project's git directory when it lives outside the workspace
+- **THEN** the granted host paths are exactly the workspace, `~/.pi/agent`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.pi/sandbox/tmp`, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
 
 #### Scenario: Neovim configuration is available read-only
 - **WHEN** the host's `~/.config/nvim` exists and a default sandbox run starts
@@ -122,6 +134,10 @@ By default the sandbox SHALL grant exactly these host resources: the project wor
 #### Scenario: Git metadata outside the workspace is usable
 - **WHEN** the project is a worktree in a bare-repository layout and `git status`, `git log`, or a commit runs inside the sandbox
 - **THEN** the command succeeds against the same repository as on the host
+
+#### Scenario: Repository root instructions readable
+- **WHEN** the project is a worktree in a bare-repository layout and Pi reads the repository root `AGENTS.md`
+- **THEN** the file content is accessible read-only
 
 #### Scenario: Plain project adds no extra mount
 - **WHEN** the project's `.git` is a directory inside the workspace
@@ -181,39 +197,43 @@ GitHub authentication SHALL use nono credential injection: the GitHub token is h
 
 ### Requirement: Per-project opt-in grants via manifest
 
-A per-project manifest (`pi-box.toml`) SHALL be the only mechanism for granting resources beyond the default set. Supported grants SHALL be: listened and published ports, localhost outbound ports, extra environment variables, extra read-only paths, and disabling the `~/.config/gh` grant. Grants not declared in the manifest SHALL NOT be present.
+A per-project nono profile (`pi-box.profile.json`) SHALL be the only mechanism for granting resources beyond the default set. The profile SHALL extend the deployed pi-box base profile by name, and nono SHALL merge every field of its profile schema; fields outside the schema SHALL fail the run with a validation error. Grants not declared in the profile or the base SHALL NOT be present.
 
 #### Scenario: Host database access
-- **WHEN** the manifest grants the MySQL localhost port and the sandbox runs the project's feature tests
-- **THEN** the tests connect to the host's MySQL without database credentials duplicated in the manifest
+- **WHEN** the profile sets `network.connect_port` to the MySQL port and the sandbox runs the project's feature tests
+- **THEN** the tests connect to the host's MySQL without database credentials duplicated in the profile
 
 #### Scenario: Dropping the GitHub identity
-- **WHEN** the manifest disables the gh grant
-- **THEN** `~/.config/gh` is not accessible inside the sandbox
+- **WHEN** the sandbox has no GitHub token file
+- **THEN** `gh` commands are unauthenticated and the read-only `~/.config/gh` grant carries no credentials
 
 #### Scenario: Undeclared grants are absent
-- **WHEN** the manifest declares no ports, env vars, extra paths, or gh changes
+- **WHEN** the profile declares no ports, env vars, or extra paths
 - **THEN** the sandbox grants no ports, carries no extra environment variables, and exposes no extra paths
 
+#### Scenario: Extra read-write path persists across runs
+- **WHEN** the profile grants a read-write path such as `~/.m2` via `filesystem.allow` and a run writes files there
+- **THEN** a later run of the same project finds those files
+
 #### Scenario: Named volume persists across runs
-- **WHEN** the manifest declares `volumes = ["pi-m2-example:/root/.m2"]`
-- **THEN** `pi-box` refuses to start and reports that named volumes are no longer supported
+- **WHEN** the profile sets a field outside the nono profile schema, such as `volumes`
+- **THEN** the run fails with a profile validation error instead of silently ignoring the field
 
 #### Scenario: Privileged mode is opt-in
-- **WHEN** the manifest sets `privileged = true`
-- **THEN** `pi-box` refuses to start and reports that privileged mode is no longer supported
+- **WHEN** the profile requests namespace isolation via `linux.isolate` on a host that cannot create the namespaces
+- **THEN** nono fails at startup rather than running with a degraded boundary
 
 ### Requirement: Project scaffold creation
 
-`pi-box init [--force] [template]` SHALL create the per-project manifest (`pi-box.toml`) in the current project directory from the named template, or from the default template when no name is given. Existing files SHALL be backed up with a shared timestamp before being overwritten, and only when the user confirms interactively or `--force` is passed; otherwise they SHALL be left untouched. The manifest SHALL be ignored by the user's global gitignore so it remains untracked in every repository.
+`pi-box init [--force] [template]` SHALL create the per-project profile (`pi-box.profile.json`) in the current project directory from the named template, or from the default template when no name is given. Existing files SHALL be backed up with a shared timestamp before being overwritten, and only when the user confirms interactively or `--force` is passed; otherwise they SHALL be left untouched. The profile SHALL be ignored by the user's global gitignore so it remains untracked in every repository.
 
 #### Scenario: Scaffold a new worktree
 - **WHEN** `pi-box init` runs in a project without the scaffold files
-- **THEN** `pi-box.toml` is created from the default template
+- **THEN** `pi-box.profile.json` is created from the default template
 
 #### Scenario: Scaffold with a named template
 - **WHEN** `pi-box init php83` runs in a project without the scaffold files
-- **THEN** `pi-box.toml` matches the php83 template
+- **THEN** `pi-box.profile.json` matches the php83 template
 
 #### Scenario: Templates are listable
 - **WHEN** `pi-box init --list` runs
@@ -225,7 +245,7 @@ A per-project manifest (`pi-box.toml`) SHALL be the only mechanism for granting 
 
 #### Scenario: Interactive overwrite backs up first
 - **WHEN** `pi-box init` runs in a project with an existing scaffold file and the user answers yes to the single prompt
-- **THEN** the existing file is copied to `pi-box.toml.<YYYYmmdd-HHMMSS>.bak` and the new file is written
+- **THEN** the existing file is copied to `pi-box.profile.json.<YYYYmmdd-HHMMSS>.bak` and the new file is written
 
 #### Scenario: Idempotent scaffold
 - **WHEN** `pi-box init` runs in a project that already has the scaffold file and the user answers no
@@ -240,7 +260,7 @@ A per-project manifest (`pi-box.toml`) SHALL be the only mechanism for granting 
 - **THEN** the existing file is backed up with a timestamp and the template file is written without any prompt
 
 #### Scenario: Scaffolds stay untracked
-- **WHEN** `git status` runs in any repository containing `pi-box.toml`
+- **WHEN** `git status` runs in any repository containing `pi-box.profile.json`
 - **THEN** the file does not appear as untracked
 
 ### Requirement: GitHub SCP-style SSH remotes work without SSH credentials

@@ -142,55 +142,87 @@ Do not use `command ls` etc. — it triggers repeated approval prompts. Run alia
 
 ## Sandboxed Pi (`pi-box`)
 
-`pi-box` runs Pi in a per-project rootless-Docker container instead of on the host, so the
-agent never sees `~/.aws`, `~/.ssh`, or the 1Password socket. Installed by
-`home-manager/pi-sandbox.nix`; the base image Dockerfile deploys to
-`~/.pi/sandbox/Dockerfile`.
+`pi-box` runs Pi in a per-project nono capability sandbox instead of on the host, so the agent
+never sees `~/.aws`, `~/.ssh`, or the 1Password socket. Nono enforces the grant set with the
+kernel (Landlock), so ungranted paths are unreadable rather than merely unmounted. Installed
+by `home-manager/pi-sandbox.nix`; the wrapper is `home-manager/pi-box.sh`. Nono itself is a
+pinned upstream release (see `pkgs/nono.nix`, currently 0.82.0) and is on `PATH` as `nono`.
 
 ```bash
 pi-box                    # start Pi in the current directory's sandbox
 pi-box -p "run the tests" # pass arguments to Pi (non-interactive here)
-pi-box init               # scaffold Dockerfile.pi and pi-box.toml (default template)
+pi-box init               # scaffold pi-box.profile.json (default template)
 pi-box init php83         # scaffold from a named template
 pi-box init --list        # list the available templates
-pi-box init --force php83 # back up and overwrite existing scaffold files
+pi-box init --force php83 # back up and overwrite an existing pi-box.profile.json
+pi-box profile            # print the per-run overlay profile and exit
 pi-box help               # usage summary
 ```
 
-Herdr recognizes `pi-box` panes as the `pi` agent (screen-manifest detection; `HERDR_AGENT`
-is set to `pi` on the host-side wrapper process). Override per run with `HERDR_AGENT=... pi-box`
-if ever needed.
+The policy is split in two, and nono merges them itself:
 
-Agent states (working, blocked, idle) come from Pi's own herdr extension, not from screen
-matching: inside a herdr pane `pi-box` starts `~/.pi/sandbox/pi-herdr-relay.py` and gives the
-container only that relay socket. The relay forwards nothing but `pane.report_agent` and
-`pane.report_agent_session`, forces the host pane id, and rewrites reported session paths to
-the host view. Herdr's own API socket is never mounted — it can read and drive every pane.
-Outside a herdr pane no relay starts and nothing is forwarded.
+- The **base profile** `~/.config/nono/profiles/pi-box.json`, deployed by home-manager: the
+  default grants below, the network allowlist, and the environment deny-list. It is static.
+- The **per-run overlay** `pi-box-overlay-<project>`, generated into the same directory: the
+  parts that cannot be static — the workspace grant, a worktree's git common directory, the
+  repository root `AGENTS.md`, the herdr socket, and the GitHub token route (when the token
+  file exists).
 
-Herdr resumes a restarted pane by typing `pi --session <host path>` into the pane shell, which
-would run the agent on the host. A `pi` zsh function in `home-manager/zsh.nix` routes exactly
-that invocation (only when `HERDR_ENV=1` and the path is under `~/.pi/agent/`) through
-`pi-box`, and `pi-box` maps the path to `/root/.pi/agent/...` inside the container, so a
-resumed session stays sandboxed. Every other `pi` invocation runs the real binary, including
-all of them outside herdr panes. Limitation: this relies on the pane shell being zsh.
+A project's `pi-box.profile.json` is a standard nono profile with `"extends": "pi-box"`, and
+`pi-box` runs `nono run --profile <project profile|pi-box> --extends pi-box-overlay-<project>`;
+nono unions the filesystem grants across the chain. `pi-box profile` prints the overlay and
+the base lives next to it — together they are the whole policy, which is the fastest way to
+see what a project actually grants.
 
-Default grants: the project directory (read-write, at its host absolute path),
-`~/.pi/agent` (read-write — provider credentials, settings, sessions, skills and trust are
-shared with host Pi, so no login step is needed in the sandbox), `~/.config/git` and
-`~/.config/gh` (read-only), and `~/.config/nvim` (read-only when present). Never
-granted: `~/.aws`, `~/.ssh`, the 1Password agent socket, and every other host path.
-Pi's Ctrl+G editor uses `nvim` via `EDITOR=nvim` unless the shared Pi settings
-specify an explicit `externalEditor`.
+Default grants: the project directory (read-write, at its host absolute path), `~/.pi/agent`
+(read-write — provider credentials, settings, sessions, skills and trust are shared with host
+Pi, so no login step is needed), `~/.pi/sandbox/tmp` (read-write, exported as `TMPDIR` via the short `~/.pi-tmp` symlink, because nixos-rebuild falls back to the denied `/tmp` when `TMPDIR` exceeds its 45-byte SSH control-socket limit),
+`~/.config/git`, `~/.config/gh` and `~/.config/nvim` (read-only), `~/.local/state/nvim` and
+`~/.local/share/nvim` (read-write — Neovim's shaDa, plugin logs and data),
+`~/.config/github-copilot` (read-write — the nvim Copilot client's auth store), and `/nix` (read-only — the
+Nix store, needed for the targets of home-manager's symlinks and for the PATH the generated
+launcher sets), and `~/.pi/sandbox/runtime` (read-only — the launcher and profile files).
+Worktrees whose git directory sits outside the workspace also get that git directory
+(read-write) and the repository root's `AGENTS.md` (read-only). Never granted: `~/.aws`,
+`~/.ssh`, the 1Password agent socket, `~/.cache`, `/tmp`, and every other host path. Pi's
+Ctrl+G editor uses `nvim` via `EDITOR=nvim` unless the shared Pi settings specify an
+explicit `externalEditor`.
 
 Worktree projects also get their git directory: when `git rev-parse --git-common-dir` for the
-workspace resolves outside it (the bare+worktree layout used here), `pi-box` mounts that
+workspace resolves outside it (the bare+worktree layout used here), `pi-box` grants that
 directory read-write, so `git status`, `git log` and commits work inside the sandbox. Plain
-single-directory repositories get no extra mount.
+single-directory repositories get no extra grant.
 
-GitHub identity needs one extra file: host `gh` keeps its token in the OS keyring, which
-does not cross into the container, so `pi-box` reads `~/.pi/sandbox/gh-token` (mode 600)
-when present, mounts it read-only, and exports `GH_TOKEN` inside the container only.
+Herdr detects a pane's agent by its foreground process, so `pi-box` execs nono under the name
+`pi` (a symlink to the unwrapped nono ELF with `exec -a pi`), making the pane foreground read
+as `pi` exactly like a host pi pane. Agent states (working, blocked, idle) come from Pi's own
+herdr extension: the sandboxed session is a host process, so it connects to the herdr socket
+directly, granted through the profile. There is no relay process and no session-path mapping
+any more — the session path herdr types is already a host path.
+
+Herdr resumes a restarted pane by typing `pi --session <host path>` into the pane shell, which
+would run the agent unsandboxed. A `pi` zsh function in `home-manager/zsh.nix` routes exactly
+that invocation (only when `HERDR_ENV=1` and the path is under `~/.pi/agent/`) through
+`pi-box`. Every other `pi` invocation runs the real binary, including all of them outside
+herdr panes. Limitation: this relies on the pane shell being zsh.
+
+Network is default-deny. The profile uses nono's `developer` network profile (LLM APIs,
+package registries, GitHub, sigstore, docs), adds pi's own providers explicitly — GitHub
+Copilot (`*.githubcopilot.com`, its business proxy `proxy.business.githubcopilot.com`, plus the
+`/copilot_internal/**` OAuth exchange path on api.github.com), OpenCode (`opencode.ai`,
+`api.opencode.ai`), and the pi-web-access providers (Exa, Tavily, Brave Search, Serper, Kagi,
+Jina) — and everything else fails closed with a 403 from the local proxy. Arbitrary-URL
+reading works through `r.jina.ai` when the Jina reader fallback is enabled in
+`~/.pi/agent/web-search.json`; otherwise per-project domains go in `pi-box.profile.json`.
+Blocked attempts are visible with `nono audit list` / `nono audit show`.
+
+**GitHub access is endpoint-restricted.** `pi-box` reads `~/.pi/sandbox/gh-token` (mode 600)
+when present and declares it as a nono credential route: the token stays outside the sandbox,
+`gh` sees only a phantom in `GH_TOKEN`, and the proxy swaps in the real token per request. The
+route allows `GET /user`, `GET /repos/**`, `GET /search/**`, `GET /notifications`,
+`POST /repos/*/pulls`, `POST /copilot_internal/**` (the Copilot OAuth exchange) and
+`POST /graphql`; everything else, including every DELETE and PATCH, is refused. The `POST /graphql` rule is the loose end — GraphQL is one endpoint, so path rules
+cannot separate a query from a mutation.
 
 ```bash
 mkdir -p ~/.pi/sandbox && install -m 600 /dev/null ~/.pi/sandbox/gh-token
@@ -201,44 +233,39 @@ cat > ~/.pi/sandbox/gh-token
 **The token is a classic PAT with `repo` + `read:org`, and it is write-capable.** Classic
 tokens have no read-only scope for private repos, and `Secretlabsg` blocks fine-grained PATs
 needing org approval, so a classic PAT is the only token that works against that org today.
-Consequence: sandboxed Pi can push to every private repo the token reaches. Treat the
-sandbox as trusted for git writes, or drop the file for projects that must not have it.
-See the design doc's risks section for the read-only alternatives (GitHub App, org-approved
-fine-grained PAT).
+The endpoint rules are what keep that token from touching repository settings, secrets or
+deletions; they cannot stop a GraphQL mutation or a `git push` allowed by the token's scopes.
+Without the file the sandbox still starts; `gh` just reports unauthenticated.
 
-Without that file the sandbox still starts; `gh` just reports unauthenticated.
+GitHub remotes written in SSH form work anyway: the wrapper exports
+`url.https://github.com/.insteadOf=git@github.com:` for the sandboxed process, so those
+operations go over HTTPS with the host credential helper, and each checkout keeps its
+configured `origin` untouched. That rewrite covers the `git@github.com:ORG/REPO.git` form
+only — `ssh://git@github.com/...` URLs and remotes on any other SSH host are not rewritten and
+still fail in the sandbox, since the 1Password agent socket is deliberately never granted.
+Note that `git remote get-url` prints the rewritten HTTPS URL while
+`git config --get remote.origin.url` shows the stored SSH value.
 
-GitHub remotes written in SSH form work anyway: the base image's `/root/.gitconfig` rewrites
-`git@github.com:` to `https://github.com/`, so those operations go over HTTPS with the same
-`gh` credential helper, and each checkout keeps its configured `origin` untouched. That
-rewrite covers the `git@github.com:ORG/REPO.git` form only — `ssh://git@github.com/...` URLs
-and remotes on any other SSH host are not rewritten and still fail in the sandbox, since the
-1Password agent socket is deliberately never mounted. Note that `git remote get-url` prints
-the rewritten HTTPS URL while `git config --get remote.origin.url` shows the stored SSH value.
-
-The base image (`pi-sandbox`) holds the common toolchain — git, gh, ripgrep, fd, node,
-python3, Neovim (`nvim`), and a pinned Pi. Neovim is the official v0.12.6 release tarball
-(Debian's 0.7.x is too old for the Nixvim config), and the image also ships the plugin pack
-that config loads — TokyoNight, the other enabled plugins, and compiled Treesitter parsers —
-from revisions pinned in the Dockerfile. Per-project images are `FROM pi-sandbox`,
-so common layers are stored once and shared across projects and worktrees. Pi itself is
-pinned to the host version in
-`home-manager/pi-sandbox.nix` (`piVersion`).
+Pi, Neovim, the language toolchains and the Nix CLI all come from the host (home-manager and
+project devShells); the sandbox contributes policy, not images. Pi's version in the sandbox is
+whatever home-manager installs.
 
 ### Templates
 
 The stack templates live in `home-manager/pi-box-templates/` (the source of truth) and are
-deployed by home-manager to `~/.pi/sandbox/templates/`, one directory each:
+deployed by home-manager to `~/.pi/sandbox/templates/`, one directory each. A template is a
+`pi-box.profile.json` with the grants that stack needs; toolchains come from the host or the project's
+devShell.
 
-| Template | Toolchain | Manifest |
-|----------|-----------|----------|
-| `default` | nothing installed, commented examples only | generic, no grants |
-| `php83` | PHP 8.3 (sury) + composer + bcmath cli curl dom gd mbstring mysql soap xml zip | `DB_HOST=host.docker.internal` |
-| `php82` | same extension list on PHP 8.2 (sury) | `DB_HOST=host.docker.internal` |
-| `java8` | Temurin 8 JDK + Maven 3.6.3 | named volume for `/root/.m2` |
-| `node22` | Node 22 + yarn classic 1.22 | generic |
-| `knowledge-assistant` | `mmdlint` (pinned npm package) for headless Mermaid validation of Markdown | generic |
-| `nix-configs` | private Nix (flakes) + make + `nh` + `nixos-rebuild` + `nixpkgs-fmt` + openspec | `privileged = true`, named volume for `/nix` |
+| Template | Grants |
+|----------|--------|
+| `default` | empty profile with commented fields |
+| `php83` | `filesystem.allow ~/.cache/composer`, `connect_port [3306]`, `DB_HOST=127.0.0.1` |
+| `php82` | same as `php83` |
+| `java8` | `filesystem.allow ~/.m2` for the Maven cache |
+| `node22` | `filesystem.allow ~/.npm, ~/.yarn, ~/.cache/node` |
+| `knowledge-assistant` | `filesystem.allow ~/.npm` for the npx cache |
+| `nix-configs` | `~/.local/state/nix`, `~/.cache/nix`, the Nix daemon socket |
 
 Use `php83` for Laravel 11/12 projects, `php82` for older Laravel (9/10) and any project that
 pins PHP 8.2, `java8` for the Fluent Commerce backend, `node22` for the frontend,
@@ -246,62 +273,63 @@ pins PHP 8.2, `java8` for the Fluent Commerce backend, `node22` for the frontend
 `nix-configs` for this repository, whose Makefile targets are meant to run inside the sandbox.
 
 ```bash
-pi-box init php83     # in the project root, then adjust Dockerfile.pi as needed
+pi-box init php83     # in the project root, then adjust pi-box.profile.json as needed
 ```
 
-Adding a template means adding a directory under `home-manager/pi-box-templates/` and
-force-adding its files to git (`git add -f`), because the global gitignore ignores the
-scaffold names `Dockerfile.pi` and `pi-box.toml` everywhere. A template may omit
-`pi-box.toml`; the generic manifest is then used.
+Adding a template means adding a directory under `home-manager/pi-box-templates/` with a
+`pi-box.profile.json`, and force-adding it to git (`git add -f`), because the global gitignore
+ignores the scaffold name `pi-box.profile.json` everywhere.
 
 ### Nix builds in the sandbox (`nix-configs` template)
 
 Adopt it in this repository with `pi-box init --force nix-configs` (backups are written
-first). The template adds a private, flake-capable Nix whose store lives in the named volume
-`pi-nix-configs-nix`, so nixpkgs and built paths survive the `--rm` runs; the host `/nix` and
-the host Nix daemon stay outside the sandbox. Worktrees share that volume deliberately — Nix
-store paths are content addressed, so sharing only saves downloads. Remove it with
-`docker volume rm pi-nix-configs-nix` when it is no longer wanted.
+first). The template grants the Nix daemon socket, `~/.local/state/nix` and the `~/.cache/nix`
+evaluation cache, and `/nix` is readable by default, so `nix build`, `nh` and `nixos-rebuild` run as daemon clients against
+the host Nix. Nix's own build sandbox runs daemon-side, so it is unaffected by the pi-box
+sandbox and stays hermetic.
 
-Nix's build sandbox needs nested user/mount/PID namespaces, which rootless Docker grants only
-in privileged mode — capabilities alone are not enough. That is why the template declares
-`privileged = true`: without it, a build fails with "this system does not support the kernel
-namespaces that are required for sandboxing" instead of silently running unsandboxed (the
-template also sets `sandbox-fallback = false`). Builds stay hermetic, so a sandboxed build
-here behaves like a sandboxed build on the host.
+`make home-build` and `make os-build` are the agent-safe targets (see Commands above);
+`make home`, `make os`, `make os-boot`, `make os-test` and `make clean` are human-only.
 
 ### Per-project files (untracked, gitignored)
 
-`pi-box init [template]` writes both files from the chosen template. Both are in
-`programs.git.ignores`, so they stay untracked in every repository — which also means each
-new worktree starts without them and needs `pi-box init` again.
+`pi-box init [template]` writes `pi-box.profile.json` from the chosen template. It is in
+`programs.git.ignores`, so it stays untracked in every repository — which also means each new
+worktree starts without it and needs `pi-box init` again.
 
-Existing files are not touched by default: `pi-box init` asks once before replacing anything
-(and does nothing when there is no terminal to ask), each replaced file is first copied to
-`<file>.<YYYYmmdd-HHMMSS>.bak`, and all backups from one run share a single timestamp. Pass
-`--force` to skip the prompt; the backups are still written.
+An existing file is not touched by default: `pi-box init` asks once before replacing it (and
+does nothing when there is no terminal to ask), the previous version is copied to
+`pi-box.profile.json.<YYYYmmdd-HHMMSS>.bak`, and `--force` skips the prompt while still
+writing the backup.
 
-- `Dockerfile.pi` — project toolchain, `FROM pi-sandbox`
-- `pi-box.toml` — extra grants:
+The file is a standard nono profile (validate it with `nono profile validate
+pi-box.profile.json`) that extends the deployed base by name; nono merges it, so any field of
+the nono profile schema is honored and anything outside the schema fails validation at run
+time:
 
-```toml
-gh = true                          # false drops the ~/.config/gh GitHub identity mount
-privileged = true                  # only for workloads needing nested namespaces (Nix)
-ports = ["8080:8080"]              # publish container ports
-mounts = ["/host/path"]            # extra read-only host mounts, at the same path
-volumes = ["pi-m2-oms:/root/.m2"]  # named Docker volume, kept across runs
-
-[env]
-DB_HOST = "host.docker.internal"   # reach host MySQL etc. from the sandbox
+```json
+{
+  "extends": "pi-box",
+  "filesystem": {
+    "allow": ["~/.m2"],              // extra read-write paths
+    "read": ["/host/path"],          // extra read-only paths
+    "read_file": ["/host/file"],     // single read-only files
+    "unix_socket": ["/path/to.sock"] // AF_UNIX sockets the sandbox may connect to
+  },
+  "network": {
+    "connect_port": [3306],          // outbound ports (a host database)
+    "listen_port": [8080],           // ports the sandbox may listen on
+    "allow_domain": ["example.com"]  // extra allowed domains
+  },
+  "environment": {
+    "set_vars": { "DB_HOST": "127.0.0.1" }
+  }
+}
 ```
 
-Named volumes are Docker-managed, so nothing on the host is exposed and the contents survive
-the `--rm` runs. Give each project its own name (the `java8` template ships
-`pi-m2-example`, which it tells you to rename) and drop the volume with `docker volume rm
-<name>` once the project is gone.
-
-Rebuild the base image after upgrading Pi by running `pi-box` (it rebuilds on every run;
-Docker layer caching makes an unchanged build a no-op).
+`gh = false`, `volumes` and `privileged` are gone: the gh config grant is unconditional (the
+token file in `~/.pi/sandbox` is the on/off switch), and named volumes and nested namespaces
+only made sense for the Docker backend. Grant the host path instead.
 
 ## Scratch Space
 

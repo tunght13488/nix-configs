@@ -1,0 +1,10 @@
+{
+  "extends": "pi-box",
+  "meta": {
+    "name": "pi-box node22",
+    "description": "Node 22: npm and yarn stores, plus the node cache."
+  },
+  "filesystem": {
+    "allow": ["~/.npm", "~/.yarn", "~/.cache/node"]
+  }
+}

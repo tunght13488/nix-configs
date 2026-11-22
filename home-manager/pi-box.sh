@@ -1,37 +1,29 @@
 #!/usr/bin/env bash
-# pi-box - run the Pi coding agent in a per-project rootless-Docker sandbox.
+# pi-box - run the Pi coding agent in a per-project nono capability sandbox.
 #
-# Installed by home-manager/pi-sandbox.nix. The base image Dockerfile is
-# deployed alongside it to ~/.pi/sandbox/Dockerfile; per-project images extend
-# it via an untracked Dockerfile.pi in the project directory.
+# Installed by home-manager/pi-sandbox.nix. The static policy lives in the
+# deployed base profile ~/.config/nono/profiles/pi-box.json; the project's
+# untracked pi-box.profile.json extends it by name. This wrapper generates only
+# the per-run overlay - the parts that cannot be static: the workspace grant,
+# a worktree's git common directory, the repository root AGENTS.md, the herdr
+# socket, and the GitHub token route - and runs
+# `nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`.
 #
-# Default grants: the project directory (read-write, at its host absolute path),
-# ~/.pi/agent (read-write, shared Pi identity and state), ~/.config/git (read-only),
-# ~/.config/gh (read-only), and ~/.config/nvim (read-only, when present). Never
-# granted: ~/.aws, ~/.ssh, the 1Password agent socket, or any other host path.
-#
-# Extra grants come only from an untracked pi-box.toml in the project directory.
-#
-# Inside a herdr pane the sandbox also gets a filtered relay socket for agent
-# state reporting; herdr's API socket itself is never mounted.
+# Never granted (by the base profile): ~/.aws, ~/.ssh, the 1Password socket,
+# ~/.cache, /tmp, or any other host path.
 
 set -euo pipefail
 
-# Pinned by home-manager/pi-sandbox.nix.
-PI_VERSION="__PI_VERSION__"
-
 SANDBOX_DIR="${PI_BOX_SANDBOX_DIR:-$HOME/.pi/sandbox}"
-BASE_DOCKERFILE="$SANDBOX_DIR/Dockerfile"
 TEMPLATE_DIR="$SANDBOX_DIR/templates"
 GH_TOKEN_FILE="$SANDBOX_DIR/gh-token"
-BASE_IMAGE="pi-sandbox"
-PI_STATE_DIR="$HOME/.pi/agent"
-CONTAINER_PI_STATE_DIR="/root/.pi/agent"
-GIT_CONFIG_DIR="$HOME/.config/git"
-GH_CONFIG_DIR="$HOME/.config/gh"
-NVIM_CONFIG_DIR="$HOME/.config/nvim"
-RELAY_SCRIPT="$SANDBOX_DIR/pi-herdr-relay.py"
-CONTAINER_RELAY_SOCKET="/run/pi-box/herdr-relay.sock"
+RUNTIME_DIR="$SANDBOX_DIR/runtime"
+TMP_DIR="$SANDBOX_DIR/tmp"
+# The deployed base profile; nono resolves it by name from
+# ~/.config/nono/profiles/.
+BASE_PROFILE="pi-box"
+# Prefer the nixpkgs nono; fall back to PATH for a hand-installed binary.
+NONO="${PI_BOX_NONO:-${NONO_BIN:-nono}}"
 
 die() {
   printf 'pi-box: %s\n' "$*" >&2
@@ -40,335 +32,237 @@ die() {
 
 usage() {
   cat <<'EOF'
-pi-box - run Pi in a per-project rootless-Docker sandbox
+pi-box - run Pi in a per-project nono capability sandbox
 
 Usage:
 pi-box                 start Pi in the current directory's sandbox
 pi-box <pi args>       pass arguments to Pi (e.g. pi-box -p "run the tests")
-pi-box init [template] scaffold Dockerfile.pi and pi-box.toml from a template
+pi-box init [template] scaffold pi-box.profile.json from a template
                        (defaults to the 'default' template)
 pi-box init --force [template]
-                       same, but overwrite existing files after backing them up
+                       same, but overwrite an existing file after backing it up
 pi-box init --list     list the available templates
+pi-box profile         print the generated overlay profile and exit
 pi-box help            show this help
 
 Templates live in ~/.pi/sandbox/templates and are deployed by home-manager from
-home-manager/pi-box-templates. A project's files are only replaced when you
-confirm the prompt or pass --force, and the previous versions are kept as
-<file>.<YYYYmmdd-HHMMSS>.bak, all backups of one run sharing one timestamp.
+home-manager/pi-box-templates. An existing pi-box.profile.json is only replaced
+when you confirm the prompt or pass --force, and the previous version is kept as
+pi-box.profile.json.<YYYYmmdd-HHMMSS>.bak.
 
-Default grants: the project directory (read-write), ~/.pi/agent (read-write),
-~/.config/git and ~/.config/gh (read-only), plus ~/.config/nvim (read-only when
-present). ~/.aws, ~/.ssh and the 1Password socket are never mounted. Add grants
-with pi-box.toml, including
-`privileged = true` for workloads that need nested namespaces (Nix builds).
-
-The base image is rebuilt on every run; Docker layer caching makes that a no-op
-unless the Dockerfile or --build-arg changed. Rebuild it after upgrading Pi.
+The static policy lives in ~/.config/nono/profiles/pi-box.json (deployed by
+home-manager); a project's pi-box.profile.json extends it by name and is merged
+by nono itself. This wrapper adds only the per-run overlay: workspace, worktree
+git directory, repository root AGENTS.md, herdr socket, and the GitHub token
+route. `pi-box profile` prints that overlay.
 EOF
 }
 
-# --- manifest ---------------------------------------------------------------
+# --- overlay ----------------------------------------------------------------
 #
-# pi-box.toml declares grants beyond the default set; the schema is documented in
-# the init template below. yq parses it as real TOML, so quoting, comments, types
-# and multi-line values behave as TOML specifies rather than as a hand-rolled
-# parser guesses. Records are emitted as TAB-separated `KIND<TAB>value` lines:
-#
-#   PORT <spec>   MOUNT <path>   VOLUME <spec>   ENV <key=value>   GH <bool>
-#   PRIVILEGED <bool>
-#
-# A key that is absent produces no record, so the caller's defaults stand (gh
-# defaults to on, privileged mode to off).
-parse_manifest() {
-  yq -p toml -o json -r '
-    (.ports[]? | "PORT\t" + tostring),
-    (.mounts[]? | "MOUNT\t" + tostring),
-    (.volumes[]? | "VOLUME\t" + tostring),
-    ((.env // {}) | to_entries | .[] | "ENV\t" + .key + "=" + (.value | tostring)),
-    (select(has("gh")) | "GH\t" + (.gh | tostring)),
-    (select(has("privileged")) | "PRIVILEGED\t" + (.privileged | tostring))
-  ' "$1"
+# The overlay holds only what cannot be static in the deployed base profile.
+build_overlay() {
+  local workspace="$1" out="$2" herdr_socket="${3:-}"
+  python3 - "$workspace" "$out" "$GH_TOKEN_FILE" "$herdr_socket" <<'PY'
+import json
+import os
+import subprocess
+import sys
+
+(workspace, out_path, token_path, herdr_socket) = sys.argv[1:5]
+
+allow = [workspace]
+read_file = []
+unix_sockets = []
+
+# A worktree's .git file points outside the workspace; without the common dir git
+# cannot read or write its own metadata. Pi also reads AGENTS.md from the
+# repository root, which for a bare worktree layout is the common dir's parent.
+dot_git = os.path.join(workspace, ".git")
+if os.path.isfile(dot_git):
+    try:
+        common = subprocess.run(
+            ["git", "-C", workspace, "rev-parse", "--path-format=absolute",
+             "--git-common-dir"],
+            capture_output=True, text=True, check=True).stdout.strip()
+    except subprocess.CalledProcessError:
+        common = ""
+    if common and os.path.isdir(common):
+        real = os.path.realpath(common)
+        if not real.startswith(workspace.rstrip("/") + "/"):
+            allow.append(real)
+            agents = os.path.join(os.path.dirname(real), "AGENTS.md")
+            if os.path.isfile(agents):
+                read_file.append(agents)
+
+if herdr_socket:
+    unix_sockets.append(herdr_socket)
+
+filesystem = {"allow": allow}
+if read_file:
+    filesystem["read_file"] = read_file
+if unix_sockets:
+    filesystem["unix_socket"] = unix_sockets
+
+network = {}
+# GitHub: the token stays in the supervisor, and only a phantom reaches the
+# sandbox. Endpoint rules come from the base profile; this route only activates
+# when the token file exists.
+if os.path.exists(token_path):
+    network = {
+        "credentials": ["pi-box-github"],
+        "custom_credentials": {
+            "pi-box-github": {
+                "upstream": "https://api.github.com",
+                "credential_key": f"file://{token_path}",
+                "env_var": "GH_TOKEN",
+                "inject_header": "Authorization",
+                "credential_format": "token {}",
+                "endpoint_rules": [
+                    {"method": "GET", "path": "/user"},
+                    {"method": "GET", "path": "/repos/**"},
+                    {"method": "GET", "path": "/search/**"},
+                    {"method": "GET", "path": "/notifications"},
+                    {"method": "POST", "path": "/repos/*/pulls"},
+                    {"method": "POST", "path": "/copilot_internal/**"},
+                    {"method": "POST", "path": "/graphql"},
+                ],
+            }
+        },
+    }
+
+overlay = {
+    "extends": "default",
+    "meta": {"name": os.path.basename(out_path)[:-len(".json")]},
+    "filesystem": filesystem,
+}
+if network:
+    overlay["network"] = network
+
+os.makedirs(os.path.dirname(out_path), exist_ok=True)
+with open(out_path, "w") as handle:
+    json.dump(overlay, handle, indent=2)
+    handle.write("\n")
+PY
 }
 
-# --- images -----------------------------------------------------------------
-build_base_image() {
-  [ -f "$BASE_DOCKERFILE" ] || die "base Dockerfile missing at $BASE_DOCKERFILE (apply home-manager: make home)"
-  # The deployed Dockerfile is a symlink into the Nix store, which BuildKit
-  # cannot read from the build context, so feed it on stdin instead.
-  docker build \
-    --file - \
-    --tag "$BASE_IMAGE" \
-    --build-arg "PI_VERSION=$PI_VERSION" \
-    "$SANDBOX_DIR" <"$BASE_DOCKERFILE"
-}
-
-project_image_tag() {
+# Stable overlay profile name per project, written next to the deployed base
+# profile so nono can resolve it by name. Nono's name grammar excludes
+# underscores, so collapse them to hyphens.
+overlay_name() {
   local name
-  name="$(basename "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9_.-]/-/g')"
-  printf 'pi-%s' "$name"
-}
-
-# Address the container uses to reach host services.
-# Rootless Docker's `host-gateway` resolves to the inner bridge address, which
-# does not reach services bound on the host, so prefer the source address of the
-# default route and fall back to host-gateway when it cannot be determined.
-host_gateway_address() {
-  local address
-  address="$(ip -4 route get 1.1.1.1 2>/dev/null | sed -n 's/.* src \([0-9.]*\).*/\1/p')"
-  if [ -n "$address" ]; then
-    printf '%s' "$address"
-  else
-    printf 'host-gateway'
-  fi
-}
-
-# Mount a git common dir that lives outside the workspace read-write.
-# In a bare-repository worktree layout the worktree's `.git` is a file pointing at
-# `<repo>/.bare/worktrees/<name>`, so mounting only the project directory leaves
-# git unable to read or write its own metadata inside the sandbox.
-append_gitdir_mount() {
-  local workspace="$1" common
-
-  # Only the `.git`-file layouts (worktree, submodule) can point outside.
-  [ -f "$workspace/.git" ] || return 0
-
-  common="$(git -C "$workspace" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)"
-  [ -n "$common" ] || return 0
-  common="$(readlink -f "$common" 2>/dev/null || printf '%s' "$common")"
-  [ -d "$common" ] || return 0
-
-  # Already covered by the workspace mount.
-  case "$common/" in
-    "$workspace"/*) return 0 ;;
-  esac
-
-  args+=(--volume "$common:$common")
-}
-
-# Mount a host config directory read-only, plus each of its symlinked entries.
-# Home-manager deploys files as symlinks into the Nix store; the targets do not
-# exist inside the container, so a mount over the symlink path is what makes
-# them readable. Optional third argument limits the pass to one file name.
-append_config_mounts() {
-  local host_dir="$1" container_dir="$2" only="${3:-}"
-  [ -d "$host_dir" ] || return 0
-
-  local entry resolved
-  if [ -n "$only" ]; then
-    entry="$host_dir/$only"
-    [ -L "$entry" ] || return 0
-    resolved="$(readlink -f "$entry" || true)"
-    if [ -n "$resolved" ] && [ -f "$resolved" ]; then
-      args+=(--volume "$resolved:$container_dir/$only:ro")
-    fi
-    return 0
-  fi
-
-  args+=(--volume "$host_dir:$container_dir:ro")
-
-  for entry in "$host_dir"/*; do
-    [ -L "$entry" ] || continue
-    resolved="$(readlink -f "$entry" || true)"
-    [ -n "$resolved" ] && [ -f "$resolved" ] || continue
-    args+=(--volume "$resolved:$container_dir/$(basename "$entry"):ro")
-  done
-}
-
-# Map a host Pi state path to the container view for --session arguments.
-# Herdr's restart-resume types the host path; the same file is mounted inside.
-map_session_path() {
-  case "${1:-}" in
-    "$PI_STATE_DIR"/*) printf '%s/%s' "$CONTAINER_PI_STATE_DIR" "${1#"$PI_STATE_DIR"/}" ;;
-    *) printf '%s' "${1:-}" ;;
-  esac
+  name="$(basename "$1" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g; s/--*/-/g; s/^-//; s/-$//')"
+  [ -n "$name" ] || name="project"
+  printf 'pi-box-overlay-%s' "$name"
 }
 
 # --- run --------------------------------------------------------------------
+#
+# The sandboxed process inherits the host PATH, and nono's filtering of it is
+# not something this wrapper controls: on NixOS every profile entry is a symlink
+# farm, and what survives the filter is exactly what made `readlink: command not
+# found` happen. Instead, a launcher script is generated into the runtime dir
+# (granted read-only by the base profile) that sets its own PATH from entries
+# the wrapper resolved host-side to /nix/store - the /nix grant makes those
+# readable - and execs pi by absolute path. PATH and TMPDIR set inside the
+# launcher are final; the supervisor keeps the original host PATH for its own
+# broker resolution.
+launcher_path() {
+  # Colon list of original PATH entries whose targets resolve under /nix/store.
+  local entry resolved result=""
+  local IFS=:
+  for entry in $PATH; do
+    [ -n "$entry" ] || continue
+    resolved="$(readlink -f "$entry" 2>/dev/null || true)"
+    case "$resolved" in
+      /nix/store/*) result="${result:+$result:}$resolved" ;;
+    esac
+  done
+  printf '%s' "$result"
+}
+
 cmd_run() {
-  local workspace pi_args=()
+  local workspace
   workspace="$(pwd)"
-  pi_args=("$@")
+
+  # Resolve pi host-side: the supervisor must not depend on PATH for it, and the
+  # resolved path is either a Nix store path (readable via /nix) or the real
+  # wrapper file under ~/.local/bin (readable via the user-tools group).
+  local pi_bin
+  pi_bin="$(command -v pi)" || die "pi not found on PATH"
+  pi_bin="$(readlink -f "$pi_bin")"
+
+  mkdir -p "$RUNTIME_DIR" "$TMP_DIR"
+  # nixos-rebuild falls back to hardcoded /tmp when TMPDIR exceeds its 45-byte
+  # SSH control-socket limit, which the sandbox denies. Export a short alias of
+  # the scratch dir instead.
+  local tmp_alias="$HOME/.pi-tmp"
+  if [ ! -L "$tmp_alias" ] || [ "$(readlink "$tmp_alias" 2>/dev/null)" != "$TMP_DIR" ]; then
+    rm -f "$tmp_alias"
+    ln -s "$TMP_DIR" "$tmp_alias"
+  fi
+  local launcher="$RUNTIME_DIR/pi-launcher.sh"
+  {
+    printf '#!/usr/bin/env bash\n'
+    printf 'export PATH="%s"\n' "$(launcher_path)"
+    printf 'export TMPDIR="%s"\n' "$tmp_alias"
+    printf 'exec %q "$@"\n' "$pi_bin"
+  } >"$launcher"
+  chmod +x "$launcher"
 
   # Herdr cannot see the agent process behind a sandbox wrapper, so tell it
   # which screen manifest to use for this pane. The hint lives on the host-side
-  # foreground process (this script, then the exec'd docker), never inside the
-  # container. Override with HERDR_AGENT=... when invoking pi-box.
+  # foreground process, never in the profile.
   export HERDR_AGENT="${HERDR_AGENT:-pi}"
 
-  build_base_image
-
-  local image="$BASE_IMAGE"
-  if [ -f "$workspace/Dockerfile.pi" ]; then
-    image="$(project_image_tag "$workspace")"
-    docker build --file "$workspace/Dockerfile.pi" --tag "$image" "$workspace"
-  else
-    printf 'pi-box: no Dockerfile.pi in %s, using the base image\n' "$workspace" >&2
+  local herdr_socket=""
+  if [ "${HERDR_ENV:-}" = "1" ] && [ -n "${HERDR_SOCKET_PATH:-}" ]; then
+    herdr_socket="$HERDR_SOCKET_PATH"
   fi
 
-  local -a ports=() mounts=() envs=() volumes=()
-  local gh_enabled=1 privileged=0
-  if [ -f "$workspace/pi-box.toml" ]; then
-    local kind value
-    while IFS=$'\t' read -r kind value; do
-      case "$kind" in
-        PORT) ports+=("$value") ;;
-        MOUNT) mounts+=("$value") ;;
-        VOLUME) volumes+=("$value") ;;
-        ENV) envs+=("$value") ;;
-        GH)
-          case "$value" in
-            false | False | FALSE | 0 | no | off) gh_enabled=0 ;;
-            *) gh_enabled=1 ;;
-          esac
-          ;;
-        PRIVILEGED)
-          case "$value" in
-            true | True | TRUE | 1 | yes | on) privileged=1 ;;
-            *) privileged=0 ;;
-          esac
-          ;;
-      esac
-    done < <(parse_manifest "$workspace/pi-box.toml")
+  # GitHub remotes written in SSH form work anyway: rewrite them to HTTPS inside
+  # the sandbox only, so git uses the host credential helper instead of an SSH
+  # agent the sandbox never receives. Each checkout keeps its configured origin.
+  export GIT_CONFIG_COUNT=1
+  export GIT_CONFIG_KEY_0="url.https://github.com/.insteadOf"
+  export GIT_CONFIG_VALUE_0="git@github.com:"
+
+  local overlay
+  overlay="$(overlay_name "$workspace")"
+  build_overlay "$workspace" "$HOME/.config/nono/profiles/$overlay.json" "$herdr_socket"
+
+  # Project profile when present (it extends the deployed base by name);
+  # otherwise the base profile itself.
+  local profile="$BASE_PROFILE"
+  if [ -f "$workspace/pi-box.profile.json" ]; then
+    profile="$workspace/pi-box.profile.json"
   fi
 
-  local -a args=(run --rm --interactive --workdir "$workspace")
-  if [ -t 0 ] && [ -t 1 ]; then
-    args+=(--tty)
-  fi
-  # Opt-in: Nix's build sandbox needs nested namespaces, which rootless Docker
-  # only grants in privileged mode. Off unless the manifest declares it.
-  if [ "$privileged" -eq 1 ]; then
-    args+=(--privileged)
-  fi
-  args+=(--add-host "host.docker.internal:$(host_gateway_address)")
-  args+=(--volume "$workspace:$workspace")
-  args+=(--volume "$PI_STATE_DIR:$CONTAINER_PI_STATE_DIR")
-  append_gitdir_mount "$workspace"
+  # Herdr detects the pane's agent by the foreground process. Nono must
+  # therefore exec under the name `pi` - a symlink to the unwrapped ELF, with
+  # argv[0] forced to `pi` - so the foreground reads as `pi` exactly like a host
+  # pi pane, instead of `.nono-wrapped` or `nono`.
+  local nono_bin
+  nono_bin="$(command -v "$NONO")" || die "nono not found on PATH"
+  ln -sf "$(readlink -f "$nono_bin")" "$RUNTIME_DIR/pi"
+  exec -a pi "$RUNTIME_DIR/pi" run --profile "$profile" --extends "$overlay" -- "$launcher" "$@"
+}
 
-  # Home-manager deploys these as symlinks into the Nix store, whose targets do
-  # not exist inside the container. Mount the directory, then mount each
-  # symlink's resolved target over the symlink's own container path.
-  append_config_mounts "$PI_STATE_DIR" "/root/.pi/agent" "AGENTS.md"
-  append_config_mounts "$GIT_CONFIG_DIR" "/root/.config/git"
-  append_config_mounts "$NVIM_CONFIG_DIR" "/root/.config/nvim"
-  if [ "$gh_enabled" -eq 1 ]; then
-    append_config_mounts "$GH_CONFIG_DIR" "/root/.config/gh"
-  fi
-
-  local item
-  for item in ${ports[@]+"${ports[@]}"}; do
-    args+=(--publish "$item")
-  done
-  for item in ${mounts[@]+"${mounts[@]}"}; do
-    args+=(--volume "$item:$item:ro")
-  done
-  for item in ${volumes[@]+"${volumes[@]}"}; do
-    args+=(--volume "$item")
-  done
-  for item in ${envs[@]+"${envs[@]}"}; do
-    args+=(--env "$item")
-  done
-
-  # Herdr state reporting: the sandbox gets a filtered relay socket instead of
-  # the herdr API socket, which can read and drive every pane. The relay
-  # forwards only this pane's agent state reports and maps reported session
-  # paths back to the host view so restart-resume stores a usable path.
-  local relay_pid="" relay_socket=""
-  if [ "${HERDR_ENV:-}" = "1" ] && [ -n "${HERDR_PANE_ID:-}" ] && [ -n "${HERDR_SOCKET_PATH:-}" ]; then
-    [ -f "$RELAY_SCRIPT" ] || die "relay script missing at $RELAY_SCRIPT (apply home-manager: make home)"
-    relay_socket="$SANDBOX_DIR/relay-$(printf '%s' "$HERDR_PANE_ID" | tr -c '[:alnum:]._-' '-').sock"
-    rm -f "$relay_socket"
-    python3 "$RELAY_SCRIPT" \
-      --socket "$relay_socket" \
-      --api-socket "$HERDR_SOCKET_PATH" \
-      --pane-id "$HERDR_PANE_ID" \
-      --host-state-dir "$PI_STATE_DIR" &
-    relay_pid=$!
-    local waited=0
-    while [ ! -S "$relay_socket" ]; do
-      if [ "$waited" -ge 200 ] || ! kill -0 "$relay_pid" 2>/dev/null; then
-        printf 'pi-box: warning: herdr relay did not start; agent states fall back to screen detection\n' >&2
-        break
-      fi
-      sleep 0.01
-      waited=$((waited + 1))
-    done
-    if [ -S "$relay_socket" ]; then
-      args+=(--env "HERDR_ENV=1" --env "HERDR_PANE_ID=$HERDR_PANE_ID")
-      args+=(--env "HERDR_SOCKET_PATH=$CONTAINER_RELAY_SOCKET")
-      args+=(--volume "$relay_socket:$CONTAINER_RELAY_SOCKET")
-    fi
-  fi
-
-  # Invoked indirectly by the EXIT trap below.
-  # shellcheck disable=SC2329
-  cleanup_relay() {
-    if [ -n "$relay_pid" ]; then
-      kill "$relay_pid" 2>/dev/null || true
-      wait "$relay_pid" 2>/dev/null || true
-      relay_pid=""
-    fi
-    if [ -n "$relay_socket" ]; then
-      rm -f "$relay_socket"
-    fi
-  }
-  trap cleanup_relay EXIT
-
-  # GitHub token: the host's gh keeps its credential in the OS keyring, which
-  # does not cross into the container, and ~/.config/gh/hosts.yml carries only
-  # settings. A fine-grained read-only token is mounted as a file instead, and
-  # exported inside the container so it never shows up in `docker inspect` or
-  # the host process list.
-  local -a command=(pi)
-  if [ -f "$GH_TOKEN_FILE" ]; then
-    case "$(stat -Lc '%a' "$GH_TOKEN_FILE")" in
-      600 | 400) ;;
-      *) printf 'pi-box: warning: %s is readable by others (chmod 600 it)\n' "$GH_TOKEN_FILE" >&2 ;;
-    esac
-    args+=(--volume "$GH_TOKEN_FILE:/run/pi-box/gh-token:ro")
-    # The single quotes are deliberate: the container-side shell expands these.
-    # shellcheck disable=SC2016
-    command=(sh -c 'if [ -r /run/pi-box/gh-token ]; then GH_TOKEN="$(cat /run/pi-box/gh-token)"; export GH_TOKEN; fi; exec pi "$@"' pi-box)
-  fi
-
-  # Session paths herdr types for restart-resume point at the host Pi state
-  # directory; map them to the container view. Ids and other args pass through.
-  local -a sandbox_pi_args=()
-  local idx=0 arg
-  while [ "$idx" -lt "${#pi_args[@]}" ]; do
-    arg="${pi_args[$idx]}"
-    idx=$((idx + 1))
-    case "$arg" in
-      --session=*)
-        sandbox_pi_args+=("--session=$(map_session_path "${arg#--session=}")")
-        ;;
-      --session)
-        sandbox_pi_args+=("--session")
-        if [ "$idx" -lt "${#pi_args[@]}" ]; then
-          sandbox_pi_args+=("$(map_session_path "${pi_args[$idx]}")")
-          idx=$((idx + 1))
-        fi
-        ;;
-      *)
-        sandbox_pi_args+=("$arg")
-        ;;
-    esac
-  done
-
-  args+=("$image" "${command[@]}" ${sandbox_pi_args[@]+"${sandbox_pi_args[@]}"})
-  local status=0
-  docker "${args[@]}" || status=$?
-  exit "$status"
+cmd_profile() {
+  local workspace overlay
+  workspace="$(pwd)"
+  overlay="$(overlay_name "$workspace")"
+  printf 'pi-box: static policy: %s (deployed by home-manager, "extends" target)\n' \
+    "$HOME/.config/nono/profiles/$BASE_PROFILE.json" >&2
+  build_overlay "$workspace" "$HOME/.config/nono/profiles/$overlay.json" ""
+  cat "$HOME/.config/nono/profiles/$overlay.json"
 }
 
 # --- init -------------------------------------------------------------------
-# Templates are deployed by home-manager alongside the base Dockerfile; the
-# repository copy under home-manager/pi-box-templates is the source of truth.
 list_templates() {
   local dir
   for dir in "$TEMPLATE_DIR"/*/; do
-    if [ -f "$dir/Dockerfile.pi" ]; then
+    if [ -f "$dir/pi-box.profile.json" ]; then
       basename "$dir"
     fi
   done
@@ -395,44 +289,30 @@ cmd_init() {
     shift
   done
 
-  local template_dir="$TEMPLATE_DIR/$template" docker_src manifest_src
-  if [ ! -f "$template_dir/Dockerfile.pi" ]; then
+  local src="$TEMPLATE_DIR/$template/pi-box.profile.json"
+  if [ ! -f "$src" ]; then
     local available
     available="$(list_templates | tr '\n' ' ')"
     [ -n "$available" ] || die "no templates found in $TEMPLATE_DIR (apply home-manager: make home)"
     die "unknown template '$template'; available: $available"
   fi
-  docker_src="$template_dir/Dockerfile.pi"
-  # A template may omit the manifest; the generic one then applies.
-  manifest_src="$template_dir/pi-box.toml"
-  [ -f "$manifest_src" ] || manifest_src="$TEMPLATE_DIR/default/pi-box.toml"
-  [ -f "$manifest_src" ] \
-    || die "default manifest missing at $TEMPLATE_DIR/default/pi-box.toml (apply home-manager: make home)"
 
-  local -a targets=(Dockerfile.pi pi-box.toml) sources=("$docker_src" "$manifest_src")
-  local i path overwrite=0
-  local -a existing=()
-  for path in "${targets[@]}"; do
-    if [ -e "$path" ]; then
-      existing+=("$path")
-    fi
-  done
-
-  # One prompt for the whole batch, so a single answer decides the run and all
-  # backups share one timestamp. Without a terminal the answer is no: scripted
-  # runs must not silently destroy files.
-  if [ "${#existing[@]}" -gt 0 ]; then
+  local target="pi-box.profile.json"
+  if [ -e "$target" ]; then
+    local overwrite=0
+    # One prompt, and without a terminal the answer is no: scripted runs must not
+    # silently destroy files.
     if [ "$force" -eq 1 ]; then
       overwrite=1
     elif [ -t 0 ]; then
-      printf 'pi-box: found existing %s. Back up and overwrite from template %s? [y/N] ' "${existing[*]}" "$template" >&2
+      printf 'pi-box: %s already exists. Back up and overwrite from template %s? [y/N] ' "$target" "$template" >&2
       local answer=""
       read -r answer || answer=""
       case "$answer" in
         [yY] | [yY][eE][sS]) overwrite=1 ;;
       esac
     else
-      printf 'pi-box: %s already exists, and there is no terminal to ask; leaving it alone (use --force)\n' "${existing[*]}" >&2
+      printf 'pi-box: %s already exists, and there is no terminal to ask; leaving it alone (use --force)\n' "$target" >&2
     fi
     if [ "$overwrite" -eq 0 ]; then
       return 0
@@ -442,21 +322,17 @@ cmd_init() {
     # overwrites the earlier backup. Add a counter loop if that ever bites.
     local stamp
     stamp="$(date +%Y%m%d-%H%M%S)"
-    for path in "${existing[@]}"; do
-      cp -a "$path" "$path.$stamp.bak"
-      printf 'pi-box: backed up %s -> %s.bak\n' "$path" "$path.$stamp" >&2
-    done
+    cp -a "$target" "$target.$stamp.bak"
+    printf 'pi-box: backed up %s -> %s.bak\n' "$target" "$target.$stamp" >&2
   fi
 
-  for i in "${!targets[@]}"; do
-    # rm first: writing through a symlinked target would land outside the project.
-    rm -f "${targets[$i]}"
-    cp "${sources[$i]}" "${targets[$i]}"
-    # Templates live in the Nix store, whose files are read-only; without this the
-    # scaffold could not be edited after `init`.
-    chmod u+w "${targets[$i]}"
-    printf 'pi-box: created %s from template %s\n' "${targets[$i]}" "$template" >&2
-  done
+  # rm first: writing through a symlinked target would land outside the project.
+  rm -f "$target"
+  cp "$src" "$target"
+  # Templates live in the Nix store, whose files are read-only; without this the
+  # scaffold could not be edited after `init`.
+  chmod u+w "$target"
+  printf 'pi-box: created %s from template %s\n' "$target" "$template" >&2
 }
 
 # --- dispatch ---------------------------------------------------------------
@@ -464,6 +340,9 @@ case "${1:-}" in
   init)
     shift
     cmd_init "$@"
+    ;;
+  profile)
+    cmd_profile
     ;;
   help | --help | -h)
     usage

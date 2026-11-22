@@ -12,6 +12,11 @@
   # You can change versions, add patches, set compilation flags, anything really.
   # https://wiki.nixos.org/wiki/Overlays
   modifications = final: prev: {
+    # 26.05 pins nono 0.61.1, which predates the profile features pi-box relies
+    # on (custom credential routes with endpoint rules). Pin the upstream
+    # release binary instead; see pkgs/nono.nix.
+    nono = final.callPackage ../pkgs/nono.nix { };
+
     # docker_28 is marked insecure on nixos-25.11 (unmaintained since Nov 2025);
     # alias pkgs.docker to docker_29 so virtualisation.docker and
     # virtualisation.docker.rootless both pull a maintained build.
