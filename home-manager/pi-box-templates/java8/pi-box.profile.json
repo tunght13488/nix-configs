@@ -1,0 +1,10 @@
+{
+  "extends": "pi-box",
+  "meta": {
+    "name": "pi-box java8",
+    "description": "Java 8 / Maven: the host Maven local repository persists across runs."
+  },
+  "filesystem": {
+    "allow": ["~/.m2"]
+  }
+}

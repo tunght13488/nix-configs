@@ -454,8 +454,7 @@
     # Pi sandbox (pi-box) #
     ######################
     # Per-project, machine-local: scaffolded by `pi-box init`, never shared.
-    "Dockerfile.pi"
-    "pi-box.toml"
+    "pi-box.profile.json"
 
     # Git #
     # #####

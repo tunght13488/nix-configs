@@ -1,0 +1,23 @@
+{
+  "extends": "pi-box",
+  "meta": {
+    "name": "pi-box default",
+    "description": "Generic pi-box profile. Commented fields below show the grants the wrapper merges over its defaults."
+  },
+  "filesystem": {
+    "allow": [],
+    "read": [],
+    "read_file": [],
+    "unix_socket": []
+  },
+  "network": {
+    "connect_port": [],
+    "listen_port": [],
+    "open_port": [],
+    "allow_domain": [],
+    "deny_domain": []
+  },
+  "environment": {
+    "set_vars": {}
+  }
+}

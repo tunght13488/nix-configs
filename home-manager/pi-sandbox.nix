@@ -1,21 +1,96 @@
-# pi-box: run the Pi coding agent in a per-project rootless-Docker sandbox.
+# pi-box: run the Pi coding agent in a per-project nono capability sandbox.
 #
 # Consumers: home-manager/home.nix imports this module. The `pi-box` wrapper is
-# installed on PATH, and it builds the base image from the Dockerfile deployed
-# to ~/.pi/sandbox/Dockerfile. Per-project images extend that base via an
-# untracked Dockerfile.pi, with extra grants declared in pi-box.toml.
+# installed on PATH; it generates a small per-run overlay profile (workspace,
+# worktree git directory, herdr socket, gh token route) and starts Pi under
+# `nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`.
+#
+# The shared base profile is deployed to ~/.config/nono/profiles/pi-box.json;
+# project profiles extend it by name. Nono enforces the grant set with Landlock,
+# so ungranted host paths are unreadable rather than merely unmounted.
 #
 # The stack templates the wrapper scaffolds from are deployed as a directory of
 # store symlinks under ~/.pi/sandbox/templates; the repository copy in
 # ./pi-box-templates stays the source of truth.
 { pkgs
 , lib
+, config
 , ...
 }:
 
 let
-  # Pinned to the host Pi release; rebuild the base image after upgrading Pi.
-  piVersion = "1.5.2";
+  homeDir = config.home.homeDirectory;
+
+  # Static part of the policy, shared by every project. Dynamic grants
+  # (workspace, worktree git dir, herdr socket, token route) come from the
+  # per-run overlay the wrapper generates; nono unions them.
+  #
+  # api.github.com is L7-filtered to read endpoints plus PR creation and the
+  # Copilot OAuth exchange; the provider domains are plain CONNECT tunnels so
+  # the chat APIs work unfiltered. The credentials entry is added by the
+  # overlay only when a token file exists.
+  baseProfile = pkgs.writeText "pi-box-base-profile.json" (builtins.toJSON {
+    extends = "default";
+    meta = {
+      name = "pi-box";
+      description = "Shared pi-box base profile; project profiles extend this by name.";
+    };
+    filesystem = {
+      allow = [
+        "${homeDir}/.pi/agent"
+        "${homeDir}/.pi/sandbox/tmp"
+        "${homeDir}/.local/state/nvim"
+        "${homeDir}/.local/share/nvim"
+        "${homeDir}/.config/github-copilot"
+      ];
+      read = [
+        "/nix"
+        "${homeDir}/.config/git"
+        "${homeDir}/.config/gh"
+        "${homeDir}/.config/nvim"
+        "${homeDir}/.pi/sandbox/runtime"
+      ];
+    };
+    network = {
+      network_profile = "developer";
+      allow_domain = [
+        {
+          domain = "api.github.com";
+          endpoints = [
+            { method = "GET"; path = "/user"; }
+            { method = "GET"; path = "/repos/**"; }
+            { method = "GET"; path = "/search/**"; }
+            { method = "GET"; path = "/notifications"; }
+            { method = "POST"; path = "/repos/*/pulls"; }
+            { method = "POST"; path = "/copilot_internal/**"; }
+            # shortcut: GraphQL is one endpoint, so path rules cannot tell a
+            # read from a mutation. Drop this rule to hard-block `gh` writes
+            # that go through it.
+            { method = "POST"; path = "/graphql"; }
+          ];
+        }
+        "*.githubcopilot.com"
+        "proxy.business.githubcopilot.com"
+        "opencode.ai"
+        "api.opencode.ai"
+        # pi-web-access: the built-in web search and reader providers.
+        # Everything else stays blocked; arbitrary-URL reading goes through
+        # r.jina.ai when the Jina reader fallback is enabled.
+        "api.exa.ai"
+        "mcp.exa.ai"
+        "api.tavily.com"
+        "api.search.brave.com"
+        "google.serper.dev"
+        "kagi.com"
+        "jina.ai"
+        "r.jina.ai"
+        "s.jina.ai"
+      ];
+    };
+    environment = {
+      deny_vars = [ "AWS_*" "AZURE_*" "GOOGLE_APPLICATION_CREDENTIALS" "GH_TOKEN" ];
+    };
+  });
 
   piBox = pkgs.writeShellApplication {
     name = "pi-box";
@@ -24,23 +99,27 @@ let
       git
       gnugrep
       gnused
-      iproute2
       python3
-      yq-go
+      # Nono's own runtime helpers (socat bridges the proxy, bubblewrap backs
+      # the Linux sandbox). They must be on pi-box's PATH because nono is
+      # deliberately unwrapped - see pkgs/nono.nix.
+      bubblewrap
+      socat
+      nono
     ];
-    text = lib.replaceStrings [ "__PI_VERSION__" ] [ piVersion ]
-      (builtins.readFile ./pi-box.sh);
+    text = builtins.readFile ./pi-box.sh;
   };
 in
 {
-  home.packages = [ piBox ];
+  home.packages = [
+    piBox
+    pkgs.nono
+  ];
 
-  # The wrapper builds this on demand; keep it alongside the Pi agent state.
-  home.file.".pi/sandbox/Dockerfile".source = ./pi-sandbox.Dockerfile;
-
-  # Herdr state reporting relay: the wrapper starts it per run inside a herdr
-  # pane and publishes only its socket to the container, never herdr's own.
-  home.file.".pi/sandbox/pi-herdr-relay.py".source = ./pi-herdr-relay.py;
+  # The shared base profile projects extend by name. `pi-box` deploys the
+  # per-run overlays next to it; that directory is read by nono, not managed
+  # by home-manager.
+  home.file.".config/nono/profiles/pi-box.json".source = baseProfile;
 
   # `pi-box init [template]` copies from here. The sources must be tracked in
   # git (force-added, since the global gitignore ignores the scaffold names)
@@ -50,7 +129,7 @@ in
     recursive = true;
   };
 
-  # Housekeeping note for future readers: no system-level Docker changes are
-  # needed here - nixos/configuration.nix already enables rootless Docker,
-  # which maps container root to this user.
+  # Housekeeping note for future readers: no system-level changes are needed
+  # here. Nono needs Linux 5.13+ (Landlock), which this host has, and runs
+  # unprivileged as the invoking user - rootless Docker is no longer involved.
 }
