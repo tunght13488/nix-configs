@@ -11,10 +11,13 @@ See proposal.md for motivation. Relevant current state:
   TCP 80/443 and 1024-49151. UDP 41641 (the tailscale port) is blocked.
 - sshd is disabled (commented out in `configuration.nix`); the only SSH
   material is the agenix identity key under `~/.ssh/`.
-- herdr runs a persistent server on the VM; its mobile layout activates
-  automatically on narrow terminals, and its docs recommend the moshi SSH
-  client on iPhone. Moshi supports Tailscale SSH with empty key fields and
-  requires the tailnet ACL in accept mode (the default).
+- herdr runs a persistent server on the VM. Reaching it from a phone is a
+  follow-up concern, not part of this change: the Herdr iOS app requires
+  `herdr-core`, a separate runtime from the Herdr TUI, and is not packaged
+  in nixpkgs 26.05.
+- The firewall uses the iptables backend (`firewall.service` depends on
+  iptables, no `/etc/nftables.conf`), so verification uses `iptables`, not
+  `nft`.
 - Pinned nixpkgs (26.05) `services.tailscale` module options verified:
   `enable`, `openFirewall` (adds `networking.firewall.allowedUDPPorts
   [ 41641 ]`), `authKeyFile`, `extraUpFlags` (applied only when
@@ -25,11 +28,12 @@ See proposal.md for motivation. Relevant current state:
 **Goals:**
 
 - Tailnet-only SSH into the VM from an iPhone, landing in the `tung`
-  shell, with the same herdr session the desktop uses.
+  shell.
 - Direct peer connections (no forced DERP relay).
 
 **Non-Goals:**
 
+- Herdr access from the phone (deferred; needs `herdr-core`, out of scope).
 - Remote access to `*.vm.local` dev sites (no dnsmasq/nginx changes).
 - Exit node, subnet routing, or ACL policy redesign beyond a possible
   user-mapping rule.
@@ -42,12 +46,12 @@ See proposal.md for motivation. Relevant current state:
 The machine has no sshd today and the goal is access from one phone.
 Tailscale SSH needs no keys, no sshd config, exposes port 22 only on the
 tailnet, and authenticates by tailnet identity (ACL-controlled). The
-admin-console web SSH works in the phone browser as a fallback client.
+admin-console web SSH works in the phone browser as a fallback client, and
+any SSH client works over the Tailscale tunnel (Termius was used to verify).
 Alternative considered: enable `services.openssh` with key auth and open
 port 22. Rejected: more moving parts, a listener reachable from the
 VMware NAT network, and no identity-based auth. Trade-off: mosh cannot be
-used with Tailscale SSH (mosh needs OpenSSH); the phone uses plain SSH,
-which moshi supports.
+used with Tailscale SSH (mosh needs OpenSSH); plain SSH is used instead.
 
 **D2: `openFirewall = true` on the tailscale module.**
 With the firewall enabled, inbound UDP 41641 is blocked by default and
@@ -87,8 +91,8 @@ Dev-site browsing from the phone is out of scope, so dnsmasq's
 - [NAT traversal fails between phone and VM] -> Tailscale falls back to
   DERP relays; sessions work with higher latency. Acceptable for a
   single-phone setup.
-- [Tailnet ACL switched to "check" mode] -> moshi cannot complete the
-  browser-based auth-URL flow and login fails. Keep the ACL in accept
+- [Tailnet ACL switched to "check" mode] -> the SSH client cannot complete
+  the browser-based auth-URL flow and login fails. Keep the ACL in accept
   mode (default).
 - [Tailnet login name differs from `tung`] -> First SSH fails with a user
   lookup error until an ACL user-mapping rule (`"users": ["tung"]`) is
@@ -106,11 +110,10 @@ Dev-site browsing from the phone is out of scope, so dnsmasq's
 2. Human runs `sudo tailscale up --ssh`, authenticates in the browser,
    and confirms the machine appears in the tailnet admin console.
 3. Human installs the Tailscale app on the iPhone, signs in to the same
-   tailnet, and connects from moshi to `nixos-vmware` with empty
-   credentials. If login fails with a user error, add the ACL
-   user-mapping rule, then retry.
-4. Verify: `herdr` shows the existing session in mobile layout; agents
-   and panes are intact.
+   tailnet, and connects an SSH client to `nixos-vmware`. If login fails
+   with a user error, add the ACL user-mapping rule, then retry.
+4. Verify: the session opens a shell as `tung`; `sudo iptables -L nixos-fw
+   -nv | grep 41641` shows the ACCEPT rule.
 
 Rollback: remove the import and the `nixos/tailscale.nix` file, rebuild.
 Tailscale state remains on disk but the daemon no longer starts;

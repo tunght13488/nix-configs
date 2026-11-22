@@ -3,8 +3,7 @@
 ## Purpose
 
 Connect the machine to a private Tailscale mesh and provide tailnet-only SSH
-access to its shell so that herdr sessions and agent panes can be reached
-from a phone without exposing SSH to the host network.
+access to its shell from a phone, without exposing SSH to the host network.
 
 ## ADDED Requirements
 
@@ -66,8 +65,7 @@ an agenix-managed authkey.
 
 ### Requirement: Remote shell lands as the tung user
 The tailnet identity used from the phone SHALL be mapped to the local user
-`tung`, so the herdr server, panes, and agent sessions are the same ones
-used on the desktop.
+`tung`, so remote sessions run as the same user as the desktop.
 
 #### Scenario: Mismatched tailnet login is mapped
 - **WHEN** the tailnet login name differs from `tung`
@@ -75,16 +73,10 @@ used on the desktop.
   local `tung` user, and `ssh` lands in a `tung` shell
 
 ### Requirement: Local dev stack is unaffected
-The change SHALL NOT modify nginx, dnsmasq, the `*.vm.local` hostname
-resolution, or the herdr configuration. Browsing dev sites on the host and
-running herdr locally SHALL behave exactly as before.
+The change SHALL NOT modify nginx, dnsmasq, or the `*.vm.local` hostname
+resolution. Browsing dev sites on the host SHALL behave exactly as before.
 
 #### Scenario: Dev sites still resolve on the host
 - **WHEN** the change is applied
 - **THEN** `*.vm.local` names still resolve to 127.0.0.1 on the host and all
   existing vhosts remain reachable locally
-
-#### Scenario: Herdr session is shared, not replaced
-- **WHEN** a tailnet SSH session runs `herdr`
-- **THEN** it attaches to the same persistent herdr session the desktop
-  uses, with existing workspaces, panes, and agents intact
