@@ -9,8 +9,8 @@
 # socket, and the GitHub token route - and runs
 # `nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`.
 #
-# Never granted (by the base profile): ~/.aws, ~/.ssh, the 1Password socket,
-# ~/.cache, /tmp, or any other host path.
+# The base profile grants ~/.cache and /tmp, but never grants ~/.aws, ~/.ssh,
+# the 1Password socket, or any other host path not explicitly listed.
 
 set -euo pipefail
 
@@ -18,7 +18,6 @@ SANDBOX_DIR="${PI_BOX_SANDBOX_DIR:-$HOME/.pi/sandbox}"
 TEMPLATE_DIR="$SANDBOX_DIR/templates"
 GH_TOKEN_FILE="$SANDBOX_DIR/gh-token"
 RUNTIME_DIR="$SANDBOX_DIR/runtime"
-TMP_DIR="$SANDBOX_DIR/tmp"
 # The deployed base profile; nono resolves it by name from
 # ~/.config/nono/profiles/.
 BASE_PROFILE="pi-box"
@@ -192,20 +191,12 @@ cmd_run() {
   pi_bin="$(command -v pi)" || die "pi not found on PATH"
   pi_bin="$(readlink -f "$pi_bin")"
 
-  mkdir -p "$RUNTIME_DIR" "$TMP_DIR"
-  # nixos-rebuild falls back to hardcoded /tmp when TMPDIR exceeds its 45-byte
-  # SSH control-socket limit, which the sandbox denies. Export a short alias of
-  # the scratch dir instead.
-  local tmp_alias="$HOME/.pi-tmp"
-  if [ ! -L "$tmp_alias" ] || [ "$(readlink "$tmp_alias" 2>/dev/null)" != "$TMP_DIR" ]; then
-    rm -f "$tmp_alias"
-    ln -s "$TMP_DIR" "$tmp_alias"
-  fi
+  mkdir -p "$RUNTIME_DIR"
   local launcher="$RUNTIME_DIR/pi-launcher.sh"
   {
     printf '#!/usr/bin/env bash\n'
     printf 'export PATH="%s"\n' "$(launcher_path)"
-    printf 'export TMPDIR="%s"\n' "$tmp_alias"
+    printf 'export TMPDIR="/tmp"\n'
     printf 'exec %q "$@"\n' "$pi_bin"
   } >"$launcher"
   chmod +x "$launcher"

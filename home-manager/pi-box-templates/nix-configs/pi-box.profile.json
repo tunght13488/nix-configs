@@ -2,10 +2,10 @@
   "extends": "pi-box",
   "meta": {
     "name": "pi-box nix-configs",
-    "description": "This repository: host Nix daemon socket, profile state and eval cache."
+    "description": "This repository: host Nix daemon socket and profile state."
   },
   "filesystem": {
-    "allow": ["~/.local/state/nix", "~/.cache/nix"],
+    "allow": ["~/.local/state/nix"],
     "unix_socket": ["/nix/var/nix/daemon-socket/socket"]
   }
 }

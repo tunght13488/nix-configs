@@ -176,17 +176,17 @@ see what a project actually grants.
 
 Default grants: the project directory (read-write, at its host absolute path), `~/.pi/agent`
 (read-write — provider credentials, settings, sessions, skills and trust are shared with host
-Pi, so no login step is needed), `~/.pi/sandbox/tmp` (read-write, exported as `TMPDIR` via the short `~/.pi-tmp` symlink, because nixos-rebuild falls back to the denied `/tmp` when `TMPDIR` exceeds its 45-byte SSH control-socket limit),
-`~/.config/git`, `~/.config/gh` and `~/.config/nvim` (read-only), `~/.local/state/nvim` and
-`~/.local/share/nvim` (read-write — Neovim's shaDa, plugin logs and data),
-`~/.config/github-copilot` (read-write — the nvim Copilot client's auth store), and `/nix` (read-only — the
-Nix store, needed for the targets of home-manager's symlinks and for the PATH the generated
-launcher sets), and `~/.pi/sandbox/runtime` (read-only — the launcher and profile files).
-Worktrees whose git directory sits outside the workspace also get that git directory
-(read-write) and the repository root's `AGENTS.md` (read-only). Never granted: `~/.aws`,
-`~/.ssh`, the 1Password agent socket, `~/.cache`, `/tmp`, and every other host path. Pi's
-Ctrl+G editor uses `nvim` via `EDITOR=nvim` unless the shared Pi settings specify an
-explicit `externalEditor`.
+Pi, so no login step is needed), `~/.cache` (read-write, for application and tool caches),
+`/tmp` (read-write; `pi-box` sets `TMPDIR=/tmp`), `~/.config/git`, `~/.config/gh` and
+`~/.config/nvim` (read-only), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write —
+Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write — the nvim
+Copilot client's auth store), `/nix` (read-only — the Nix store, needed for the targets of
+home-manager's symlinks and for the PATH the generated launcher sets), and
+`~/.pi/sandbox/runtime` (read-only — the launcher and profile files). Worktrees whose git
+directory sits outside the workspace also get that git directory (read-write) and the
+repository root's `AGENTS.md` (read-only). The default base profile leaves `~/.aws`, `~/.ssh`,
+the 1Password agent socket, and all other unlisted host paths inaccessible. Pi's Ctrl+G editor
+uses `nvim` via `EDITOR=nvim` unless the shared Pi settings specify an explicit `externalEditor`.
 
 Worktree projects also get their git directory: when `git rev-parse --git-common-dir` for the
 workspace resolves outside it (the bare+worktree layout used here), `pi-box` grants that
@@ -260,12 +260,12 @@ devShell.
 | Template | Grants |
 |----------|--------|
 | `default` | empty profile with commented fields |
-| `php83` | `filesystem.allow ~/.cache/composer`, `connect_port [3306]`, `DB_HOST=127.0.0.1` |
+| `php83` | `connect_port [3306]`, `DB_HOST=127.0.0.1` |
 | `php82` | same as `php83` |
 | `java8` | `filesystem.allow ~/.m2` for the Maven cache |
-| `node22` | `filesystem.allow ~/.npm, ~/.yarn, ~/.cache/node` |
+| `node22` | `filesystem.allow ~/.npm, ~/.yarn` |
 | `knowledge-assistant` | `filesystem.allow ~/.npm` for the npx cache |
-| `nix-configs` | `~/.local/state/nix`, `~/.cache/nix`, the Nix daemon socket |
+| `nix-configs` | `~/.local/state/nix`, the Nix daemon socket |
 
 Use `php83` for Laravel 11/12 projects, `php82` for older Laravel (9/10) and any project that
 pins PHP 8.2, `java8` for the Fluent Commerce backend, `node22` for the frontend,
@@ -283,10 +283,10 @@ ignores the scaffold name `pi-box.profile.json` everywhere.
 ### Nix builds in the sandbox (`nix-configs` template)
 
 Adopt it in this repository with `pi-box init --force nix-configs` (backups are written
-first). The template grants the Nix daemon socket, `~/.local/state/nix` and the `~/.cache/nix`
-evaluation cache, and `/nix` is readable by default, so `nix build`, `nh` and `nixos-rebuild` run as daemon clients against
-the host Nix. Nix's own build sandbox runs daemon-side, so it is unaffected by the pi-box
-sandbox and stays hermetic.
+first). The template grants the Nix daemon socket and `~/.local/state/nix`. The base profile
+already grants `~/.cache`, and `/nix` is readable by default, so `nix build`, `nh` and
+`nixos-rebuild` run as daemon clients against the host Nix. Nix's own build sandbox runs
+daemon-side, so it is unaffected by the pi-box sandbox and stays hermetic.
 
 `make home-build` and `make os-build` are the agent-safe targets (see Commands above);
 `make home`, `make os`, `make os-boot`, `make os-test` and `make clean` are human-only.

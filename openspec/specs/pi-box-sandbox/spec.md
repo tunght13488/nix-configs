@@ -24,7 +24,7 @@ Running `pi-box` in a project directory SHALL start an interactive Pi session un
 
 ### Requirement: Least-privilege default grant set
 
-By default the sandbox SHALL grant exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), a private scratch directory `~/.pi/sandbox/tmp` (read-write, exported as `TMPDIR`), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write, Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write, the nvim Copilot client's auth store), `/nix` (read-only), the sandbox runtime directory `~/.pi/sandbox/runtime` (read-only, holding the generated launcher and profile), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write) and the repository root's `AGENTS.md` (read-only). The sandbox SHALL NOT grant `~/.aws`, `~/.ssh`, the 1Password agent socket, `~/.cache`, `/tmp`, or any other host path.
+By default the sandbox SHALL grant exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.cache` (read-write, for application and tool caches), `/tmp` (read-write and used as Pi's `TMPDIR`), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write, Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write, the nvim Copilot client's auth store), `/nix` (read-only), the sandbox runtime directory `~/.pi/sandbox/runtime` (read-only, holding the generated launcher and profile), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write) and the repository root's `AGENTS.md` (read-only). The default base profile SHALL NOT grant `~/.aws`, `~/.ssh`, the 1Password agent socket, or any other unlisted host path.
 
 #### Scenario: AWS credentials inaccessible
 - **WHEN** a process in the sandbox opens a file under `~/.aws` (including the SSO token cache)
@@ -36,7 +36,11 @@ By default the sandbox SHALL grant exactly these host resources: the project wor
 
 #### Scenario: Only granted paths are mounted
 - **WHEN** the session's effective grants are inspected on a default run
-- **THEN** the granted host paths are exactly the workspace, `~/.pi/agent`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.pi/sandbox/tmp`, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
+- **THEN** the granted host paths are exactly the workspace, `~/.pi/agent`, `~/.cache`, `/tmp`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
+
+#### Scenario: Standard temporary directory is used
+- **WHEN** Pi starts inside the sandbox
+- **THEN** `TMPDIR` is `/tmp` and is writable
 
 #### Scenario: Neovim configuration is available read-only
 - **WHEN** the host's `~/.config/nvim` exists and a default sandbox run starts

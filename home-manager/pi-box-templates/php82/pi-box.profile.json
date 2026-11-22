@@ -2,10 +2,7 @@
   "extends": "pi-box",
   "meta": {
     "name": "pi-box php82",
-    "description": "Laravel 9 or 10 on the host PHP 8.2: composer cache, host MySQL on 3306."
-  },
-  "filesystem": {
-    "allow": ["~/.cache/composer"]
+    "description": "Laravel 9 or 10 on the host PHP 8.2: host MySQL on 3306."
   },
   "network": {
     "connect_port": [3306]

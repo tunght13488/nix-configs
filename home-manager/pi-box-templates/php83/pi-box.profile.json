@@ -2,10 +2,7 @@
   "extends": "pi-box",
   "meta": {
     "name": "pi-box php83",
-    "description": "Laravel 12 on the host PHP 8.3: composer cache, host MySQL on 3306."
-  },
-  "filesystem": {
-    "allow": ["~/.cache/composer"]
+    "description": "Laravel 12 on the host PHP 8.3: host MySQL on 3306."
   },
   "network": {
     "connect_port": [3306]

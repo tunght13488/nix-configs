@@ -38,7 +38,8 @@ let
     filesystem = {
       allow = [
         "${homeDir}/.pi/agent"
-        "${homeDir}/.pi/sandbox/tmp"
+        "${homeDir}/.cache"
+        "/tmp"
         "${homeDir}/.local/state/nvim"
         "${homeDir}/.local/share/nvim"
         "${homeDir}/.config/github-copilot"
