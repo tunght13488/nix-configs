@@ -20,8 +20,8 @@
 
 ## 4. Validate end to end after activation
 
-- [ ] 4.1 After the user runs `make home`, verify `command -v hc`, `hc --help` exits 0, and `hc --version` reports the pinned version.
-- [ ] 4.2 Verify coexistence: `herdr` still launches, and `~/.config/herdr/config.toml` and the agent skill symlinks remain intact after activation.
+- [x] 4.1 After the user runs `make home`, verify `command -v hc`, `hc --help` exits 0, and `hc --version` reports the pinned version. Verified: `~/.nix-profile/bin/hc`, `hc 0.1.21`, `hc --help` exits 0.
+- [x] 4.2 Verify coexistence: `herdr` still launches, and `~/.config/herdr/config.toml` and the agent skill symlinks remain intact after activation. Verified with `herdr --version` (0.9.5, exit 0) rather than launching the TUI; `~/.config/herdr/config.toml` is still the unmodified real file from Sep 30, and both herdr skill symlinks resolve. `~/.config/herdr-core` does not exist yet, so nothing of `hc`'s ran during activation.
 
 ## Workflow follow-up
 
