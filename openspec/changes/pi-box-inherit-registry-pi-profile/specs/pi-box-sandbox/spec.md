@@ -24,7 +24,8 @@ The sandbox SHALL deny all outbound network access except connections to allowli
 ## MODIFIED Requirements
 
 ### Requirement: Least-privilege default grant set
-The default sandbox SHALL extend the installed `nolabs-ai/pi` profile and inherit its filesystem grants and runtime groups, including read-write access to `~/.pi`, `~/.cache`, and Nono profile drafts. It SHALL add pi-box host-integration grants and per-run workspace grants. The brokered GitHub token SHALL remain outside every path granted to the sandbox. `~/.aws`, `~/.ssh`, and the 1Password agent socket SHALL remain inaccessible.
+
+The default sandbox SHALL inherit the installed `nolabs-ai/pi` profile's filesystem grants and runtime groups — including `~/.pi` and `~/.cache` read-write — and add pi-box's own grants: the workspace (read-write), `/tmp` as `TMPDIR`, host config read-only, Neovim state, the OpenSpec CLI read-only, `/nix`, and the sandbox runtime directory. The brokered GitHub token SHALL stay outside every granted path. `~/.aws`, `~/.ssh`, and the 1Password agent socket SHALL stay inaccessible.
 
 #### Scenario: AWS credentials inaccessible
 - **WHEN** a process in the sandbox opens a file under `~/.aws` (including the SSO token cache)
@@ -34,9 +35,13 @@ The default sandbox SHALL extend the installed `nolabs-ai/pi` profile and inheri
 - **WHEN** a process in the sandbox opens a file under `~/.ssh` or the 1Password agent socket
 - **THEN** the open fails
 
-#### Scenario: Effective grants include the registry Pi profile
-- **WHEN** the default sandbox's effective grants are inspected
-- **THEN** they include the installed `nolabs-ai/pi` profile grants, pi-box's host-integration grants, and the per-run workspace and worktree grants, including the registry's `~/.pi` and `~/.cache` read-write grants
+#### Scenario: Only granted paths are mounted
+- **WHEN** the session's effective grants are inspected on a default run
+- **THEN** the granted host paths are the inherited registry profile grants (`~/.pi`, Nono profile drafts, `~/.cache`, the runtime and system-read groups), pi-box's additions (the workspace, `/tmp`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, `~/.npm-global/bin`, and the OpenSpec package), plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
+
+#### Scenario: Standard temporary directory is used
+- **WHEN** Pi starts inside the sandbox
+- **THEN** `TMPDIR` is `/tmp` and is writable
 
 #### Scenario: Neovim configuration is available read-only
 - **WHEN** the host's `~/.config/nvim` exists and a default sandbox run starts
@@ -56,21 +61,25 @@ The default sandbox SHALL extend the installed `nolabs-ai/pi` profile and inheri
 
 #### Scenario: Plain project adds no extra mount
 - **WHEN** the project's `.git` is a directory inside the workspace
-- **THEN** no git directory is granted beyond the workspace and profile grants
+- **THEN** no git directory is granted beyond the workspace and the profile grants
+
+#### Scenario: Effective grants include the registry Pi profile
+- **WHEN** the default sandbox's effective grants are inspected
+- **THEN** they include the registry's `~/.pi` and `~/.cache` read-write grants alongside pi-box's own grants
 
 ### Requirement: GitHub authentication in the sandbox
-GitHub authentication SHALL use nono credential injection with the real token stored at `~/.config/nono/credentials/pi-box-gh-token`, outside sandbox grants. The sandbox SHALL receive only the phantom `GH_TOKEN`; the real token SHALL NOT appear in its environment or profile. A legacy token at `~/.pi/sandbox/gh-token` SHALL prevent sandbox launch until it is moved or removed.
+GitHub authentication SHALL use nono credential injection with the real token stored at `~/.config/nono/credentials/pi-box-gh-token`, outside sandbox grants. The sandbox SHALL receive only the phantom `GH_TOKEN`. A legacy token at `~/.pi/sandbox/gh-token` SHALL prevent sandbox launch until it is moved or removed.
 
 #### Scenario: gh can read pull requests
 - **WHEN** `gh pr view` runs inside the sandbox with a configured token
-- **THEN** it authenticates through the injected credential route and returns the pull request details
+- **THEN** it authenticates with the injected credential and returns the pull request details
 
-#### Scenario: Real token stays out of the sandbox
-- **WHEN** the sandboxed process environment and profile are inspected
-- **THEN** the real GitHub token appears in neither, and the new host-side token path is denied by the effective sandbox profile
+#### Scenario: Token stays out of the container environment
+- **WHEN** the sandboxed process environment and the profile are inspected
+- **THEN** the GitHub token appears in neither, and the host-side token path is denied by the effective sandbox profile
 
 #### Scenario: Missing token file leaves gh unauthenticated
-- **WHEN** no token is configured at `~/.config/nono/credentials/pi-box-gh-token`
+- **WHEN** no token is configured
 - **THEN** the sandbox still starts and `gh` reports an authentication failure instead of failing the run
 
 #### Scenario: Legacy token blocks launch
@@ -78,15 +87,15 @@ GitHub authentication SHALL use nono credential injection with the real token st
 - **THEN** `pi-box` exits before starting Nono and instructs the user to move the token to the new host-side path
 
 ### Requirement: Endpoint-restricted GitHub API access
-Requests using the brokered GitHub credential SHALL be limited to the method and path patterns configured on the credential route. Requests that do not match those rules SHALL be rejected before the real token is injected. These endpoint rules SHALL NOT restrict general outbound network access.
+Requests using the brokered GitHub credential SHALL be limited to the method and path patterns configured on the credential route; non-matching requests SHALL be rejected before the real token is injected. These rules SHALL NOT restrict general outbound traffic.
 
 #### Scenario: Reading pull requests is allowed
-- **WHEN** `gh pr view` uses the brokered token route for a repository request matching its configured `GET /repos/**` rule
+- **WHEN** `gh pr view` runs inside the sandbox against a repository the profile allows
 - **THEN** the request succeeds and returns the pull request details
 
-#### Scenario: Disallowed credentialed endpoint is denied
-- **WHEN** a process attempts a `DELETE` request to a GitHub API endpoint using the brokered token route
-- **THEN** the proxy refuses the request before injecting the real token and records the denial
+#### Scenario: Destructive endpoints are denied
+- **WHEN** a process in the sandbox calls a destructive GitHub API endpoint such as repository deletion
+- **THEN** the request is refused before the real token is injected and recorded in the audit log
 
 #### Scenario: The configured GraphQL rule remains a known limitation
 - **WHEN** a brokered-token request uses `POST /graphql`
