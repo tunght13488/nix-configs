@@ -9,14 +9,18 @@
 # socket, and the GitHub token route - and runs
 # `nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`.
 #
-# The base profile grants ~/.cache and /tmp, but never grants ~/.aws, ~/.ssh,
-# the 1Password socket, or any other host path not explicitly listed.
+# The base profile inherits the registry Pi profile (`nono pull nolabs-ai/pi`)
+# and adds the host-specific grants. The real GitHub token lives outside every
+# grant, so a broad inherited grant such as $HOME/.pi cannot expose it.
 
 set -euo pipefail
 
 SANDBOX_DIR="${PI_BOX_SANDBOX_DIR:-$HOME/.pi/sandbox}"
 TEMPLATE_DIR="$SANDBOX_DIR/templates"
-GH_TOKEN_FILE="$SANDBOX_DIR/gh-token"
+GH_TOKEN_FILE="${PI_BOX_GH_TOKEN_FILE:-$HOME/.config/nono/credentials/pi-box-gh-token}"
+# Pre-inheritance location. The registry Pi profile grants $HOME/.pi read-write,
+# so a token left here would be readable inside the sandbox.
+LEGACY_GH_TOKEN_FILE="$SANDBOX_DIR/gh-token"
 RUNTIME_DIR="$SANDBOX_DIR/runtime"
 # The deployed base profile; nono resolves it by name from
 # ~/.config/nono/profiles/.
@@ -50,7 +54,8 @@ when you confirm the prompt or pass --force, and the previous version is kept as
 pi-box.profile.json.<YYYYmmdd-HHMMSS>.bak.
 
 The static policy lives in ~/.config/nono/profiles/pi-box.json (deployed by
-home-manager); a project's pi-box.profile.json extends it by name and is merged
+home-manager, extending the registry Pi profile); a project's
+pi-box.profile.json extends it by name and is merged
 by nono itself. This wrapper adds only the per-run overlay: workspace, worktree
 git directory, repository root AGENTS.md, herdr socket, and the GitHub token
 route. `pi-box profile` prints that overlay.
@@ -167,11 +172,17 @@ overlay_name() {
 # launcher are final; the supervisor keeps the original host PATH for its own
 # broker resolution.
 launcher_path() {
-  # Colon list of original PATH entries whose targets resolve under /nix/store.
+  # Colon list of original PATH entries whose targets resolve under /nix/store,
+  # plus the npm global bin directory the base profile grants read-only so the
+  # host OpenSpec CLI resolves by name.
   local entry resolved result=""
   local IFS=:
   for entry in $PATH; do
     [ -n "$entry" ] || continue
+    if [ "$entry" = "$HOME/.npm-global/bin" ]; then
+      result="${result:+$result:}$entry"
+      continue
+    fi
     resolved="$(readlink -f "$entry" 2>/dev/null || true)"
     case "$resolved" in
       /nix/store/*) result="${result:+$result:}$resolved" ;;
@@ -183,6 +194,10 @@ launcher_path() {
 cmd_run() {
   local workspace
   workspace="$(pwd)"
+
+  if [ -e "$LEGACY_GH_TOKEN_FILE" ]; then
+    die "legacy GitHub token at $LEGACY_GH_TOKEN_FILE; move it to $GH_TOKEN_FILE (directory 700, file 600) and remove the old file - the inherited registry profile grants ~/.pi read-write"
+  fi
 
   # Resolve pi host-side: the supervisor must not depend on PATH for it, and the
   # resolved path is either a Nix store path (readable via /nix) or the real

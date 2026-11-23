@@ -162,7 +162,10 @@ pi-box help               # usage summary
 The policy is split in two, and nono merges them itself:
 
 - The **base profile** `~/.config/nono/profiles/pi-box.json`, deployed by home-manager: the
-  default grants below, the network allowlist, and the environment deny-list. It is static.
+  default grants below, the environment deny-list, and `extends: nolabs-ai/pi`, so it inherits
+  the registry Pi profile's grants and network policy. It is static. Install the registry
+  profile once per host with `nono pull nolabs-ai/pi`; without it the base profile does not
+  resolve.
 - The **per-run overlay** `pi-box-overlay-<project>`, generated into the same directory: the
   parts that cannot be static — the workspace grant, a worktree's git common directory, the
   repository root `AGENTS.md`, the herdr socket, and the GitHub token route (when the token
@@ -174,19 +177,22 @@ nono unions the filesystem grants across the chain. `pi-box profile` prints the 
 the base lives next to it — together they are the whole policy, which is the fastest way to
 see what a project actually grants.
 
-Default grants: the project directory (read-write, at its host absolute path), `~/.pi/agent`
-(read-write — provider credentials, settings, sessions, skills and trust are shared with host
-Pi, so no login step is needed), `~/.cache` (read-write, for application and tool caches),
-`/tmp` (read-write; `pi-box` sets `TMPDIR=/tmp`), `~/.config/git`, `~/.config/gh` and
-`~/.config/nvim` (read-only), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write —
-Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write — the nvim
-Copilot client's auth store), `/nix` (read-only — the Nix store, needed for the targets of
-home-manager's symlinks and for the PATH the generated launcher sets), and
-`~/.pi/sandbox/runtime` (read-only — the launcher and profile files). Worktrees whose git
-directory sits outside the workspace also get that git directory (read-write) and the
-repository root's `AGENTS.md` (read-only). The default base profile leaves `~/.aws`, `~/.ssh`,
-the 1Password agent socket, and all other unlisted host paths inaccessible. Pi's Ctrl+G editor
-uses `nvim` via `EDITOR=nvim` unless the shared Pi settings specify an explicit `externalEditor`.
+Default grants, inherited from the `nolabs-ai/pi` registry profile: `~/.pi` (read-write —
+provider credentials, settings, sessions, skills and trust are shared with host Pi, so no login
+step is needed), `~/.cache` (read-write, from the `user_caches_linux` group), Nono's profile
+drafts, the language-runtime and system-read groups, and default-allow outbound networking.
+pi-box adds the project directory (read-write, at its host absolute path), `/tmp` (read-write;
+`pi-box` sets `TMPDIR=/tmp`), `~/.config/git`, `~/.config/gh` and `~/.config/nvim` (read-only),
+`~/.local/state/nvim` and `~/.local/share/nvim` (read-write — Neovim's shaDa, plugin logs and
+data), `~/.config/github-copilot` (read-write — the nvim Copilot client's auth store), `/nix`
+(read-only — the Nix store, needed for the targets of home-manager's symlinks and for the PATH
+the generated launcher sets), `~/.pi/sandbox/runtime` (read-only — the launcher and profile
+files), and `~/.npm-global/bin` plus the OpenSpec package (read-only, so the host `openspec`
+CLI resolves inside the sandbox). Worktrees whose git directory sits outside the workspace also
+get that git directory (read-write) and the repository root's `AGENTS.md` (read-only). `~/.aws`,
+`~/.ssh`, the 1Password agent socket, and all other unlisted host paths stay inaccessible.
+Pi's Ctrl+G editor uses `nvim` via `EDITOR=nvim` unless the shared Pi settings specify an
+explicit `externalEditor`.
 
 Worktree projects also get their git directory: when `git rev-parse --git-common-dir` for the
 workspace resolves outside it (the bare+worktree layout used here), `pi-box` grants that
@@ -206,29 +212,34 @@ that invocation (only when `HERDR_ENV=1` and the path is under `~/.pi/agent/`) t
 `pi-box`. Every other `pi` invocation runs the real binary, including all of them outside
 herdr panes. Limitation: this relies on the pane shell being zsh.
 
-Network is default-deny. The profile uses nono's `developer` network profile (LLM APIs,
-package registries, GitHub, sigstore, docs), adds pi's own providers explicitly — GitHub
-Copilot (`*.githubcopilot.com`, its business proxy `proxy.business.githubcopilot.com`, plus the
-`/copilot_internal/**` OAuth exchange path on api.github.com), OpenCode (`opencode.ai`,
-`api.opencode.ai`), and the pi-web-access providers (Exa, Tavily, Brave Search, Serper, Kagi,
-Jina) — and everything else fails closed with a 403 from the local proxy. Arbitrary-URL
-reading works through `r.jina.ai` when the Jina reader fallback is enabled in
-`~/.pi/agent/web-search.json`; otherwise per-project domains go in `pi-box.profile.json`.
-Blocked attempts are visible with `nono audit list` / `nono audit show`.
+Network is allowed by default, inherited from the registry profile (`network.block: false`,
+no domain-filtering network profile, no static allowlist): pi's providers, GitHub, and any
+other public host are reachable without a per-project grant. A project that needs restricted
+egress sets `network.block` or a `network_profile` in its `pi-box.profile.json`. Network
+events and denials remain visible with `nono audit list` / `nono audit show`.
 
-**GitHub access is endpoint-restricted.** `pi-box` reads `~/.pi/sandbox/gh-token` (mode 600)
-when present and declares it as a nono credential route: the token stays outside the sandbox,
-`gh` sees only a phantom in `GH_TOKEN`, and the proxy swaps in the real token per request. The
+**GitHub access is endpoint-restricted.** `pi-box` reads
+`~/.config/nono/credentials/pi-box-gh-token` (mode 600) when present and declares it as a nono
+credential route: the token stays outside every sandbox grant, `gh` sees only a phantom in
+`GH_TOKEN`, and the proxy swaps in the real token per request. The
 route allows `GET /user`, `GET /repos/**`, `GET /search/**`, `GET /notifications`,
 `POST /repos/*/pulls`, `POST /copilot_internal/**` (the Copilot OAuth exchange) and
-`POST /graphql`; everything else, including every DELETE and PATCH, is refused. The `POST /graphql` rule is the loose end — GraphQL is one endpoint, so path rules
-cannot separate a query from a mutation.
+`POST /graphql`; everything else, including every DELETE and PATCH, is refused. The
+`POST /graphql` rule is the loose end — GraphQL is one endpoint, so path rules
+cannot separate a query from a mutation. These rules constrain only the brokered credential;
+they do not restrict the sandbox's general outbound access.
 
 ```bash
-mkdir -p ~/.pi/sandbox && install -m 600 /dev/null ~/.pi/sandbox/gh-token
+install -d -m 700 ~/.config/nono/credentials
+install -m 600 /dev/null ~/.config/nono/credentials/pi-box-gh-token
 # paste the token, then Ctrl-D
-cat > ~/.pi/sandbox/gh-token
+cat > ~/.config/nono/credentials/pi-box-gh-token
 ```
+
+The token used to live at `~/.pi/sandbox/gh-token`. Because the inherited registry profile
+grants `~/.pi` read-write, a token left there would be readable inside the sandbox, so
+`pi-box` refuses to start while that file exists: move it to the new path and remove the old
+one first.
 
 **The token is a classic PAT with `repo` + `read:org`, and it is write-capable.** Classic
 tokens have no read-only scope for private repos, and `Secretlabsg` blocks fine-grained PATs
