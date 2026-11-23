@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Runs the Pi coding agent per project inside a nono capability sandbox with least-privilege host access: a deployed shared base profile, per-project opt-in grants that extend it, shared Pi identity and state, default-deny network with an allowlist, brokered GitHub credentials, and never-granted host secrets such as AWS, SSH and the 1Password socket.
+Runs the Pi coding agent per project inside a nono capability sandbox with least-privilege host access: a deployed shared base profile that inherits the registry Pi profile, per-project opt-in grants that extend it, shared Pi identity and state, default-allow outbound networking, brokered GitHub credentials, and never-granted host secrets such as AWS, SSH and the 1Password socket.
 
 ## Requirements
 
@@ -24,7 +24,7 @@ Running `pi-box` in a project directory SHALL start an interactive Pi session un
 
 ### Requirement: Least-privilege default grant set
 
-By default the sandbox SHALL grant exactly these host resources: the project workspace (read-write), `~/.pi/agent` (read-write), `~/.cache` (read-write, for application and tool caches), `/tmp` (read-write and used as Pi's `TMPDIR`), `~/.config/git` (read-only), `~/.config/gh` (read-only), `~/.config/nvim` (read-only, when present), `~/.local/state/nvim` and `~/.local/share/nvim` (read-write, Neovim's shaDa, plugin logs and data), `~/.config/github-copilot` (read-write, the nvim Copilot client's auth store), `/nix` (read-only), the sandbox runtime directory `~/.pi/sandbox/runtime` (read-only, holding the generated launcher and profile), and — when the project is a git worktree or submodule whose git common directory lies outside the workspace — that git directory (read-write) and the repository root's `AGENTS.md` (read-only). The default base profile SHALL NOT grant `~/.aws`, `~/.ssh`, the 1Password agent socket, or any other unlisted host path.
+The default sandbox SHALL inherit the installed `nolabs-ai/pi` profile's filesystem grants and runtime groups — including `~/.pi` and `~/.cache` read-write — and add pi-box's own grants: the workspace (read-write), `/tmp` as `TMPDIR`, host config read-only, Neovim state, the OpenSpec CLI read-only, `/nix`, and the sandbox runtime directory. The brokered GitHub token SHALL stay outside every granted path. `~/.aws`, `~/.ssh`, and the 1Password agent socket SHALL stay inaccessible.
 
 #### Scenario: AWS credentials inaccessible
 - **WHEN** a process in the sandbox opens a file under `~/.aws` (including the SSO token cache)
@@ -36,7 +36,7 @@ By default the sandbox SHALL grant exactly these host resources: the project wor
 
 #### Scenario: Only granted paths are mounted
 - **WHEN** the session's effective grants are inspected on a default run
-- **THEN** the granted host paths are exactly the workspace, `~/.pi/agent`, `~/.cache`, `/tmp`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
+- **THEN** the granted host paths are the inherited registry profile grants (`~/.pi`, Nono profile drafts, `~/.cache`, the runtime and system-read groups), pi-box's additions (the workspace, `/tmp`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, `~/.npm-global/bin`, and the OpenSpec package), plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
 
 #### Scenario: Standard temporary directory is used
 - **WHEN** Pi starts inside the sandbox
@@ -60,7 +60,11 @@ By default the sandbox SHALL grant exactly these host resources: the project wor
 
 #### Scenario: Plain project adds no extra mount
 - **WHEN** the project's `.git` is a directory inside the workspace
-- **THEN** no git directory is granted beyond the workspace
+- **THEN** no git directory is granted beyond the workspace and the profile grants
+
+#### Scenario: Effective grants include the registry Pi profile
+- **WHEN** the default sandbox's effective grants are inspected
+- **THEN** they include the registry's `~/.pi` and `~/.cache` read-write grants alongside pi-box's own grants
 
 ### Requirement: Shared Pi identity, state, and instructions
 
@@ -99,8 +103,7 @@ The sandbox SHALL carry the host's git and GitHub configuration via read-only gr
 - **THEN** the host-configured editor runs
 
 ### Requirement: GitHub authentication in the sandbox
-
-GitHub authentication SHALL use nono credential injection: the GitHub token is held by the broker outside the sandbox and injected only into allowed GitHub API requests. The token SHALL NOT appear in the sandboxed process environment or in the profile file.
+GitHub authentication SHALL use nono credential injection with the real token stored at `~/.config/nono/credentials/pi-box-gh-token`, outside sandbox grants. The sandbox SHALL receive only the phantom `GH_TOKEN`. A legacy token at `~/.pi/sandbox/gh-token` SHALL prevent sandbox launch until it is moved or removed.
 
 #### Scenario: gh can read pull requests
 - **WHEN** `gh pr view` runs inside the sandbox with a configured token
@@ -108,11 +111,15 @@ GitHub authentication SHALL use nono credential injection: the GitHub token is h
 
 #### Scenario: Token stays out of the container environment
 - **WHEN** the sandboxed process environment and the profile are inspected
-- **THEN** the GitHub token appears in neither
+- **THEN** the GitHub token appears in neither, and the host-side token path is denied by the effective sandbox profile
 
 #### Scenario: Missing token file leaves gh unauthenticated
 - **WHEN** no token is configured
 - **THEN** the sandbox still starts and `gh` reports an authentication failure instead of failing the run
+
+#### Scenario: Legacy token blocks launch
+- **WHEN** `~/.pi/sandbox/gh-token` still exists
+- **THEN** `pi-box` exits before starting Nono and instructs the user to move the token to the new host-side path
 
 ### Requirement: Per-project opt-in grants via manifest
 
@@ -229,23 +236,19 @@ The sandbox SHALL configure `nvim` as Pi's external-editor fallback so Ctrl+G la
 - **WHEN** Pi has an explicit `externalEditor` setting
 - **THEN** Pi uses that configured command instead of the `EDITOR` fallback
 
-### Requirement: Default-deny network with domain allowlist
-The sandbox SHALL deny all outbound network access except connections to allowlisted domains: LLM API providers, GitHub and git hosting, and package registries. Connections to unlisted destinations SHALL fail closed.
+### Requirement: Default-allow outbound network
+The default sandbox SHALL inherit `nolabs-ai/pi`'s `network.block: false` policy without an active domain-filtering profile or static host allowlist, allowing outbound connections to arbitrary destinations.
 
-#### Scenario: Provider requests succeed
-- **WHEN** sandboxed Pi makes a provider request to an allowlisted LLM API domain
-- **THEN** the request completes
+#### Scenario: An unlisted public host is reachable
+- **WHEN** a process in a default pi-box sandbox connects to `pi.dev` or another public host not named in pi-box configuration
+- **THEN** the connection is permitted without a project-specific network grant
 
-#### Scenario: Unknown domain is blocked
-- **WHEN** a process in the sandbox connects to a domain outside the allowlist
-- **THEN** the connection is refused and the sandbox keeps running
-
-#### Scenario: Localhost services require an opt-in port grant
-- **WHEN** the sandboxed process connects to a host localhost port that the profile did not grant
-- **THEN** the connection is refused
+#### Scenario: A project can opt into restricted networking
+- **WHEN** a project profile explicitly configures a network block or filtering profile
+- **THEN** that project-specific network restriction applies to the run
 
 ### Requirement: Endpoint-restricted GitHub API access
-GitHub API traffic from the sandbox SHALL be limited to allowlisted method and path patterns. Read access to issues and pull requests and pull-request creation on the configured work organizations SHALL be allowed; destructive endpoints SHALL be denied.
+Requests using the brokered GitHub credential SHALL be limited to the method and path patterns configured on the credential route; non-matching requests SHALL be rejected before the real token is injected. These rules SHALL NOT restrict general outbound traffic.
 
 #### Scenario: Reading pull requests is allowed
 - **WHEN** `gh pr view` runs inside the sandbox against a repository the profile allows
@@ -253,7 +256,11 @@ GitHub API traffic from the sandbox SHALL be limited to allowlisted method and p
 
 #### Scenario: Destructive endpoints are denied
 - **WHEN** a process in the sandbox calls a destructive GitHub API endpoint such as repository deletion
-- **THEN** the request is refused and recorded in the audit log
+- **THEN** the request is refused before the real token is injected and recorded in the audit log
+
+#### Scenario: The configured GraphQL rule remains a known limitation
+- **WHEN** a brokered-token request uses `POST /graphql`
+- **THEN** it matches the configured route rule and may be forwarded, because method and path rules cannot distinguish a GraphQL query from a mutation
 
 ### Requirement: Sandbox operations are audited
 Blocked network requests and denied operations SHALL be recorded in a tamper-evident audit log that remains readable on the host after the session ends.
@@ -305,13 +312,27 @@ The sandbox SHALL run the Pi release installed by home-manager (currently 1.5.2)
 - **THEN** the sandbox reports the same version as host Pi
 
 ### Requirement: Deployed shared base profile
-
-Home Manager SHALL deploy a shared base profile to `~/.config/nono/profiles/pi-box.json` containing the default grants, the network allowlist, and the environment deny-list. Project profiles and the wrapper's per-run overlay SHALL compose with it through nono's own profile inheritance.
+Home Manager SHALL deploy `~/.config/nono/profiles/pi-box.json` as a child of the installed `nolabs-ai/pi` profile, adding pi-box's host-specific grants and environment deny-list while inheriting the registry profile's network and filesystem policy. Project profiles and the wrapper's per-run overlay SHALL compose with it through nono's profile inheritance.
 
 #### Scenario: Base profile is deployed and valid
-- **WHEN** home-manager has been applied
-- **THEN** `~/.config/nono/profiles/pi-box.json` exists and passes `nono profile validate`
+- **WHEN** Home Manager has been applied and `nolabs-ai/pi` is installed
+- **THEN** `~/.config/nono/profiles/pi-box.json` extends `nolabs-ai/pi` and passes `nono profile validate`
+
+#### Scenario: Registry network policy remains effective
+- **WHEN** the resolved pi-box base profile is inspected
+- **THEN** it has default-allow outbound networking with no pi-box domain-filtering profile or static host allowlist
 
 #### Scenario: Overlay composes with the base
 - **WHEN** `pi-box` runs and the effective grants are inspected
-- **THEN** the base grants, the project profile's grants, and the overlay grants are all present
+- **THEN** the registry profile grants, pi-box base grants, project profile grants, and per-run overlay grants are all present
+
+### Requirement: Host OpenSpec CLI available by name
+The default pi-box sandbox SHALL run the host-installed OpenSpec CLI from `~/.npm-global/bin/openspec` without requiring a project-specific filesystem grant, while keeping the CLI package read-only.
+
+#### Scenario: OpenSpec command resolves in the sandbox
+- **WHEN** `openspec --version` runs inside a default pi-box sandbox
+- **THEN** it executes the host-installed CLI and reports its version
+
+#### Scenario: OpenSpec package cannot be modified
+- **WHEN** a process in the sandbox attempts to write to the OpenSpec package under `~/.npm-global/lib/node_modules/@fission-ai/openspec`
+- **THEN** the write is denied
