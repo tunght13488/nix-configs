@@ -2,11 +2,8 @@
 { inputs, ... }:
 {
   # This one brings our custom packages from the 'pkgs' directory
-  additions = final: _prev: import ../pkgs final.pkgs // {
-    herdrAgentFiles = final.callPackage ../pkgs/herdr-agent-files.nix {
-      herdrSrc = inputs.herdr.outPath;
-    };
-  };
+  additions = final: prev:
+    import ../pkgs final.pkgs prev.stdenv.hostPlatform.system;
 
   # This one contains whatever you want to overlay
   # You can change versions, add patches, set compilation flags, anything really.

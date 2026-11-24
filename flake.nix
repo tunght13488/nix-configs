@@ -31,8 +31,9 @@
     nix-index-database.url = "github:nix-community/nix-index-database";
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-    # Herdr terminal multiplexer
+    # Legacy Herdr TUI; herdr-app is the Core-backed desktop app.
     herdr.url = "github:herdrdev/herdr/v0.9.5";
+
   };
 
   outputs =
@@ -60,7 +61,7 @@
       # Accessible through 'nix build', 'nix shell', etc
       # phpLib is excluded — it requires the phps overlay and is not a standalone package.
       packages = forAllSystems (
-        system: removeAttrs (import ./pkgs nixpkgs.legacyPackages.${system}) [ "phpLib" ]
+        system: removeAttrs (import ./pkgs nixpkgs.legacyPackages.${system} system) [ "phpLib" ]
       );
 
       # Formatter for your nix files, available through 'nix fmt'

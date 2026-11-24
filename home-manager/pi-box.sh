@@ -5,8 +5,8 @@
 # deployed base profile ~/.config/nono/profiles/pi-box.json; the project's
 # untracked pi-box.profile.json extends it by name. This wrapper generates only
 # the per-run overlay - the parts that cannot be static: the workspace grant,
-# a worktree's git common directory, the repository root AGENTS.md, the herdr
-# socket, and the GitHub token route - and runs
+# a worktree's git common directory, the repository root AGENTS.md, an optional
+# legacy TUI socket, and the GitHub token route - and runs
 # `nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`.
 #
 # The base profile inherits the registry Pi profile (`nono pull nolabs-ai/pi`)
@@ -57,8 +57,9 @@ The static policy lives in ~/.config/nono/profiles/pi-box.json (deployed by
 home-manager, extending the registry Pi profile); a project's
 pi-box.profile.json extends it by name and is merged
 by nono itself. This wrapper adds only the per-run overlay: workspace, worktree
-git directory, repository root AGENTS.md, herdr socket, and the GitHub token
-route. `pi-box profile` prints that overlay.
+git directory, repository root AGENTS.md, an optional legacy TUI socket, and the
+GitHub token route. The Core socket directory is granted by the base profile.
+`pi-box profile` prints the overlay.
 EOF
 }
 
@@ -66,14 +67,14 @@ EOF
 #
 # The overlay holds only what cannot be static in the deployed base profile.
 build_overlay() {
-  local workspace="$1" out="$2" herdr_socket="${3:-}"
-  python3 - "$workspace" "$out" "$GH_TOKEN_FILE" "$herdr_socket" <<'PY'
+  local workspace="$1" out="$2" legacy_socket="${3:-}" hc_socket="${4:-}"
+  python3 - "$workspace" "$out" "$GH_TOKEN_FILE" "$legacy_socket" "$hc_socket" <<'PY'
 import json
 import os
 import subprocess
 import sys
 
-(workspace, out_path, token_path, herdr_socket) = sys.argv[1:5]
+(workspace, out_path, token_path, legacy_socket, hc_socket) = sys.argv[1:6]
 
 allow = [workspace]
 read_file = []
@@ -99,8 +100,8 @@ if os.path.isfile(dot_git):
             if os.path.isfile(agents):
                 read_file.append(agents)
 
-if herdr_socket:
-    unix_sockets.append(herdr_socket)
+if legacy_socket:
+    unix_sockets.append(legacy_socket)
 
 filesystem = {"allow": allow}
 if read_file:
@@ -142,6 +143,13 @@ overlay = {
 }
 if network:
     overlay["network"] = network
+if hc_socket:
+    overlay["environment"] = {
+        "set_vars": {
+            "HC_SOCKET": hc_socket,
+            "HC_TERMINAL_SOCKET": hc_socket,
+        }
+    }
 
 os.makedirs(os.path.dirname(out_path), exist_ok=True)
 with open(out_path, "w") as handle:
@@ -221,9 +229,9 @@ cmd_run() {
   # foreground process, never in the profile.
   export HERDR_AGENT="${HERDR_AGENT:-pi}"
 
-  local herdr_socket=""
-  if [ "${HERDR_ENV:-}" = "1" ] && [ -n "${HERDR_SOCKET_PATH:-}" ]; then
-    herdr_socket="$HERDR_SOCKET_PATH"
+  local hc_socket="${HC_TERMINAL_SOCKET:-}" legacy_socket=""
+  if [ -z "$hc_socket" ] && [ "${HERDR_ENV:-}" = "1" ]; then
+    legacy_socket="${HERDR_SOCKET_PATH:-}"
   fi
 
   # GitHub remotes written in SSH form work anyway: rewrite them to HTTPS inside
@@ -235,7 +243,8 @@ cmd_run() {
 
   local overlay
   overlay="$(overlay_name "$workspace")"
-  build_overlay "$workspace" "$HOME/.config/nono/profiles/$overlay.json" "$herdr_socket"
+  build_overlay "$workspace" "$HOME/.config/nono/profiles/$overlay.json" \
+    "$legacy_socket" "$hc_socket"
 
   # Project profile when present (it extends the deployed base by name);
   # otherwise the base profile itself.
@@ -255,12 +264,16 @@ cmd_run() {
 }
 
 cmd_profile() {
-  local workspace overlay
+  local workspace overlay hc_socket="${HC_TERMINAL_SOCKET:-}" legacy_socket=""
   workspace="$(pwd)"
   overlay="$(overlay_name "$workspace")"
+  if [ -z "$hc_socket" ] && [ "${HERDR_ENV:-}" = "1" ]; then
+    legacy_socket="${HERDR_SOCKET_PATH:-}"
+  fi
   printf 'pi-box: static policy: %s (deployed by home-manager, "extends" target)\n' \
     "$HOME/.config/nono/profiles/$BASE_PROFILE.json" >&2
-  build_overlay "$workspace" "$HOME/.config/nono/profiles/$overlay.json" ""
+  build_overlay "$workspace" "$HOME/.config/nono/profiles/$overlay.json" \
+    "$legacy_socket" "$hc_socket"
   cat "$HOME/.config/nono/profiles/$overlay.json"
 }
 
