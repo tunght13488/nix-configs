@@ -54,10 +54,10 @@ let
         "${homeDir}/.config/gh"
         "${homeDir}/.config/nvim"
         "${homeDir}/.pi/sandbox/runtime"
-        # The host OpenSpec CLI is an npm global install; grant its bin directory
-        # and package read-only so `openspec` works inside the sandbox.
+        # Global npm executables are shims into this package tree; grant both
+        # read-only so all globally installed CLIs can run.
         "${homeDir}/.npm-global/bin"
-        "${homeDir}/.npm-global/lib/node_modules/@fission-ai/openspec"
+        "${homeDir}/.npm-global/lib/node_modules"
       ];
     };
     environment = {
