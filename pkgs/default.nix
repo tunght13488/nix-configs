@@ -4,7 +4,11 @@
 # Packages here are exposed two ways:
 #   1. As flake outputs:  nix build .#<name>
 #   2. Via the `additions` overlay:  pkgs.<name>
-pkgs: {
+pkgs: system:
+let
+  herdrCore = pkgs.callPackage ./herdr-core.nix { };
+in
+{
   # example = pkgs.callPackage ./example { };
 
   maven363 = pkgs.callPackage ./maven363.nix { };
@@ -29,7 +33,7 @@ pkgs: {
 
   # herdr-core (`hc`): headless terminals that outlive the client.
   # Consumers: home-manager/home.nix (`home.packages`).
-  herdr-core = pkgs.callPackage ./herdr-core.nix { };
+  herdr-core = herdrCore;
 
   # Official upstream AppImage, pinned.  See pkgs/obsidian.nix for update steps.
   obsidian = pkgs.callPackage ./obsidian.nix { };
@@ -39,3 +43,6 @@ pkgs: {
   # Used directly by devShells (outside the module system).
   phpLib = config: import ./php-lib.nix { inherit pkgs config; };
 }
+  // (if builtins.elem system [ "x86_64-linux" "aarch64-linux" ] then {
+  herdr-app = pkgs.callPackage ./herdr-app.nix { inherit herdrCore; };
+} else { })

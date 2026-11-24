@@ -1,14 +1,5 @@
-# Writable herdr config.toml bootstrapped from Nix attrsets via pkgs.formats.toml.
-# Copied on first activation (or if file is a legacy symlink) instead of symlinked
-# to the Nix store, so settings can be tested quickly via `herdr server reload-config`
-# before incorporating them back into this module.
-#
-# Reset to baseline:
-#   cp ~/.config/herdr/config.toml ~/.config/herdr/config.toml.bak
-#   rm ~/.config/herdr/config.toml
-#   home-manager switch
-
-{ config, lib, pkgs, ... }:
+# Keep the legacy Herdr TUI configured alongside Herdr App/Core.
+{ inputs, lib, pkgs, ... }:
 
 let
   herdrConfig = {
@@ -21,13 +12,13 @@ let
     ui = {
       agent_panel_sort = "spaces";
       show_agent_labels_on_pane_borders = true;
-      toast = {
-        delivery = "system";
-      };
+      toast.delivery = "system";
     };
   };
 
   herdrConfigToml = (pkgs.formats.toml { }).generate "herdr-config" herdrConfig;
+  herdrTuiGuide = "${inputs.herdr.outPath}/skills/herdr/SKILL.md";
+  herdrAppGuide = pkgs.herdr-app.agentGuide;
 in
 {
   home.activation.copyHerdrConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -38,15 +29,13 @@ in
     fi
   '';
 
-  # Agent skill file linked from the herdr flake source.
-  # Provides agents with herdr workspace, tab, and pane management knowledge.
   home.file = {
-    ".pi/agent/skills/herdr/SKILL.md".source =
-      lib.mkDefault "${pkgs.herdrAgentFiles}/.pi/skills/herdr/SKILL.md";
+    ".pi/agent/skills/herdr/SKILL.md".source = lib.mkDefault herdrTuiGuide;
+    ".pi/agent/skills/herdr-app/SKILL.md".source = lib.mkDefault herdrAppGuide;
   };
 
   xdg.configFile = {
-    "opencode/skills/herdr/SKILL.md".source =
-      lib.mkDefault "${pkgs.herdrAgentFiles}/.opencode/skills/herdr/SKILL.md";
+    "opencode/skills/herdr/SKILL.md".source = lib.mkDefault herdrTuiGuide;
+    "opencode/skills/herdr-app/SKILL.md".source = lib.mkDefault herdrAppGuide;
   };
 }

@@ -88,6 +88,7 @@
     unstable.uv
     unstable.zed-editor
     herdr
+    herdr-app
     obsidian
     # agenix CLI (from the flake input, not nixpkgs) for editing/decrypting
     # secrets/*.age as the user: `agenix -d secrets/litellm-env.age`.

@@ -2,7 +2,7 @@
 #
 # Consumers: home-manager/home.nix imports this module. The `pi-box` wrapper is
 # installed on PATH; it generates a small per-run overlay profile (workspace,
-# worktree git directory, herdr socket, gh token route) and starts Pi under
+# worktree git directory, legacy TUI socket, gh token route) and starts Pi under
 # `nono run --profile <project|pi-box> --extends pi-box-overlay-<project>`.
 #
 # The shared base profile is deployed to ~/.config/nono/profiles/pi-box.json as a
@@ -26,8 +26,8 @@ let
   # Pi profile's filesystem grants and runtime groups (including ~/.pi and
   # ~/.cache read-write) and its default-allow network policy, then adds the
   # host-specific grants pi-box needs. Dynamic grants (workspace, worktree git
-  # dir, herdr socket, token route) come from the per-run overlay the wrapper
-  # generates; nono unions them.
+  # dir, legacy TUI socket, token route) come from the per-run overlay; the Core
+  # socket directory is static because its path is fixed on this host.
   #
   # The GitHub token route lives in the overlay, which activates it only when the
   # token file exists. Its endpoint rules restrict that brokered credential, not
@@ -47,6 +47,7 @@ let
         "${homeDir}/.local/share/nvim"
         "${homeDir}/.config/github-copilot"
       ];
+      unix_socket_dir = [ "/run/user/1000/herdr-core" ];
       read = [
         "/nix"
         "${homeDir}/.config/git"
