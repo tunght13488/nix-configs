@@ -6,6 +6,7 @@
   },
   "filesystem": {
     "allow": ["~/.local/state/nix", "~/.cache/nix"],
+    "read_file": ["~/.config/herdr-app/AGENTS.md"],
     "unix_socket": ["/nix/var/nix/daemon-socket/socket"]
   }
 }
