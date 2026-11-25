@@ -24,7 +24,7 @@ Running `pi-box` in a project directory SHALL start an interactive Pi session un
 
 ### Requirement: Least-privilege default grant set
 
-The default sandbox SHALL inherit the installed `nolabs-ai/pi` profile's filesystem grants and runtime groups — including `~/.pi` and `~/.cache` read-write — and add pi-box's own grants: the workspace (read-write), `/tmp` as `TMPDIR`, host config read-only, Neovim state, the OpenSpec CLI read-only, `/nix`, and the sandbox runtime directory. The brokered GitHub token SHALL stay outside every granted path. `~/.aws`, `~/.ssh`, and the 1Password agent socket SHALL stay inaccessible.
+The default sandbox SHALL inherit the installed `nolabs-ai/pi` profile's filesystem grants and runtime groups — including `~/.pi` and `~/.cache` read-write — and add pi-box's own grants: the workspace (read-write), `/tmp` as `TMPDIR`, host config read-only, `~/.config/herdr-app/mods` read-write, Neovim state, the OpenSpec CLI read-only, `/nix`, and the sandbox runtime directory. The brokered GitHub token SHALL stay outside every granted path. `~/.aws`, `~/.ssh`, and the 1Password agent socket SHALL stay inaccessible.
 
 #### Scenario: AWS credentials inaccessible
 - **WHEN** a process in the sandbox opens a file under `~/.aws` (including the SSO token cache)
@@ -36,7 +36,11 @@ The default sandbox SHALL inherit the installed `nolabs-ai/pi` profile's filesys
 
 #### Scenario: Only granted paths are mounted
 - **WHEN** the session's effective grants are inspected on a default run
-- **THEN** the granted host paths are the inherited registry profile grants (`~/.pi`, Nono profile drafts, `~/.cache`, the runtime and system-read groups), pi-box's additions (the workspace, `/tmp`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `/nix`, `~/.pi/sandbox/runtime`, `~/.npm-global/bin`, and the OpenSpec package), plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
+- **THEN** the granted host paths are the inherited registry profile grants (`~/.pi`, Nono profile drafts, `~/.cache`, the runtime and system-read groups), pi-box's additions (the workspace, `/tmp`, `~/.config/git`, `~/.config/gh`, `~/.config/nvim` when it exists, `~/.local/state/nvim`, `~/.local/share/nvim`, `~/.config/github-copilot`, `~/.config/herdr-app/mods` read-write, `/nix`, `~/.pi/sandbox/runtime`, `~/.npm-global/bin`, and the OpenSpec package), plus the project's git directory and the repository root `AGENTS.md` when the git directory lives outside the workspace
+
+#### Scenario: Herdr mods directory is read-write
+- **WHEN** a process in a default pi-box sandbox reads a mod or creates or updates a file under `~/.config/herdr-app/mods`
+- **THEN** the operation succeeds and changes are visible at the same host path
 
 #### Scenario: Standard temporary directory is used
 - **WHEN** Pi starts inside the sandbox
