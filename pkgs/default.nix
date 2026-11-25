@@ -38,6 +38,10 @@ in
   # Official upstream AppImage, pinned.  See pkgs/obsidian.nix for update steps.
   obsidian = pkgs.callPackage ./obsidian.nix { };
 
+  # GitHub Copilot desktop app, pinned.  See pkgs/github-copilot-app.nix for
+  # update steps.  Unfree; the flake build needs NIXPKGS_ALLOW_UNFREE=1 --impure.
+  github-copilot-app = pkgs.callPackage ./github-copilot-app.nix { };
+
   # PHP INI derivation builders.  Takes a config attrset matching the shape
   # of the phpConfig module options and returns per-version helpers.
   # Used directly by devShells (outside the module system).
