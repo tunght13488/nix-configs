@@ -59,6 +59,8 @@ in
 {
   home.packages = with pkgs; [
     github-copilot-cli
+    # Desktop app (official upstream AppImage); see pkgs/github-copilot-app.nix.
+    github-copilot-app
   ];
 
   programs.claude-code.enable = false;

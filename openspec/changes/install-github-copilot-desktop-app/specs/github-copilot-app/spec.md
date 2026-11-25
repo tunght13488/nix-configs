@@ -42,3 +42,12 @@ Installing the desktop app SHALL preserve the existing GitHub Copilot CLI and Ne
 
 - **WHEN** the Home Manager configuration includes the desktop app
 - **THEN** `github-copilot-cli` remains installed and the existing Neovim Copilot configuration remains unchanged
+
+### Requirement: The app supports HTTPS Git repository operations
+
+The packaged app SHALL provide a runtime libcurl ABI compatible with its Git HTTPS helper on the configured NixOS host.
+
+#### Scenario: Cloning a repository over HTTPS
+
+- **WHEN** the user clones a GitHub repository over HTTPS with valid access
+- **THEN** the app's Git helper completes the clone without a missing libcurl symbol-version error
