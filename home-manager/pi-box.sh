@@ -77,33 +77,56 @@ import sys
 (workspace, out_path, token_path, legacy_socket, hc_socket) = sys.argv[1:6]
 
 allow = [workspace]
+read = []
 read_file = []
 unix_sockets = []
 
 # A worktree's .git file points outside the workspace; without the common dir git
 # cannot read or write its own metadata. Pi also reads AGENTS.md from the
 # repository root, which for a bare worktree layout is the common dir's parent.
+# A workspace nested inside a repository has no .git of its own: its metadata is
+# above it and is read-only, since git only inspects it from there.
 dot_git = os.path.join(workspace, ".git")
-if os.path.isfile(dot_git):
-    try:
-        common = subprocess.run(
-            ["git", "-C", workspace, "rev-parse", "--path-format=absolute",
-             "--git-common-dir"],
-            capture_output=True, text=True, check=True).stdout.strip()
-    except subprocess.CalledProcessError:
-        common = ""
-    if common and os.path.isdir(common):
-        real = os.path.realpath(common)
-        if not real.startswith(workspace.rstrip("/") + "/"):
-            allow.append(real)
-            agents = os.path.join(os.path.dirname(real), "AGENTS.md")
-            if os.path.isfile(agents):
-                read_file.append(agents)
+try:
+    common = subprocess.run(
+        ["git", "-C", workspace, "rev-parse", "--path-format=absolute",
+         "--git-common-dir"],
+        capture_output=True, text=True, check=True).stdout.strip()
+except subprocess.CalledProcessError:
+    common = ""
+
+
+def outside_workspace(path):
+    return path and not os.path.realpath(path).startswith(
+        os.path.realpath(workspace).rstrip("/") + "/")
+
+
+if common and os.path.isdir(common) and outside_workspace(common):
+    real = os.path.realpath(common)
+    if os.path.isfile(dot_git):
+        allow.append(real)
+        agents = os.path.join(os.path.dirname(real), "AGENTS.md")
+        if os.path.isfile(agents):
+            read_file.append(agents)
+    else:
+        read.append(real)
+    # Tools discovering the repository walk from the worktree up to the main
+    # repository's .git entry, which in a bare layout is a file beside the
+    # common dir rather than the common dir itself.
+    root_git = os.path.join(os.path.dirname(real), ".git")
+    if os.path.exists(root_git) and outside_workspace(root_git):
+        if os.path.isdir(root_git):
+            if root_git != real and root_git not in allow:
+                read.append(root_git)
+        elif root_git not in read_file:
+            read_file.append(root_git)
 
 if legacy_socket:
     unix_sockets.append(legacy_socket)
 
 filesystem = {"allow": allow}
+if read:
+    filesystem["read"] = read
 if read_file:
     filesystem["read_file"] = read_file
 if unix_sockets:
