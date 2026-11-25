@@ -46,6 +46,7 @@ let
         "${homeDir}/.local/state/nvim"
         "${homeDir}/.local/share/nvim"
         "${homeDir}/.config/github-copilot"
+        "${homeDir}/.config/herdr-app/mods"
       ];
       unix_socket_dir = [ "/run/user/1000/herdr-core" ];
       read = [
