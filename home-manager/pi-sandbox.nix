@@ -52,6 +52,7 @@ let
         "/nix"
         "${homeDir}/.config/git"
         "${homeDir}/.config/gh"
+        "${homeDir}/.config/herdr-app"
         "${homeDir}/.config/nvim"
         "${homeDir}/.pi/sandbox/runtime"
         # Global npm executables are shims into this package tree; grant both
