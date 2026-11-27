@@ -42,6 +42,11 @@ in
   # update steps.  Unfree; the flake build needs NIXPKGS_ALLOW_UNFREE=1 --impure.
   github-copilot-app = pkgs.callPackage ./github-copilot-app.nix { };
 
+  # Orca desktop IDE for parallel coding agents, pinned.  Named `orca-app`
+  # because nixpkgs' `orca` is the GNOME screen reader.  Consumers:
+  # home-manager/ai.nix.  See pkgs/orca.nix for update steps.
+  orca-app = pkgs.callPackage ./orca.nix { };
+
   # PHP INI derivation builders.  Takes a config attrset matching the shape
   # of the phpConfig module options and returns per-version helpers.
   # Used directly by devShells (outside the module system).
