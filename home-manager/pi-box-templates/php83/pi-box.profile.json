@@ -4,9 +4,6 @@
     "name": "pi-box php83",
     "description": "Laravel 12 on the host PHP 8.3: host MySQL on 3306."
   },
-  "network": {
-    "connect_port": [3306]
-  },
   "environment": {
     "set_vars": {
       "DB_HOST": "127.0.0.1"
