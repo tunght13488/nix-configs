@@ -61,6 +61,8 @@ in
     github-copilot-cli
     # Desktop app (official upstream AppImage); see pkgs/github-copilot-app.nix.
     github-copilot-app
+    # Orca IDE for parallel agents (official upstream AppImage); see pkgs/orca.nix.
+    orca-app
   ];
 
   programs.claude-code.enable = false;
