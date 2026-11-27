@@ -20,7 +20,7 @@ Templates SHALL live in `~/.pi/sandbox/templates/<name>/`, deployed declarativel
 
 ### Requirement: php83 template
 
-The `php83` template SHALL provide the grants a Laravel 12 project needs on this host: the composer cache, the package registries needed by composer, and the localhost MySQL port, relying on the host PHP 8.3 toolchain. Its profile SHALL set `DB_HOST=127.0.0.1` so database traffic reaches the host MySQL.
+The `php83` template SHALL provide what a Laravel 12 project needs on this host — the composer cache and package-registry access it inherits from the shared pi-box base — relying on the host PHP 8.3 toolchain. Its profile SHALL set `DB_HOST=127.0.0.1` so database traffic reaches the host MySQL.
 
 #### Scenario: Laravel 12 project installs on PHP 8.3
 - **WHEN** `pi-box init php83` scaffolds a Laravel 12 project and `composer install` runs inside the sandbox
@@ -41,6 +41,18 @@ The `php82` template SHALL provide the same grants as `php83` for projects whose
 #### Scenario: Extension parity with php83
 - **WHEN** the loaded extensions of the host PHP 8.2 are inspected
 - **THEN** the bcmath, cli, curl, dom, gd, mbstring, mysql, soap, xml, and zip extensions are present
+
+### Requirement: PHP templates preserve default outbound HTTPS access
+
+The PHP82 and PHP83 templates SHALL preserve the shared pi-box base's default-allow outbound network behavior for Composer and model-provider HTTPS traffic while retaining their host database settings. With the default base, they SHALL NOT restrict outbound TCP to the MySQL port.
+
+#### Scenario: Model HTTPS remains reachable
+- **WHEN** a PHP82 or PHP83 project uses the default pi-box base without a proxy-only network policy and a model client connects to an HTTPS endpoint on TCP port 443
+- **THEN** the PHP template does not deny the connection
+
+#### Scenario: Host MySQL remains reachable
+- **WHEN** a PHP82 or PHP83 project uses the default pi-box base and connects to host MySQL at `DB_HOST=127.0.0.1`
+- **THEN** the database connection remains available without a template-level outbound TCP port restriction
 
 ### Requirement: java8 template
 
