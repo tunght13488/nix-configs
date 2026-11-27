@@ -18,7 +18,16 @@ let
 
   herdrConfigToml = (pkgs.formats.toml { }).generate "herdr-config" herdrConfig;
   herdrTuiGuide = "${inputs.herdr.outPath}/skills/herdr/SKILL.md";
-  herdrAppGuide = pkgs.herdr-app.agentGuide;
+  herdrAppGuide = pkgs.runCommand "herdr-app-skill.md" { } ''
+    {
+      printf '%s\n' \
+        '---' \
+        'name: herdr-app' \
+        'description: Guidance for customizing the Herdr desktop app, including layouts, keybindings, settings, and mods.' \
+        '---'
+      cat ${pkgs.herdr-app.agentGuide}
+    } > "$out"
+  '';
 in
 {
   home.activation.copyHerdrConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
