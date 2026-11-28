@@ -31,7 +31,7 @@ See `proposal.md` for motivation and `specs/orca-app/spec.md` for behavior.
 
 3. **Use port 6768 only through Tailscale.** Keep the documented fixed port, remove 6768 from the existing global TCP range by splitting that range around the port, and allow 6768 on `tailscale0`. This preserves the other globally allowed ports while avoiding exposure of the Orca listener on non-Tailscale interfaces. Do not add public port forwarding.
 
-4. **Keep pairing separate from the service.** The persistent unit uses `--no-pairing`, so it does not print a client pairing link into service logs. Pair once using Orca's documented foreground `serve --pairing-address <Tailscale-hostname-or-IP>` flow while the service is stopped, then start the unit. The pairing address advertises where a client should connect; it is not a bind-interface setting. Do not place pairing credentials in the Nix store.
+4. **Keep pairing separate from the service.** The persistent unit uses `--no-pairing`, so it does not print a client pairing link into service logs. New clients pair against the running service with `orca pair --address <tailnet-host-or-ip>`, which asks the service for an offer without restarting it, and existing paired clients keep their access. Verified: the offer reports `endpoint: ws://<tailscale-ip>:6768`. The `--pairing-address` flag is therefore not needed in the unit; the loopback endpoint the service advertises at startup only affects pairing, which this flow does not use. Do not place pairing credentials in the Nix store.
 
 5. **Use the Linux CLI name `orca-ide`.** The package exposes this alias because nixpkgs' `orca` is the GNOME screen reader. Do not shadow that package.
 

@@ -81,4 +81,27 @@ in
       ".pi/agent/AGENTS.md".text = global_instructions;
     };
   };
+
+  # Headless Orca server for Remote Orca Server clients, no desktop window
+  # required (see openspec/changes/run-orca-server-as-service). `--supervise`
+  # is Orca's own restart policy for service managers: it retries with growing
+  # delays and exits 0 once it gives up, so systemd owns boot only and does not
+  # fight the supervisor. `--no-pairing` keeps pairing links out of the journal;
+  # pair from a foreground `orca serve` while this unit is stopped.
+  # Lingering (nixos/configuration.nix) keeps the user manager, and the server,
+  # running without a login.
+  systemd.user.services.orca-server = {
+    Unit = {
+      Description = "Orca headless server";
+      Documentation = [ "https://orca.dev/docs/remote-servers" ];
+    };
+    Service = {
+      ExecStart = "${pkgs.orca-app}/bin/orca-ide serve --supervise --no-pairing --port 6768";
+      # Agent CLIs the server launches come from the user and system profiles.
+      Environment = [
+        "PATH=%h/.nix-profile/bin:/run/current-system/sw/bin:/usr/bin:/bin"
+      ];
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
 }
