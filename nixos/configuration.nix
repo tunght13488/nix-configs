@@ -111,6 +111,11 @@ in
         "networkmanager"
       ];
       shell = pkgs.zsh;
+      # Keep the user manager running without a login so the Orca headless
+      # server starts at boot and survives logout (declarative equivalent of
+      # `loginctl enable-linger`; see
+      # openspec/changes/run-orca-server-as-service).
+      linger = true;
     };
   };
 
@@ -146,12 +151,20 @@ in
       };
     };
   };
+  # 6768 is Orca's fixed server port; it is allowed on the tailnet only, so the
+  # range is split around it (see
+  # openspec/changes/run-orca-server-as-service).
   networking.firewall.allowedTCPPortRanges = [
     {
       from = 1024;
+      to = 6767;
+    }
+    {
+      from = 6769;
       to = 49151;
     }
   ];
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ 6768 ];
 
   # GNOME
   services.displayManager.gdm.enable = true;
